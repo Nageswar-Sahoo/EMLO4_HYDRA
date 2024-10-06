@@ -3,7 +3,7 @@ from pathlib import Path
 import logging
 
 import hydra
-from omegaconf import DictConfig
+from omegaconf import DictConfig , OmegaConf
 import lightning as L
 from lightning.pytorch.loggers import Logger
 from typing import List
@@ -83,6 +83,8 @@ def test(
 
 @hydra.main(version_base="1.3", config_path="../configs", config_name="train")
 def main(cfg: DictConfig):
+    
+    print(OmegaConf.to_yaml(cfg))
     # Set up paths
     log_dir = Path(cfg.paths.log_dir)
 

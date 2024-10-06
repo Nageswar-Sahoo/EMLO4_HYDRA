@@ -10,10 +10,12 @@ defaults:
   - override /logger: default
   - override /trainer: default
 
+
 # all parameters below will be merged with parameters from default configurations set above
 # this allows you to overwrite only specified parameters
 
 seed: 42
+someley: "somevalue"
 
 data:
   batch_size: 64
@@ -22,7 +24,7 @@ data:
 
 model:
   base_model: "resnet18"
-  num_classes: 2
+  num_classes: 10
   lr: 1e-3
 
 trainer:

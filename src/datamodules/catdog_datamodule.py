@@ -1,7 +1,9 @@
 from pathlib import Path
 from typing import Union, Tuple
 import os
-
+import gdown
+import zipfile
+import os
 import lightning as L
 from torch.utils.data import DataLoader, random_split
 from torchvision import transforms
@@ -27,15 +29,30 @@ class CatDogImageDataModule(L.LightningDataModule):
         self._dataset = None
 
     def prepare_data(self):
-        """Download images if not already downloaded and extracted."""
-        dataset_path = self.data_path / "cats_and_dogs_filtered"
-        if not dataset_path.exists():
-            download_and_extract_archive(
-                url="https://storage.googleapis.com/mledu-datasets/cats_and_dogs_filtered.zip",
-                download_root=self._data_dir,
-                remove_finished=True,
-            )
+        
+        print('prepare_data' + str(self.data_path.exists()))
+        if not self.data_path.exists():
+            
+            # Google Drive file ID (from the shareable link)
 
+            # URL to download the file
+            download_url = f"https://drive.google.com/uc?id=1lylGUWzGUK9GKIIid3Pm0pEdKN7POYzh"
+
+            # Name of the output zip file (it will be downloaded in the current directory)
+            output_zip = 'data.zip'
+
+            # Download the zip file
+            gdown.download(download_url, output_zip, quiet=False)
+
+            # Extract the zip file in the current directory
+            with zipfile.ZipFile(output_zip, 'r') as zip_ref:
+               zip_ref.extractall(".")  # Extract to the current directory
+
+            # Optionally, remove the downloaded zip file after extraction
+            os.remove(output_zip)
+
+            print("Cat images downloaded and extracted successfully.")
+            
     @property
     def data_path(self):
         return self._data_dir
@@ -73,7 +90,7 @@ class CatDogImageDataModule(L.LightningDataModule):
     def setup(self, stage: str = None):
         if self._dataset is None:
             self._dataset = self.create_dataset(
-                self.data_path / "cats_and_dogs_filtered" / "train",
+                self.data_path  / "train",
                 self.train_transform,
             )
             train_size = int(self._splits[0] * len(self._dataset))
