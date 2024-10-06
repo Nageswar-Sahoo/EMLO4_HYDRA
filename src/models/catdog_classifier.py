@@ -11,7 +11,7 @@ class CatDogClassifier(L.LightningModule):
         self.lr = lr
 
         # Load pre-trained ResNet18 model
-        self.model = timm.create_model('resnet18', pretrained=True, num_classes=2)
+        self.model = timm.create_model('resnet18', pretrained=True, num_classes=10)
 
         # Multi-class accuracy with num_classes=2
         self.train_acc = Accuracy(task="multiclass", num_classes=2)

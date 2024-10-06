@@ -28,7 +28,7 @@ def infer(model, image_tensor):
         probabilities = F.softmax(output, dim=1)
         predicted_class = torch.argmax(probabilities, dim=1).item()
     
-    class_labels = ['cat', 'dog']
+    class_labels = ['beagle', 'boxer', 'bulldog', 'dachshund', 'german_Shepherd', 'Golden_Retriever', 'Labrador_Retriever', 'Poodle', 'Rottweiler', 'Yorkshire_Terrier']
     predicted_label = class_labels[predicted_class]
     confidence = probabilities[0][predicted_class].item()
     return predicted_label, confidence
@@ -51,13 +51,15 @@ def main(args):
     input_folder = Path(args.input_folder)
     output_folder = Path(args.output_folder)
     output_folder.mkdir(exist_ok=True, parents=True)
-
-    image_files = list(input_folder.glob('*'))
+    image_files = list(input_folder.glob('*/*'))
+    print(image_files)
     with get_rich_progress() as progress:
         task = progress.add_task("[green]Processing images...", total=len(image_files))
-        
+        print("hello")
+
         for image_file in image_files:
             if image_file.suffix.lower() in ['.jpg', '.jpeg', '.png']:
+                print("hello123")
                 img, img_tensor = load_image(image_file)
                 predicted_label, confidence = infer(model, img_tensor.to(model.device))
                 
