@@ -40,7 +40,7 @@ Running with Hydra
 To run the training script with a specified configuration, use the following command:
 
         python src/train.py 
-	python src/eval.py 
+	  python src/eval.py 
         python src/infer.py 
 
 
