@@ -40,13 +40,14 @@ Running with Hydra
 To run the training script with a specified configuration, use the following command:
 
         python src/train.py 
-	  python src/eval.py 
+	    python src/eval.py 
         python src/infer.py 
 
 
 
 Model 
-    Model Architecture
+   
+   Model Architecture
 
 How to Train, Evaluate, and Infer Using Docker
 
@@ -116,17 +117,17 @@ This repository includes a Dockerfile to containerize the training, evaluation, 
          WORKDIR /app
 
          # Install dependencies
-         RUN --mount=type=cache,target=/root/.cache/uv \
-	--mount=type=bind,source=uv.lock,target=uv.lock \
-	--mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-	uv sync --frozen --no-install-project --no-dev
+          RUN --mount=type=cache,target=/root/.cache/uv \
+         	--mount=type=bind,source=uv.lock,target=uv.lock \
+        	--mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+        	uv sync --frozen --no-install-project --no-dev
 
          # Copy the rest of the application
          ADD . /app
 
          # Install the project and its dependencies
          RUN --mount=type=cache,target=/root/.cache/uv \
-	uv sync --frozen --no-dev
+     	uv sync --frozen --no-dev
 
          # Final stage
          FROM python:3.12-slim-bookworm
@@ -139,6 +140,7 @@ This repository includes a Dockerfile to containerize the training, evaluation, 
 
          # Set the working directory
          WORKDIR /app
+
 
 
 <h3>Requirements</h3>
