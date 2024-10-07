@@ -6,9 +6,19 @@ import torch.nn.functional as F
 import matplotlib.pyplot as plt
 from PIL import Image
 from torchvision import transforms
+import lightning as L
+import hydra
+from omegaconf import DictConfig , OmegaConf
+from lightning.pytorch.loggers import Logger
+import logging
+import rootutils
+from models.timm_classifier import TimmClassifier
+
+root = rootutils.setup_root(__file__, indicator=".project-root", pythonpath=True)
 
 from models.catdog_classifier import CatDogClassifier
 from utils.logging_utils import setup_logger, task_wrapper, get_rich_progress
+log = logging.getLogger(__name__)
 
 @task_wrapper
 def load_image(image_path):
@@ -33,6 +43,25 @@ def infer(model, image_tensor):
     confidence = probabilities[0][predicted_class].item()
     return predicted_label, confidence
 
+# Refactor model instantiation and checkpoint loading
+def instantiate_model(cfg: DictConfig) -> L.LightningModule:
+    log.info(f"Instantiating model <{cfg.model._target_}>")  
+    
+    # Dynamically instantiate the model using Hydra configuration
+    model: L.LightningModule = hydra.utils.instantiate(cfg.model)
+    
+    # Load model weights from checkpoint if provided
+    if cfg.get("ckpt_path"):
+        log.info(f"Loading model weights from checkpoint: {cfg.ckpt_path}")
+        model = model.__class__.load_from_checkpoint(cfg.ckpt_path)
+
+    # Set the model to evaluation mode
+    model.eval()
+    
+    return model
+
+
+
 @task_wrapper
 def save_prediction_image(image, predicted_label, confidence, output_path):
     plt.figure(figsize=(10, 6))
@@ -44,16 +73,19 @@ def save_prediction_image(image, predicted_label, confidence, output_path):
     plt.close()
 
 @task_wrapper
-def main(args):
-    model = CatDogClassifier.load_from_checkpoint(args.ckpt_path)
-    model.eval()
-
-    input_folder = Path(args.input_folder)
-    output_folder = Path(args.output_folder)
-    output_folder.mkdir(exist_ok=True, parents=True)
-    image_files = list(input_folder.glob('*/*'))
-    print(image_files)
-    with get_rich_progress() as progress:
+@hydra.main(version_base="1.3", config_path="../configs", config_name="infer")
+def main(cfg: DictConfig):
+    log_dir = Path(cfg.paths.log_dir)
+    setup_logger(log_dir / "infer_log.log")
+    if cfg.get("infer"):
+     print(OmegaConf.to_yaml(cfg))
+     model = instantiate_model(cfg)
+     input_folder = Path(cfg.paths.data_dir + str("/test",))
+     output_folder = Path(cfg.paths.output_dir)
+     output_folder.mkdir(exist_ok=True, parents=True)
+     image_files = list(input_folder.glob('*/*'))
+     print(image_files)
+     with get_rich_progress() as progress:
         task = progress.add_task("[green]Processing images...", total=len(image_files))
         print("hello")
 
@@ -70,13 +102,4 @@ def main(args):
                 progress.advance(task)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Infer using trained CatDog Classifier")
-    parser.add_argument("--input_folder", type=str, required=True, help="Path to input folder containing images")
-    parser.add_argument("--output_folder", type=str, required=True, help="Path to output folder for predictions")
-    parser.add_argument("--ckpt_path", type=str, required=True, help="Path to model checkpoint")
-    args = parser.parse_args()
-
-    log_dir = Path(__file__).resolve().parent.parent / "logs"
-    setup_logger(log_dir / "infer_log.log")
-
-    main(args)
+    main()
