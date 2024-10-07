@@ -4,12 +4,12 @@ This repository contains a PyTorch Lightning-based project for classifying dog b
 
 Features
    
-   Train and evaluate a deep learning model on the Dog Breed Image Dataset
-   Docker containerization for easy deployment and reproducibility
-   DevContainer setup for development
-   Hydra for flexible configuration management
-   eval.py to run evaluation on the validation dataset and print metrics
-   infer.py for inference on sample images
+           Train and evaluate a deep learning model on the Dog Breed Image Dataset
+           Docker containerization for easy deployment and reproducibility
+           DevContainer setup for development
+           Hydra for flexible configuration management
+           eval.py to run evaluation on the validation dataset and print metrics
+           infer.py for inference on sample images
 
 <h3>About Dataset</h3>
 
