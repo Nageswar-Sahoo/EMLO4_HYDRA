@@ -1,6 +1,6 @@
 import argparse
 from pathlib import Path
-
+import re
 import torch
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
@@ -12,12 +12,11 @@ from omegaconf import DictConfig , OmegaConf
 from lightning.pytorch.loggers import Logger
 import logging
 import rootutils
-from models.timm_classifier import TimmClassifier
-
 root = rootutils.setup_root(__file__, indicator=".project-root", pythonpath=True)
-
 from models.catdog_classifier import CatDogClassifier
 from utils.logging_utils import setup_logger, task_wrapper, get_rich_progress
+import lightning as L
+
 log = logging.getLogger(__name__)
 
 @task_wrapper
@@ -60,14 +59,17 @@ def instantiate_model(cfg: DictConfig) -> L.LightningModule:
     
     return model
 
-
+def remove_id(filename):
+    # Use regex to match and remove the digits and underscore before the extension
+    cleaned_filename = re.sub(r'_\d+', '', str(filename))
+    return cleaned_filename
 
 @task_wrapper
-def save_prediction_image(image, predicted_label, confidence, output_path):
+def save_prediction_image(image, predicted_label, confidence, output_path, image_files):
     plt.figure(figsize=(10, 6))
     plt.imshow(image)
     plt.axis('off')
-    plt.title(f"Predicted: {predicted_label} (Confidence: {confidence:.2f})")
+    plt.title(f"Predicted: {predicted_label} (Confidence: {confidence:.2f}) \n Actual: {image_files.parent.name.lower()}")
     plt.tight_layout()
     plt.savefig(output_path, dpi=300, bbox_inches='tight')
     plt.close()
@@ -87,16 +89,14 @@ def main(cfg: DictConfig):
      print(image_files)
      with get_rich_progress() as progress:
         task = progress.add_task("[green]Processing images...", total=len(image_files))
-        print("hello")
 
         for image_file in image_files:
             if image_file.suffix.lower() in ['.jpg', '.jpeg', '.png']:
-                print("hello123")
                 img, img_tensor = load_image(image_file)
                 predicted_label, confidence = infer(model, img_tensor.to(model.device))
                 
                 output_file = output_folder / f"{image_file.stem}_prediction.png"
-                save_prediction_image(img, predicted_label, confidence, output_file)
+                save_prediction_image(img, predicted_label, confidence, output_file, image_file)
                 
                 progress.console.print(f"Processed {image_file.name}: {predicted_label} ({confidence:.2f})")
                 progress.advance(task)
