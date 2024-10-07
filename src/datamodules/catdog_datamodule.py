@@ -89,15 +89,17 @@ class CatDogImageDataModule(L.LightningDataModule):
 
     def setup(self, stage: str = None):
         if self._dataset is None:
-            self._dataset = self.create_dataset(
+            self.train_dataset = self.create_dataset(
                 self.data_path  / "train",
                 self.train_transform,
             )
-            train_size = int(self._splits[0] * len(self._dataset))
-            val_size = int(self._splits[1] * len(self._dataset))
-            test_size = len(self._dataset) - train_size - val_size
-            self.train_dataset, self.val_dataset, self.test_dataset = random_split(
-                self._dataset, [train_size, val_size, test_size]
+            self.val_dataset = self.create_dataset(
+                self.data_path  / "validation",
+                self.train_transform,
+            )
+            self.test_dataset = self.create_dataset(
+                self.data_path  / "test",
+                self.train_transform,
             )
 
     def __dataloader(self, dataset, shuffle: bool = False):
