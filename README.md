@@ -3,6 +3,7 @@
 This repository contains a PyTorch Lightning-based project for classifying dog breeds using a dataset from Kaggle. The project includes Docker support, a DevContainer setup, and inference using a pre-trained model. Configuration management is handled using Hydra.
 
 Features
+   
    Train and evaluate a deep learning model on the Dog Breed Image Dataset
    Docker containerization for easy deployment and reproducibility
    DevContainer setup for development
