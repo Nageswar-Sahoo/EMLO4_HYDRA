@@ -1,6 +1,14 @@
 <h1>Dog Breed Image Dataset Training, Evaluation, and Inference with Docker </h1>
 
-This repository contains a PyTorch Lightning-based project for classifying dog breeds using a dataset from Kaggle. The project includes Docker support, a DevContainer setup, and inference using a pre-trained model.
+This repository contains a PyTorch Lightning-based project for classifying dog breeds using a dataset from Kaggle. The project includes Docker support, a DevContainer setup, and inference using a pre-trained model. Configuration management is handled using Hydra.
+
+Features
+   Train and evaluate a deep learning model on the Dog Breed Image Dataset
+   Docker containerization for easy deployment and reproducibility
+   DevContainer setup for development
+   Hydra for flexible configuration management
+   eval.py to run evaluation on the validation dataset and print metrics
+   infer.py for inference on sample images
 
 <h3>About Dataset</h3>
 
@@ -21,11 +29,22 @@ This dataset contains a collection of images for 10 different dog breeds, meticu
 
 Each breed is represented by 100 images, stored in separate directories named after the respective breed. The images have been curated to ensure diversity and relevance, making this dataset a valuable resource for training and evaluating machine learning models in the field of computer vision.
 
+<h2>Using Hydra for Configuration Management</h2>
+The project utilizes Hydra to manage configurations. Configuration files are located in the configs/ directory. You can modify these files to adjust various parameters for training, evaluation, and inference.
+
+Running with Hydra
+To run the training script with a specified configuration, use the following command:
+
+        python src/train.py 
+	python src/eval.py 
+        python src/infer.py 
+
+
 
 Model 
     Model Architecture
 
-Docker build
+How to Train, Evaluate, and Infer Using Docker
 
  1. Build the Docker image:
 
@@ -48,6 +67,17 @@ Docker build
           To modify the infer arguments, you can do the following:
 
           docker run -v $(pwd)/model_artifacts:/app/checkpoints dogbreed-classification infer --input_folder="path/to/custom/input" --  output_folder="path/to/custom/output" --     ckpt_path="path/to/custom/checkpoint.ckpt"
+
+
+<h2>Scripts Overview</h2>
+1. train.py
+This script handles training the model using a DataModule for the dataset. It saves the best checkpoint during training.
+
+2. eval.py
+This script loads the model from a checkpoint and evaluates it on the validation dataset.
+
+3. infer.py
+This script runs inference on a folder of images and saves the predictions.
 
 <h3>Prediction Results</h3>
 
