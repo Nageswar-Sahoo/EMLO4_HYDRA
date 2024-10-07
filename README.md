@@ -4,12 +4,15 @@ This repository contains a PyTorch Lightning-based project for classifying dog b
 
 Features
    
-           Train and evaluate a deep learning model on the Dog Breed Image Dataset
-           Docker containerization for easy deployment and reproducibility
-           DevContainer setup for development
-           Hydra for flexible configuration management
-           eval.py to run evaluation on the validation dataset and print metrics
-           infer.py for inference on sample images
+           1> Train and evaluate a deep learning model on the Dog Breed Image Dataset
+	   
+           2> Docker containerization for easy deployment and reproducibility
+	   	   
+           3> Hydra for flexible configuration management
+	   
+           4> eval.py to run evaluation on the validation dataset and print metrics
+	   
+           5> infer.py for inference on sample images
 
 <h3>About Dataset</h3>
 
@@ -70,15 +73,7 @@ How to Train, Evaluate, and Infer Using Docker
           docker run -v $(pwd)/model_artifacts:/app/checkpoints dogbreed-classification infer --input_folder="path/to/custom/input" --  output_folder="path/to/custom/output" --     ckpt_path="path/to/custom/checkpoint.ckpt"
 
 
-<h2>Scripts Overview</h2>
-1. train.py
-This script handles training the model using a DataModule for the dataset. It saves the best checkpoint during training.
 
-2. eval.py
-This script loads the model from a checkpoint and evaluates it on the validation dataset.
-
-3. infer.py
-This script runs inference on a folder of images and saves the predictions.
 
 <h3>Prediction Results</h3>
 
