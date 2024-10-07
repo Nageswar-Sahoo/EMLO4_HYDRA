@@ -31,20 +31,24 @@ Model
 Docker build
 
  1. Build the Docker image:
-        docker build -t dogbreed-classification .
+
+       docker build -t dogbreed-classification .
  
- 2. To run training:
-          docker run -v $(pwd)/model_artifacts:/app/checkpoints dogbreed-classification             train
- 3. To run evaluation:
+ 3. To run training:
+
+    docker run -v $(pwd)/model_artifacts:/app/checkpoints dogbreed-classification train
+ 
+ 5. To run evaluation:
 
           docker run -v $(pwd)/model_artifacts:/app/checkpoints dogbreed-classification eval
- 4. To run inference:
+    
+ 7. To run inference:
 
-          docker run -v $(pwd)/model_artifacts:/app/checkpoints dogbreed-classification             infer
+          docker run -v $(pwd)/model_artifacts:/app/checkpoints dogbreed-classification infer
 
- 5. By default it performs inference on the images present in the input_images folder.
+ 8. By default it performs inference on the images present in the input_images folder.
 
           To modify the infer arguments, you can do the following:
 
-          docker run -v $(pwd)/model_artifacts:/app/checkpoints dogbreed-classification           infer --input_folder="path/to/custom/input" --                                                    output_folder="path/to/custom/output" --            ckpt_path="path/to/custom/checkpoint.ckpt"
+          docker run -v $(pwd)/model_artifacts:/app/checkpoints dogbreed-classification infer --input_folder="path/to/custom/input" --  output_folder="path/to/custom/output" --            ckpt_path="path/to/custom/checkpoint.ckpt"
 
