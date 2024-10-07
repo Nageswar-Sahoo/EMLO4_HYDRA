@@ -56,16 +56,12 @@ Docker build
   <tr>
     <td><img src="https://github.com/user-attachments/assets/92cb4dd8-8f37-4ae5-a906-7447554720a9" width="200"/></td>
     <td><img src="https://github.com/user-attachments/assets/2cde3ce2-3596-4bf9-bb88-9d2c996407eb" width="200"/></td>
-    <td><img src="![image](https://github.com/user-attachments/assets/97d12ed1-9f40-4d9e-929f-d282be82e882)
-" width="200"/></td>
+    <td><img src="https://github.com/user-attachments/assets/97d12ed1-9f40-4d9e-929f-d282be82e882" width="200"/></td>
   </tr>
   <tr>
-    <td><img src="![image](https://github.com/user-attachments/assets/c2a4bc37-078d-49d2-afbe-65cc0ccd3a82)
-" width="200"/></td>
-    <td><img src="![image](https://github.com/user-attachments/assets/7ca0ca0e-3295-49eb-a266-e2009eca271e)
-" width="200"/></td>
-    <td><img src="![image](https://github.com/user-attachments/assets/3adf2fc0-2753-4cb9-bd93-b4bbcb236077)
-" width="200"/></td>
+    <td><img src="https://github.com/user-attachments/assets/c2a4bc37-078d-49d2-afbe-65cc0ccd3a82" width="200"/></td>
+    <td><img src="https://github.com/user-attachments/assets/7ca0ca0e-3295-49eb-a266-e2009eca271e" width="200"/></td>
+    <td><img src="https://github.com/user-attachments/assets/3adf2fc0-2753-4cb9-bd93-b4bbcb236077" width="200"/></td>
   </tr>
 </table>
 
