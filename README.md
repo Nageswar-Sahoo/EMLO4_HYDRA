@@ -51,7 +51,7 @@ Docker build
 
   The model prediction gets saved in the predicted_images folder in the model artifacts.
 
-  ![image](https://github.com/user-attachments/assets/2cde3ce2-3596-4bf9-bb88-9d2c996407eb)    ![image](https://github.com/user-attachments/assets/92cb4dd8-8f37-4ae5-a906-7447554720a9)
+  ![image](https://github.com/user-attachments/assets/2cde3ce2-3596-4bf9-bb88-9d2c996407eb) ![image](https://github.com/user-attachments/assets/92cb4dd8-8f37-4ae5-a906-7447554720a9)
 
 
 
