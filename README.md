@@ -144,9 +144,10 @@ This repository includes a Dockerfile to containerize the training, evaluation, 
 
 
 <h3>Requirements</h3>
-Docker
-Kaggle API (for downloading the dataset)
-GitHub Codespaces or Visual Studio Code with the Remote Containers extension (for DevContainer setup)
+
+         Docker
+         Kaggle API (for downloading the dataset)
+         GitHub Codespaces or Visual Studio Code with the Remote Containers extension (for DevContainer setup)
 
   
     
