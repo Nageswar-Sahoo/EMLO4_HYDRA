@@ -57,7 +57,7 @@ How to Train, Evaluate, and Infer Using Docker
  
  3. To run training:
 
-          docker run -v $(pwd)/model_artifacts:/app/checkpoints dogbreed-classification train
+          docker run -v $(pwd)/model_artifacts:/app/logs dogbreed-classification src/train.py
  
  5. To run evaluation:
 
