@@ -53,107 +53,107 @@ All Hydra configurations are located in the following directory. Any updates to 
 
 Model  Summery : 
    
-┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┓
-┃    ┃ Name                        ┃ Type                 ┃ Params ┃ Mode  ┃
-┡━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━┩
-│ 0  │ model                       │ ResNet               │ 11.2 M │ train │
-│ 1  │ model.conv1                 │ Conv2d               │  9.4 K │ train │
-│ 2  │ model.bn1                   │ BatchNorm2d          │    128 │ train │
-│ 3  │ model.act1                  │ ReLU                 │      0 │ train │
-│ 4  │ model.maxpool               │ MaxPool2d            │      0 │ train │
-│ 5  │ model.layer1                │ Sequential           │  147 K │ train │
-│ 6  │ model.layer1.0              │ BasicBlock           │ 74.0 K │ train │
-│ 7  │ model.layer1.0.conv1        │ Conv2d               │ 36.9 K │ train │
-│ 8  │ model.layer1.0.bn1          │ BatchNorm2d          │    128 │ train │
-│ 9  │ model.layer1.0.drop_block   │ Identity             │      0 │ train │
-│ 10 │ model.layer1.0.act1         │ ReLU                 │      0 │ train │
-│ 11 │ model.layer1.0.aa           │ Identity             │      0 │ train │
-│ 12 │ model.layer1.0.conv2        │ Conv2d               │ 36.9 K │ train │
-│ 13 │ model.layer1.0.bn2          │ BatchNorm2d          │    128 │ train │
-│ 14 │ model.layer1.0.act2         │ ReLU                 │      0 │ train │
-│ 15 │ model.layer1.1              │ BasicBlock           │ 74.0 K │ train │
-│ 16 │ model.layer1.1.conv1        │ Conv2d               │ 36.9 K │ train │
-│ 17 │ model.layer1.1.bn1          │ BatchNorm2d          │    128 │ train │
-│ 18 │ model.layer1.1.drop_block   │ Identity             │      0 │ train │
-│ 19 │ model.layer1.1.act1         │ ReLU                 │      0 │ train │
-│ 20 │ model.layer1.1.aa           │ Identity             │      0 │ train │
-│ 21 │ model.layer1.1.conv2        │ Conv2d               │ 36.9 K │ train │
-│ 22 │ model.layer1.1.bn2          │ BatchNorm2d          │    128 │ train │
-│ 23 │ model.layer1.1.act2         │ ReLU                 │      0 │ train │
-│ 24 │ model.layer2                │ Sequential           │  525 K │ train │
-│ 25 │ model.layer2.0              │ BasicBlock           │  230 K │ train │
-│ 26 │ model.layer2.0.conv1        │ Conv2d               │ 73.7 K │ train │
-│ 27 │ model.layer2.0.bn1          │ BatchNorm2d          │    256 │ train │
-│ 28 │ model.layer2.0.drop_block   │ Identity             │      0 │ train │
-│ 29 │ model.layer2.0.act1         │ ReLU                 │      0 │ train │
-│ 30 │ model.layer2.0.aa           │ Identity             │      0 │ train │
-│ 31 │ model.layer2.0.conv2        │ Conv2d               │  147 K │ train │
-│ 32 │ model.layer2.0.bn2          │ BatchNorm2d          │    256 │ train │
-│ 33 │ model.layer2.0.act2         │ ReLU                 │      0 │ train │
-│ 34 │ model.layer2.0.downsample   │ Sequential           │  8.4 K │ train │
-│ 35 │ model.layer2.0.downsample.0 │ Conv2d               │  8.2 K │ train │
-│ 36 │ model.layer2.0.downsample.1 │ BatchNorm2d          │    256 │ train │
-│ 37 │ model.layer2.1              │ BasicBlock           │  295 K │ train │
-│ 38 │ model.layer2.1.conv1        │ Conv2d               │  147 K │ train │
-│ 39 │ model.layer2.1.bn1          │ BatchNorm2d          │    256 │ train │
-│ 40 │ model.layer2.1.drop_block   │ Identity             │      0 │ train │
-│ 41 │ model.layer2.1.act1         │ ReLU                 │      0 │ train │
-│ 42 │ model.layer2.1.aa           │ Identity             │      0 │ train │
-│ 43 │ model.layer2.1.conv2        │ Conv2d               │  147 K │ train │
-│ 44 │ model.layer2.1.bn2          │ BatchNorm2d          │    256 │ train │
-│ 45 │ model.layer2.1.act2         │ ReLU                 │      0 │ train │
-│ 46 │ model.layer3                │ Sequential           │  2.1 M │ train │
-│ 47 │ model.layer3.0              │ BasicBlock           │  919 K │ train │
-│ 48 │ model.layer3.0.conv1        │ Conv2d               │  294 K │ train │
-│ 49 │ model.layer3.0.bn1          │ BatchNorm2d          │    512 │ train │
-│ 50 │ model.layer3.0.drop_block   │ Identity             │      0 │ train │
-│ 51 │ model.layer3.0.act1         │ ReLU                 │      0 │ train │
-│ 52 │ model.layer3.0.aa           │ Identity             │      0 │ train │
-│ 53 │ model.layer3.0.conv2        │ Conv2d               │  589 K │ train │
-│ 54 │ model.layer3.0.bn2          │ BatchNorm2d          │    512 │ train │
-│ 55 │ model.layer3.0.act2         │ ReLU                 │      0 │ train │
-│ 56 │ model.layer3.0.downsample   │ Sequential           │ 33.3 K │ train │
-│ 57 │ model.layer3.0.downsample.0 │ Conv2d               │ 32.8 K │ train │
-│ 58 │ model.layer3.0.downsample.1 │ BatchNorm2d          │    512 │ train │
-│ 59 │ model.layer3.1              │ BasicBlock           │  1.2 M │ train │
-│ 60 │ model.layer3.1.conv1        │ Conv2d               │  589 K │ train │
-│ 61 │ model.layer3.1.bn1          │ BatchNorm2d          │    512 │ train │
-│ 62 │ model.layer3.1.drop_block   │ Identity             │      0 │ train │
-│ 63 │ model.layer3.1.act1         │ ReLU                 │      0 │ train │
-│ 64 │ model.layer3.1.aa           │ Identity             │      0 │ train │
-│ 65 │ model.layer3.1.conv2        │ Conv2d               │  589 K │ train │
-│ 66 │ model.layer3.1.bn2          │ BatchNorm2d          │    512 │ train │
-│ 67 │ model.layer3.1.act2         │ ReLU                 │      0 │ train │
-│ 68 │ model.layer4                │ Sequential           │  8.4 M │ train │
-│ 69 │ model.layer4.0              │ BasicBlock           │  3.7 M │ train │
-│ 70 │ model.layer4.0.conv1        │ Conv2d               │  1.2 M │ train │
-│ 71 │ model.layer4.0.bn1          │ BatchNorm2d          │  1.0 K │ train │
-│ 72 │ model.layer4.0.drop_block   │ Identity             │      0 │ train │
-│ 73 │ model.layer4.0.act1         │ ReLU                 │      0 │ train │
-│ 74 │ model.layer4.0.aa           │ Identity             │      0 │ train │
-│ 75 │ model.layer4.0.conv2        │ Conv2d               │  2.4 M │ train │
-│ 76 │ model.layer4.0.bn2          │ BatchNorm2d          │  1.0 K │ train │
-│ 77 │ model.layer4.0.act2         │ ReLU                 │      0 │ train │
-│ 78 │ model.layer4.0.downsample   │ Sequential           │  132 K │ train │
-│ 79 │ model.layer4.0.downsample.0 │ Conv2d               │  131 K │ train │
-│ 80 │ model.layer4.0.downsample.1 │ BatchNorm2d          │  1.0 K │ train │
-│ 81 │ model.layer4.1              │ BasicBlock           │  4.7 M │ train │
-│ 82 │ model.layer4.1.conv1        │ Conv2d               │  2.4 M │ train │
-│ 83 │ model.layer4.1.bn1          │ BatchNorm2d          │  1.0 K │ train │
-│ 84 │ model.layer4.1.drop_block   │ Identity             │      0 │ train │
-│ 85 │ model.layer4.1.act1         │ ReLU                 │      0 │ train │
-│ 86 │ model.layer4.1.aa           │ Identity             │      0 │ train │
-│ 87 │ model.layer4.1.conv2        │ Conv2d               │  2.4 M │ train │
-│ 88 │ model.layer4.1.bn2          │ BatchNorm2d          │  1.0 K │ train │
-│ 89 │ model.layer4.1.act2         │ ReLU                 │      0 │ train │
-│ 90 │ model.global_pool           │ SelectAdaptivePool2d │      0 │ train │
-│ 91 │ model.global_pool.pool      │ AdaptiveAvgPool2d    │      0 │ train │
-│ 92 │ model.global_pool.flatten   │ Flatten              │      0 │ train │
-│ 93 │ model.fc                    │ Linear               │  5.1 K │ train │
-│ 94 │ train_acc                   │ MulticlassAccuracy   │      0 │ train │
-│ 95 │ val_acc                     │ MulticlassAccuracy   │      0 │ train │
-│ 96 │ test_acc                    │ MulticlassAccuracy   │      0 │ train │
-└────┴─────────────────────────────┴──────────────────────┴────────┴───────┘
+        ┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┓
+        ┃    ┃ Name                        ┃ Type                 ┃ Params ┃ Mode  ┃
+        ┡━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━┩
+        │ 0  │ model                       │ ResNet               │ 11.2 M │ train │
+        │ 1  │ model.conv1                 │ Conv2d               │  9.4 K │ train │
+        │ 2  │ model.bn1                   │ BatchNorm2d          │    128 │ train │
+        │ 3  │ model.act1                  │ ReLU                 │      0 │ train │
+        │ 4  │ model.maxpool               │ MaxPool2d            │      0 │ train │
+        │ 5  │ model.layer1                │ Sequential           │  147 K │ train │
+        │ 6  │ model.layer1.0              │ BasicBlock           │ 74.0 K │ train │
+        │ 7  │ model.layer1.0.conv1        │ Conv2d               │ 36.9 K │ train │
+        │ 8  │ model.layer1.0.bn1          │ BatchNorm2d          │    128 │ train │
+        │ 9  │ model.layer1.0.drop_block   │ Identity             │      0 │ train │
+        │ 10 │ model.layer1.0.act1         │ ReLU                 │      0 │ train │
+        │ 11 │ model.layer1.0.aa           │ Identity             │      0 │ train │
+        │ 12 │ model.layer1.0.conv2        │ Conv2d               │ 36.9 K │ train │
+        │ 13 │ model.layer1.0.bn2          │ BatchNorm2d          │    128 │ train │
+        │ 14 │ model.layer1.0.act2         │ ReLU                 │      0 │ train │
+        │ 15 │ model.layer1.1              │ BasicBlock           │ 74.0 K │ train │
+        │ 16 │ model.layer1.1.conv1        │ Conv2d               │ 36.9 K │ train │
+        │ 17 │ model.layer1.1.bn1          │ BatchNorm2d          │    128 │ train │
+        │ 18 │ model.layer1.1.drop_block   │ Identity             │      0 │ train │
+        │ 19 │ model.layer1.1.act1         │ ReLU                 │      0 │ train │
+        │ 20 │ model.layer1.1.aa           │ Identity             │      0 │ train │
+        │ 21 │ model.layer1.1.conv2        │ Conv2d               │ 36.9 K │ train │
+        │ 22 │ model.layer1.1.bn2          │ BatchNorm2d          │    128 │ train │
+        │ 23 │ model.layer1.1.act2         │ ReLU                 │      0 │ train │
+        │ 24 │ model.layer2                │ Sequential           │  525 K │ train │
+        │ 25 │ model.layer2.0              │ BasicBlock           │  230 K │ train │
+        │ 26 │ model.layer2.0.conv1        │ Conv2d               │ 73.7 K │ train │
+        │ 27 │ model.layer2.0.bn1          │ BatchNorm2d          │    256 │ train │
+        │ 28 │ model.layer2.0.drop_block   │ Identity             │      0 │ train │
+        │ 29 │ model.layer2.0.act1         │ ReLU                 │      0 │ train │
+        │ 30 │ model.layer2.0.aa           │ Identity             │      0 │ train │
+        │ 31 │ model.layer2.0.conv2        │ Conv2d               │  147 K │ train │
+        │ 32 │ model.layer2.0.bn2          │ BatchNorm2d          │    256 │ train │
+        │ 33 │ model.layer2.0.act2         │ ReLU                 │      0 │ train │
+        │ 34 │ model.layer2.0.downsample   │ Sequential           │  8.4 K │ train │
+        │ 35 │ model.layer2.0.downsample.0 │ Conv2d               │  8.2 K │ train │
+        │ 36 │ model.layer2.0.downsample.1 │ BatchNorm2d          │    256 │ train │
+        │ 37 │ model.layer2.1              │ BasicBlock           │  295 K │ train │
+        │ 38 │ model.layer2.1.conv1        │ Conv2d               │  147 K │ train │
+        │ 39 │ model.layer2.1.bn1          │ BatchNorm2d          │    256 │ train │
+        │ 40 │ model.layer2.1.drop_block   │ Identity             │      0 │ train │
+        │ 41 │ model.layer2.1.act1         │ ReLU                 │      0 │ train │
+        │ 42 │ model.layer2.1.aa           │ Identity             │      0 │ train │
+        │ 43 │ model.layer2.1.conv2        │ Conv2d               │  147 K │ train │
+        │ 44 │ model.layer2.1.bn2          │ BatchNorm2d          │    256 │ train │
+        │ 45 │ model.layer2.1.act2         │ ReLU                 │      0 │ train │
+        │ 46 │ model.layer3                │ Sequential           │  2.1 M │ train │
+        │ 47 │ model.layer3.0              │ BasicBlock           │  919 K │ train │
+        │ 48 │ model.layer3.0.conv1        │ Conv2d               │  294 K │ train │
+        │ 49 │ model.layer3.0.bn1          │ BatchNorm2d          │    512 │ train │
+        │ 50 │ model.layer3.0.drop_block   │ Identity             │      0 │ train │
+        │ 51 │ model.layer3.0.act1         │ ReLU                 │      0 │ train │
+        │ 52 │ model.layer3.0.aa           │ Identity             │      0 │ train │
+        │ 53 │ model.layer3.0.conv2        │ Conv2d               │  589 K │ train │
+        │ 54 │ model.layer3.0.bn2          │ BatchNorm2d          │    512 │ train │
+        │ 55 │ model.layer3.0.act2         │ ReLU                 │      0 │ train │
+        │ 56 │ model.layer3.0.downsample   │ Sequential           │ 33.3 K │ train │
+        │ 57 │ model.layer3.0.downsample.0 │ Conv2d               │ 32.8 K │ train │
+        │ 58 │ model.layer3.0.downsample.1 │ BatchNorm2d          │    512 │ train │
+        │ 59 │ model.layer3.1              │ BasicBlock           │  1.2 M │ train │
+        │ 60 │ model.layer3.1.conv1        │ Conv2d               │  589 K │ train │
+        │ 61 │ model.layer3.1.bn1          │ BatchNorm2d          │    512 │ train │
+        │ 62 │ model.layer3.1.drop_block   │ Identity             │      0 │ train │
+        │ 63 │ model.layer3.1.act1         │ ReLU                 │      0 │ train │
+        │ 64 │ model.layer3.1.aa           │ Identity             │      0 │ train │
+        │ 65 │ model.layer3.1.conv2        │ Conv2d               │  589 K │ train │
+        │ 66 │ model.layer3.1.bn2          │ BatchNorm2d          │    512 │ train │
+        │ 67 │ model.layer3.1.act2         │ ReLU                 │      0 │ train │
+        │ 68 │ model.layer4                │ Sequential           │  8.4 M │ train │
+        │ 69 │ model.layer4.0              │ BasicBlock           │  3.7 M │ train │
+        │ 70 │ model.layer4.0.conv1        │ Conv2d               │  1.2 M │ train │
+        │ 71 │ model.layer4.0.bn1          │ BatchNorm2d          │  1.0 K │ train │
+        │ 72 │ model.layer4.0.drop_block   │ Identity             │      0 │ train │
+        │ 73 │ model.layer4.0.act1         │ ReLU                 │      0 │ train │
+        │ 74 │ model.layer4.0.aa           │ Identity             │      0 │ train │
+        │ 75 │ model.layer4.0.conv2        │ Conv2d               │  2.4 M │ train │
+        │ 76 │ model.layer4.0.bn2          │ BatchNorm2d          │  1.0 K │ train │
+        │ 77 │ model.layer4.0.act2         │ ReLU                 │      0 │ train │
+        │ 78 │ model.layer4.0.downsample   │ Sequential           │  132 K │ train │
+        │ 79 │ model.layer4.0.downsample.0 │ Conv2d               │  131 K │ train │
+        │ 80 │ model.layer4.0.downsample.1 │ BatchNorm2d          │  1.0 K │ train │
+        │ 81 │ model.layer4.1              │ BasicBlock           │  4.7 M │ train │
+        │ 82 │ model.layer4.1.conv1        │ Conv2d               │  2.4 M │ train │
+        │ 83 │ model.layer4.1.bn1          │ BatchNorm2d          │  1.0 K │ train │
+        │ 84 │ model.layer4.1.drop_block   │ Identity             │      0 │ train │
+        │ 85 │ model.layer4.1.act1         │ ReLU                 │      0 │ train │
+        │ 86 │ model.layer4.1.aa           │ Identity             │      0 │ train │
+        │ 87 │ model.layer4.1.conv2        │ Conv2d               │  2.4 M │ train │
+        │ 88 │ model.layer4.1.bn2          │ BatchNorm2d          │  1.0 K │ train │
+        │ 89 │ model.layer4.1.act2         │ ReLU                 │      0 │ train │
+        │ 90 │ model.global_pool           │ SelectAdaptivePool2d │      0 │ train │
+        │ 91 │ model.global_pool.pool      │ AdaptiveAvgPool2d    │      0 │ train │
+        │ 92 │ model.global_pool.flatten   │ Flatten              │      0 │ train │
+        │ 93 │ model.fc                    │ Linear               │  5.1 K │ train │
+        │ 94 │ train_acc                   │ MulticlassAccuracy   │      0 │ train │
+        │ 95 │ val_acc                     │ MulticlassAccuracy   │      0 │ train │
+        │ 96 │ test_acc                    │ MulticlassAccuracy   │      0 │ train │
+        └────┴─────────────────────────────┴──────────────────────┴────────┴───────┘
 
 How to Train, Evaluate, and Infer Using Docker
 
