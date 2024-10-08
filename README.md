@@ -43,6 +43,12 @@ To run the training script with a specified configuration, use the following com
 	    python src/eval.py 
         python src/infer.py 
 
+All Hydra configurations are located in the following directory. Any updates to the parameters can be made there.
+
+<img width="886" alt="image" src="https://github.com/user-attachments/assets/4150a98c-7f47-44b5-a388-fc11f2ac831a">
+
+ 
+
 
 
 Model 
