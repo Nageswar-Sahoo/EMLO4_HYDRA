@@ -61,10 +61,7 @@ How to Train, Evaluate, and Infer Using Docker
 
           Above docker script will generate the model artifact in below directory .
     
-          <img width="470" alt="image" src="https://github.com/user-attachments/assets/6f518288-0ecd-4995-8eb9-4a73319d6f0f">
-
-
-
+ <img width="470" alt="image" src="https://github.com/user-attachments/assets/6f518288-0ecd-4995-8eb9-4a73319d6f0f">
  
  5. To run evaluation:
 
@@ -79,7 +76,7 @@ How to Train, Evaluate, and Infer Using Docker
           please update the best model check point path generated from training script . 
 
 
- 9. By default it performs inference on the images present in the input_images folder.
+ 9. By default it performs inference on the images present in the dataset folder.
 
           To modify the infer arguments, you can do the following:
 
@@ -124,10 +121,13 @@ This repository includes a Dockerfile to containerize the training, evaluation, 
          # Set the working directory
          WORKDIR /app
 
-
+ouput from :  src/train.py
 <img width="1075" alt="image" src="https://github.com/user-attachments/assets/6a844b1a-9553-4c19-8a00-9d6241ace6ec">
-
+ouput from :  src/eval.py
 <img width="1262" alt="image" src="https://github.com/user-attachments/assets/b56d2f54-71e9-4ce5-9a76-60aef51cfa10">
+ouput from :  src/infer.py
+<img width="1615" alt="image" src="https://github.com/user-attachments/assets/95dae635-e28f-4da6-afb5-6ceebc0e90bf">
+
 
 
 <h3>Prediction Results</h3>
