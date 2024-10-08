@@ -160,7 +160,7 @@ How to Train, Evaluate, and Infer Using Docker
 
           docker build -t dogbreed-classification .
  
- 3. To run training:
+ 2. To run training:
 
           docker run -v $(pwd)/model_artifacts:/app/logs dogbreed-classification src/train.py
 
@@ -168,20 +168,20 @@ How to Train, Evaluate, and Infer Using Docker
     
  <img width="470" alt="image" src="https://github.com/user-attachments/assets/6f518288-0ecd-4995-8eb9-4a73319d6f0f">
  
- 5. To run evaluation:
+ 3. To run evaluation:
 
           docker run -v $(pwd)/model_artifacts:/app/logs dogbreed-classification src/eval.py ckpt_path=./logs/train/runs/2024-10-08_10-50-43/checkpoints/epoch_001.ckpt
 
           please update the best model check point path generated from training script . 
     
- 7. To run inference:
+ 4. To run inference:
 
           docker run -v $(pwd)/model_artifacts:/app/logs dogbreed-classification src/infer.py ckpt_path=./logs/train/runs/2024-10-08_10-50-43/checkpoints/epoch_001.ckpt
 
           please update the best model check point path generated from training script . 
 
 
- 9. By default it performs inference on the images present in the dataset folder.
+ 5 By default it performs inference on the images present in the dataset folder.
 
           To modify the infer arguments, you can do the following:
 
