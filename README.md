@@ -31,7 +31,6 @@ This dataset contains a collection of images for 10 different dog breeds, meticu
        Boxer
        Dachshund
 
-Each breed is represented by 100 images, stored in separate directories named after the respective breed. The images have been curated to ensure diversity and relevance, making this dataset a valuable resource for training and evaluating machine learning models in the field of computer vision.
 
 <h2>Using Hydra for Configuration Management</h2>
 The project utilizes Hydra to manage configurations. Configuration files are located in the configs/ directory. You can modify these files to adjust various parameters for training, evaluation, and inference.
