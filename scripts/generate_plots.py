@@ -35,8 +35,8 @@ plt.close()
 # Generate test metrics table
 test_metrics = df.iloc[-1]
 test_table = "| Metric | Value |\n|--------|-------|\n"
-test_table += f"| Test Accuracy | {test_metrics['test/acc']:.4f} |\n"
-test_table += f"| Test Loss | {test_metrics['test/loss']:.4f} |\n"
+test_table += f"| Val Accuracy | {test_metrics['val/acc']:.4f} |\n"
+test_table += f"| Val Loss | {test_metrics['val/loss']:.4f} |\n"
 
 # Write the test metrics table to a file
 with open("test_metrics.md", "w") as f:
