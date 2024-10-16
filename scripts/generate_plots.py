@@ -12,15 +12,7 @@ latest_csv = max(csv_files, key=os.path.getctime)
 # Read the CSV file
 df = pd.read_csv(latest_csv)
 
-# Print DataFrame summary
-print("DataFrame head:")
-print(df.head())  # Print first 5 rows
-
-print("\nDataFrame info:")
-df.info()
-
-print("\nDataFrame description:")
-print(df.describe())
+print(df)
 
 # Filter rows where train/acc or train/loss are not NaN for plotting
 train_metrics = df.dropna(subset=["train/acc", "train/loss"])
