@@ -1,7 +1,7 @@
 schema: '2.0'
 stages:
   train:
-    cmd: python src/train.py experiment=catdog_ex +trainer.log_every_n_steps=5
+    cmd: python src/train.py experiment=catdog_ex +trainer.log_every_n_steps=1
     deps:
     - path: configs/train.yaml
       hash: md5
@@ -19,6 +19,6 @@ stages:
     outs:
     - path: logs/train
       hash: md5
-      md5: c2cc6ace5747cb36b4dc67bb9a33ac16.dir
-      size: 268636694
+      md5: 253cec1b547fd08ab408634b64ff64b7.dir
+      size: 268640170
       nfiles: 10
