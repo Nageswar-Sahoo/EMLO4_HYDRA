@@ -19,6 +19,50 @@ stages:
     outs:
     - path: logs/train
       hash: md5
-      md5: 253cec1b547fd08ab408634b64ff64b7.dir
-      size: 268640170
-      nfiles: 10
+      md5: 901e22921f9684d662e1c65725a10e1c.dir
+      size: 13559
+      nfiles: 8
+  eval:
+    cmd: python src/eval.py ckpt_path=./logs/checkpoints/last.ckpt
+    deps:
+    - path: configs/eval.yaml
+      hash: md5
+      md5: 13e75cd833e2d55f3a916bfa7b769d0a
+      size: 1207
+    - path: data
+      hash: md5
+      md5: cead1aedef6971688cb1871369a03205.dir
+      size: 4987392
+      nfiles: 1179
+    - path: src/eval.py
+      hash: md5
+      md5: ec3d09eff476817738f322162fac5c98
+      size: 2471
+    outs:
+    - path: logs/eval
+      hash: md5
+      md5: 1662e55b291974aa887f6481c5be25b3.dir
+      size: 9817
+      nfiles: 8
+  infer:
+    cmd: python src/infer.py ckpt_path=./logs/checkpoints/last.ckpt
+    deps:
+    - path: configs/infer.yaml
+      hash: md5
+      md5: 793ac3e26a548599bcc87e181af9aeb7
+      size: 780
+    - path: data
+      hash: md5
+      md5: cead1aedef6971688cb1871369a03205.dir
+      size: 4987392
+      nfiles: 1179
+    - path: src/infer.py
+      hash: md5
+      md5: 33d8609d510424e690b2f59591ecf1f0
+      size: 4054
+    outs:
+    - path: logs/infer
+      hash: md5
+      md5: aa0fe7d0fbdd2028d3afc9cfe59a550d.dir
+      size: 21369639
+      nfiles: 193
