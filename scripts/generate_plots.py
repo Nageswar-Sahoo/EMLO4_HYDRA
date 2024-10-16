@@ -11,6 +11,10 @@ latest_csv = max(csv_files, key=os.path.getctime)
 
 # Read the CSV file
 df = pd.read_csv(latest_csv)
+print('***************************************')
+print(df)
+print('***************************************')
+
 
 # Create training loss plot
 plt.figure(figsize=(10, 6))
@@ -34,7 +38,7 @@ plt.close()
 
 # Generate test metrics table
 test_metrics = df.iloc[-1]
-test_table = "| Metric | Value |\n|--------|-------|\n"
+test_table = "| Metric | Value |\n|--------|-------|\n {print(df)}"
 test_table += f"| Val Accuracy | {test_metrics['val/acc']:.4f} |\n"
 test_table += f"| Val Loss | {test_metrics['val/loss']:.4f} |\n"
 
