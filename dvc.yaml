@@ -1,0 +1,28 @@
+stages:
+  train:
+    cmd: python src/train.py experiment=catdog_ex +trainer.log_every_n_steps=5
+    deps:
+    - configs/train.yaml
+    - src/train.py
+    - data
+    outs:
+    - logs/train:
+        cache: false
+  # eval:
+  #   cmd: python src/eval.py ckpt_path=./logs/train/runs/*/checkpoints/epoch_001.ckpt experiment=catdog_ex +trainer.log_every_n_steps=5
+  #   deps:
+  #   - configs/eval.yaml
+  #   - src/eval.py
+  #   - data
+  #   outs:
+  #   - logs/eval:
+  #       cache: false
+  # infer:
+  #   cmd: python src/infer.py ckpt_path=./logs/train/runs/*/checkpoints/epoch_001.ckpt experiment=catdog_ex +trainer.log_every_n_steps=5
+  #   deps:
+  #   - configs/infer.yaml
+  #   - src/infer.py
+  #   - data
+  #   outs:
+  #   - logs/infer:
+  #       cache: false
