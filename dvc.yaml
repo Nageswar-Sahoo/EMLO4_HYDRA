@@ -1,6 +1,6 @@
 stages:
   train:
-    cmd: python src/train.py experiment=catdog_ex +trainer.log_every_n_steps=5
+    cmd: python src/train.py experiment=catdog_ex +trainer.log_every_n_steps=1
     deps:
     - configs/train.yaml
     - src/train.py
