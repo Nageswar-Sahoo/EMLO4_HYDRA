@@ -62,7 +62,37 @@ if not valid_val_metrics.empty:
     plt.legend()
     plt.savefig("val_acc.png")
     plt.close()
+# Function to plot confusion matrix
+def plot_confusion_matrix(csv_path, title="Confusion Matrix", output_image_path="confusion_matrix.png"):
+    # Load confusion matrix from the CSV file
+    cm_df = pd.read_csv(csv_path)
 
+    # Plot confusion matrix heatmap
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(cm_df, annot=True, fmt='d', cmap='Blues', cbar=False)
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
+    plt.title(title)
+
+    # Save the confusion matrix image
+    plt.savefig(output_image_path)
+    plt.close()
+    print(f"Confusion matrix image saved to {output_image_path}")
+    
+train_confusion_csv_path = "log/train_confusion_matrix_details.csv"
+val_confusion_csv_path = "log/val_confusion_matrix_details.csv"
+
+# Check if the train confusion matrix CSV exists
+if os.path.exists(train_confusion_csv_path):
+    plot_confusion_matrix(train_confusion_csv_path, title="Training Confusion Matrix", output_image_path="train_confusion_matrix.png")
+else:
+    print(f"No training confusion matrix CSV found at {train_confusion_csv_path}")
+
+# Check if the validation confusion matrix CSV exists
+if os.path.exists(val_confusion_csv_path):
+    plot_confusion_matrix(val_confusion_csv_path, title="Validation Confusion Matrix", output_image_path="val_confusion_matrix.png")
+else:
+    print(f"No validation confusion matrix CSV found at {val_confusion_csv_path}")    
 # Generate test metrics table (use the last available validation metrics)
 if not valid_val_metrics.empty:
     test_metrics = valid_val_metrics.iloc[-1]
@@ -70,7 +100,7 @@ if not valid_val_metrics.empty:
     test_table += f"| Val Accuracy | {test_metrics['val/acc']:.4f} |\n"
     test_table += f"| Val Loss     | {test_metrics['val/loss']:.4f} |\n"
 
-    # Write the test metrics table to a file
+    # Write the test metrics table to a file 1
     with open("test_metrics.md", "w") as f:
         f.write(test_table)
 else:
