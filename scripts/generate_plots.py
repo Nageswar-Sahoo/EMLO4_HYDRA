@@ -79,8 +79,8 @@ def plot_confusion_matrix(csv_path, title="Confusion Matrix", output_image_path=
     plt.close()
     print(f"Confusion matrix image saved to {output_image_path}")
     
-train_confusion_csv_path = "log/train_confusion_matrix_details.csv"
-val_confusion_csv_path = "log/val_confusion_matrix_details.csv"
+train_confusion_csv_path = "logs/train_confusion_matrix_details.csv"
+val_confusion_csv_path = "logs/val_confusion_matrix_details.csv"
 
 # Check if the train confusion matrix CSV exists
 if os.path.exists(train_confusion_csv_path):
