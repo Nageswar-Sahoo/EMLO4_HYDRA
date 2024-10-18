@@ -86,6 +86,7 @@ class TimmClassifier(L.LightningModule):
     def save_confusion_matrix_to_csv(self, cm, output_csv_path):
         # Convert confusion matrix to DataFrame
         cm_df = pd.DataFrame(cm, index=range(cm.shape[0]), columns=range(cm.shape[1]))
+        print(cm_df)
 
         # Save confusion matrix to a CSV file (overwrite if file exists)
         cm_df.to_csv(output_csv_path, header=True, index=False)    
