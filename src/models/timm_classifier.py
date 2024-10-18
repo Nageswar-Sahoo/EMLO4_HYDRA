@@ -40,6 +40,7 @@ class TimmClassifier(L.LightningModule):
         # Paths to save confusion matrix CSV files
         self.train_output_csv_path = log_dir + "train_confusion_matrix_details.csv"
         self.val_output_csv_path = log_dir   + "val_confusion_matrix_details.csv"
+        self.log_dir = log_dir
         
 
     def forward(self, x):
