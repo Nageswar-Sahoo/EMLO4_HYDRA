@@ -64,6 +64,7 @@ if not valid_val_metrics.empty:
     plt.legend()
     plt.savefig("val_acc.png")
     plt.close()
+
 # Function to plot confusion matrix
 def plot_confusion_matrix(csv_path, title="Confusion Matrix", output_image_path="confusion_matrix.png"):
     # Load confusion matrix from the CSV file
@@ -80,7 +81,7 @@ def plot_confusion_matrix(csv_path, title="Confusion Matrix", output_image_path=
     plt.savefig(output_image_path)
     plt.close()
     print(f"Confusion matrix image saved to {output_image_path}")
-    
+
 train_confusion_csv_path = "logs/train_confusion_matrix_details.csv"
 val_confusion_csv_path = "logs/val_confusion_matrix_details.csv"
 
@@ -94,7 +95,8 @@ else:
 if os.path.exists(val_confusion_csv_path):
     plot_confusion_matrix(val_confusion_csv_path, title="Validation Confusion Matrix", output_image_path="val_confusion_matrix.png")
 else:
-    print(f"No validation confusion matrix CSV found at {val_confusion_csv_path}")    
+    print(f"No validation confusion matrix CSV found at {val_confusion_csv_path}")
+
 # Generate test metrics table (use the last available validation metrics)
 if not valid_val_metrics.empty:
     test_metrics = valid_val_metrics.iloc[-1]
@@ -102,7 +104,13 @@ if not valid_val_metrics.empty:
     test_table += f"| Val Accuracy | {test_metrics['val/acc']:.4f} |\n"
     test_table += f"| Val Loss     | {test_metrics['val/loss']:.4f} |\n"
 
-    # Write the test metrics table to a file 1
+    # Add confusion matrix references in the table
+    if os.path.exists("train_confusion_matrix.png"):
+        test_table += "| Train Confusion Matrix | ![Train Confusion Matrix](train_confusion_matrix.png) |\n"
+    if os.path.exists("val_confusion_matrix.png"):
+        test_table += "| Val Confusion Matrix | ![Val Confusion Matrix](val_confusion_matrix.png) |\n"
+
+    # Write the test metrics table to a file
     with open("test_metrics.md", "w") as f:
         f.write(test_table)
 else:
