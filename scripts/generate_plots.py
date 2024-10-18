@@ -2,6 +2,8 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 from glob import glob
+import seaborn as sns
+from sklearn.metrics import confusion_matrix
 
 # Find the most recent metrics.csv file
 csv_files = glob("logs/train/runs/*/csv/version_*/metrics.csv")
