@@ -65,6 +65,58 @@ if not valid_val_metrics.empty:
     plt.savefig("val_acc.png")
     plt.close()
 
+# # Function to plot confusion matrix
+# def plot_confusion_matrix(csv_path, title="Confusion Matrix", output_image_path="confusion_matrix.png"):
+#     # Load confusion matrix from the CSV file
+#     cm_df = pd.read_csv(csv_path)
+
+#     # Plot confusion matrix heatmap
+#     plt.figure(figsize=(10, 8))
+#     sns.heatmap(cm_df, annot=True, fmt='d', cmap='Blues', cbar=False)
+#     plt.ylabel('True label')
+#     plt.xlabel('Predicted label')
+#     plt.title(title)
+
+#     # Save the confusion matrix image
+#     plt.savefig(output_image_path)
+#     plt.close()
+#     print(f"Confusion matrix image saved to {output_image_path}")
+
+# train_confusion_csv_path = "logs/train_confusion_matrix_details.csv"
+# val_confusion_csv_path = "logs/val_confusion_matrix_details.csv"
+
+# # Check if the train confusion matrix CSV exists
+# if os.path.exists(train_confusion_csv_path):
+#     plot_confusion_matrix(train_confusion_csv_path, title="Training Confusion Matrix", output_image_path="train_confusion_matrix.png")
+# else:
+#     print(f"No training confusion matrix CSV found at {train_confusion_csv_path}")
+
+# # Check if the validation confusion matrix CSV exists
+# if os.path.exists(val_confusion_csv_path):
+#     plot_confusion_matrix(val_confusion_csv_path, title="Validation Confusion Matrix", output_image_path="val_confusion_matrix.png")
+# else:
+#     print(f"No validation confusion matrix CSV found at {val_confusion_csv_path}")
+
+# # Generate test metrics table (use the last available validation metrics)
+# if not valid_val_metrics.empty:
+#     test_metrics = valid_val_metrics.iloc[-1]
+#     test_table = "| Metric      | Value      |\n|-------------|------------|\n"
+#     test_table += f"| Val Accuracy | {test_metrics['val/acc']:.4f} |\n"
+#     test_table += f"| Val Loss     | {test_metrics['val/loss']:.4f} |\n"
+
+#     # Add confusion matrix references in the table
+#     if os.path.exists("train_confusion_matrix.png"):
+#         test_table += "| Train Confusion Matrix | ![Train Confusion Matrix](train_confusion_matrix.png) |\n"
+#     if os.path.exists("val_confusion_matrix.png"):
+#         test_table += "| Val Confusion Matrix | ![Val Confusion Matrix](val_confusion_matrix.png) |\n"
+
+#     # Write the test metrics table to a file
+#     with open("test_metrics.md", "w") as f:
+#         f.write(test_table)
+# else:
+#     print("No validation metrics found, skipping test metrics table generation.")
+
+
 # Function to plot confusion matrix
 def plot_confusion_matrix(csv_path, title="Confusion Matrix", output_image_path="confusion_matrix.png"):
     # Load confusion matrix from the CSV file
@@ -82,33 +134,58 @@ def plot_confusion_matrix(csv_path, title="Confusion Matrix", output_image_path=
     plt.close()
     print(f"Confusion matrix image saved to {output_image_path}")
 
-train_confusion_csv_path = "logs/train_confusion_matrix_details.csv"
-val_confusion_csv_path = "logs/val_confusion_matrix_details.csv"
+# Get all confusion matrix CSV files for training and validation
+train_confusion_csv_files = glob("logs/train_confusion_matrix_epoch_*.csv")
+val_confusion_csv_files = glob("logs/val_confusion_matrix_epoch_*.csv")
 
-# Check if the train confusion matrix CSV exists
-if os.path.exists(train_confusion_csv_path):
-    plot_confusion_matrix(train_confusion_csv_path, title="Training Confusion Matrix", output_image_path="train_confusion_matrix.png")
+# Plot and save all confusion matrices for each epoch in training
+if train_confusion_csv_files:
+    for csv_file in train_confusion_csv_files:
+        epoch = os.path.basename(csv_file).split("_")[-1].split(".")[0]  # Extract epoch number from filename
+        plot_confusion_matrix(csv_file, 
+                              title=f"Training Confusion Matrix - Epoch {epoch}", 
+                              output_image_path=f"train_confusion_matrix_epoch_{epoch}.png")
 else:
-    print(f"No training confusion matrix CSV found at {train_confusion_csv_path}")
+    print("No training confusion matrix CSV files found.")
 
-# Check if the validation confusion matrix CSV exists
-if os.path.exists(val_confusion_csv_path):
-    plot_confusion_matrix(val_confusion_csv_path, title="Validation Confusion Matrix", output_image_path="val_confusion_matrix.png")
+# Plot and save all confusion matrices for each epoch in validation
+if val_confusion_csv_files:
+    for csv_file in val_confusion_csv_files:
+        epoch = os.path.basename(csv_file).split("_")[-1].split(".")[0]  # Extract epoch number from filename
+        plot_confusion_matrix(csv_file, 
+                              title=f"Validation Confusion Matrix - Epoch {epoch}", 
+                              output_image_path=f"val_confusion_matrix_epoch_{epoch}.png")
 else:
-    print(f"No validation confusion matrix CSV found at {val_confusion_csv_path}")
+    print("No validation confusion matrix CSV files found.")
 
 # Generate test metrics table (use the last available validation metrics)
+csv_files = glob("logs/train/runs/*/csv/version_*/metrics.csv")
+if not csv_files:
+    raise FileNotFoundError("No metrics.csv file found")
+latest_csv = max(csv_files, key=os.path.getctime)
+
+# Read the CSV file
+df = pd.read_csv(latest_csv)
+
+# Handle validation metrics: only include rows where val/acc and val/loss are not NaN
+valid_val_metrics = df.dropna(subset=["val/acc", "val/loss"])
+
+# Create test metrics table including confusion matrix images from the last epoch
 if not valid_val_metrics.empty:
     test_metrics = valid_val_metrics.iloc[-1]
     test_table = "| Metric      | Value      |\n|-------------|------------|\n"
     test_table += f"| Val Accuracy | {test_metrics['val/acc']:.4f} |\n"
     test_table += f"| Val Loss     | {test_metrics['val/loss']:.4f} |\n"
 
-    # Add confusion matrix references in the table
-    if os.path.exists("train_confusion_matrix.png"):
-        test_table += "| Train Confusion Matrix | ![Train Confusion Matrix](train_confusion_matrix.png) |\n"
-    if os.path.exists("val_confusion_matrix.png"):
-        test_table += "| Val Confusion Matrix | ![Val Confusion Matrix](val_confusion_matrix.png) |\n"
+    # Get the last confusion matrix image paths for train and validation
+    last_train_confusion_image = sorted(glob("train_confusion_matrix_epoch_*.png"))[-1] if train_confusion_csv_files else None
+    last_val_confusion_image = sorted(glob("val_confusion_matrix_epoch_*.png"))[-1] if val_confusion_csv_files else None
+
+    # Add confusion matrix image references to the test table
+    if last_train_confusion_image:
+        test_table += f"| Train Confusion Matrix | ![Train Confusion Matrix]({last_train_confusion_image}) |\n"
+    if last_val_confusion_image:
+        test_table += f"| Val Confusion Matrix | ![Val Confusion Matrix]({last_val_confusion_image}) |\n"
 
     # Write the test metrics table to a file
     with open("test_metrics.md", "w") as f:

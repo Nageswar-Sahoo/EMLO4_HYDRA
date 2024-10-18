@@ -60,7 +60,7 @@ class TimmClassifier(L.LightningModule):
         # Compute and save confusion matrix for training at the end of each epoch
         cm_train = self.train_conf_matrix.compute().cpu().numpy()
         self.save_confusion_matrix_to_csv(cm_train, self.train_output_csv_path)
-
+        self.save_confusion_matrix_to_csv(cm_train, f"{self.log_dir}/train_confusion_matrix_epoch_{self.current_epoch}.csv")
         # Reset confusion matrix for the next epoch
         self.train_conf_matrix.reset()
         
@@ -79,6 +79,7 @@ class TimmClassifier(L.LightningModule):
         # Compute and save confusion matrix for validation at the end of each epoch
         cm_val = self.val_conf_matrix.compute().cpu().numpy()
         self.save_confusion_matrix_to_csv(cm_val, self.val_output_csv_path)
+        self.save_confusion_matrix_to_csv(cm_val, f"{self.log_dir}/val_confusion_matrix_details{self.current_epoch}.csv")
 
         # Reset confusion matrix for the next epoch
         self.val_conf_matrix.reset()
