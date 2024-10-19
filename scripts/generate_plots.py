@@ -212,12 +212,27 @@ valid_val_metrics = df.dropna(subset=["val/acc", "val/loss"])
 train_confusion_images = sorted(glob("train_confusion_matrix_epoch_*.png"))
 val_confusion_images = sorted(glob("val_confusion_matrix_epoch_*.png"))
 
-# Create test metrics table including confusion matrix images from the last epoch
+# Generate test metrics table including confusion matrix images from the last epoch
 if not valid_val_metrics.empty:
     test_metrics = valid_val_metrics.iloc[-1]
-    test_table = "| Metric      | Value      |\n|-------------|------------|\n"
+    test_table = "| Metric | Value |\n|--------|-------|\n"
     test_table += f"| Val Accuracy | {test_metrics['val/acc']:.4f} |\n"
-    test_table += f"| Val Loss     | {test_metrics['val/loss']:.4f} |\n"
+    test_table += f"| Val Loss | {test_metrics['val/loss']:.4f} |\n"
+
+    # Add accuracy and loss curves to the test table
+    train_loss_file = "train_loss.png"
+    train_acc_file = "train_acc.png"
+    val_loss_file = "val_loss.png"
+    val_acc_file = "val_acc.png"
+
+    if os.path.exists(train_loss_file):
+        test_table += f"| Training Loss Curve | ![Training Loss Curve]({train_loss_file}) |\n"
+    if os.path.exists(train_acc_file):
+        test_table += f"| Training Accuracy Curve | ![Training Accuracy Curve]({train_acc_file}) |\n"
+    if os.path.exists(val_loss_file):
+        test_table += f"| Validation Loss Curve | ![Validation Loss Curve]({val_loss_file}) |\n"
+    if os.path.exists(val_acc_file):
+        test_table += f"| Validation Accuracy Curve | ![Validation Accuracy Curve]({val_acc_file}) |\n"
 
     # Add all confusion matrix image references to the test table
     for image in train_confusion_images:
