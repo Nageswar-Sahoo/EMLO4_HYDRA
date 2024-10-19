@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 from glob import glob
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
+import random
+
 
 # Find the most recent metrics.csv file
 csv_files = glob("logs/train/runs/*/csv/version_*/metrics.csv")
@@ -134,6 +136,42 @@ def plot_confusion_matrix(csv_path, title="Confusion Matrix", output_image_path=
     plt.close()
     print(f"Confusion matrix image saved to {output_image_path}")
 
+def plot_predicted_images(num_images=10, output_file="predicted_images.png"):
+    # Get all image files from the logs/infer/runs folders
+    image_files = glob("logs/infer/runs/*/*.png")
+    
+    if not image_files:
+        print("No predicted images found.")
+        return None
+    
+    # If there are fewer than num_images, use all available images
+    num_images = min(num_images, len(image_files))
+    
+    # Randomly select num_images from the folder
+    selected_images = random.sample(image_files, num_images)
+    
+    print(selected_images)
+    
+    # Create a grid of subplots
+    fig, axes = plt.subplots(2, 5, figsize=(20, 8))
+    fig.suptitle("Sample Predicted Images", fontsize=16)
+    
+    # Plot each image
+    for i, image_path in enumerate(selected_images):
+        img = plt.imread(image_path)
+        row = i // 5
+        col = i % 5
+        axes[row, col].imshow(img)
+        axes[row, col].axis('off')
+        axes[row, col].set_title(f"Image {i+1}")
+    
+    # Adjust layout and save the figure
+    plt.tight_layout()
+    plt.savefig(output_file)
+    plt.close()
+    print(f"Predicted images plot saved to {output_file}")
+    return output_file
+    
 # Get all confusion matrix CSV files for training and validation
 train_confusion_csv_files = glob("logs/train_confusion_matrix_epoch_*.csv")
 val_confusion_csv_files = glob("logs/val_confusion_matrix_epoch_*.csv")
@@ -190,8 +228,14 @@ if not valid_val_metrics.empty:
         epoch = image.split('_')[-1].split('.')[0]  # Extract epoch number from filename
         test_table += f"| Val Confusion Matrix (Epoch {epoch}) | ![Val Confusion Matrix Epoch {epoch}]({image}) |\n"
 
+    # Add predicted images to the test table
+    predicted_images_file = plot_predicted_images(num_images=10, output_file="predicted_images.png")
+    if predicted_images_file:
+        test_table += f"| Predicted Images | ![Predicted Images]({predicted_images_file}) |\n"
+
     # Write the test metrics table to a file
     with open("test_metrics.md", "w") as f:
         f.write(test_table)
 else:
     print("No validation metrics found, skipping test metrics table generation.")
+    
