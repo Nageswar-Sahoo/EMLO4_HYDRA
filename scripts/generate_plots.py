@@ -159,8 +159,8 @@ def plot_predicted_images(num_images=10, output_file="predicted_images.png"):
     # Plot each image
     for i, image_path in enumerate(selected_images):
         img = plt.imread(image_path)
-        row = i // 5
-        col = i % 5
+        row = i // 2
+        col = i % 2
         axes[row, col].imshow(img)
         axes[row, col].axis('off')
         axes[row, col].set_title(f"Image {i+1}")
@@ -229,7 +229,7 @@ if not valid_val_metrics.empty:
         test_table += f"| Val Confusion Matrix (Epoch {epoch}) | ![Val Confusion Matrix Epoch {epoch}]({image}) |\n"
 
     # Add predicted images to the test table
-    predicted_images_file = plot_predicted_images(num_images=10, output_file="predicted_images.png")
+    predicted_images_file = plot_predicted_images(num_images=16, output_file="predicted_images.png")
     if predicted_images_file:
         test_table += f"| Predicted Images | ![Predicted Images]({predicted_images_file}) |\n"
 
