@@ -170,6 +170,10 @@ df = pd.read_csv(latest_csv)
 # Handle validation metrics: only include rows where val/acc and val/loss are not NaN
 valid_val_metrics = df.dropna(subset=["val/acc", "val/loss"])
 
+# Get all confusion matrix image paths for train and validation
+train_confusion_images = sorted(glob("train_confusion_matrix_epoch_*.png"))
+val_confusion_images = sorted(glob("val_confusion_matrix_epoch_*.png"))
+
 # Create test metrics table including confusion matrix images from the last epoch
 if not valid_val_metrics.empty:
     test_metrics = valid_val_metrics.iloc[-1]
@@ -177,15 +181,14 @@ if not valid_val_metrics.empty:
     test_table += f"| Val Accuracy | {test_metrics['val/acc']:.4f} |\n"
     test_table += f"| Val Loss     | {test_metrics['val/loss']:.4f} |\n"
 
-    # Get the last confusion matrix image paths for train and validation
-    last_train_confusion_image = sorted(glob("train_confusion_matrix_epoch_*.png"))[-1] if train_confusion_csv_files else None
-    last_val_confusion_image = sorted(glob("val_confusion_matrix_epoch_*.png"))[-1] if val_confusion_csv_files else None
+    # Add all confusion matrix image references to the test table
+    for image in train_confusion_images:
+        epoch = image.split('_')[-1].split('.')[0]  # Extract epoch number from filename
+        test_table += f"| Train Confusion Matrix (Epoch {epoch}) | ![Train Confusion Matrix Epoch {epoch}]({image}) |\n"
 
-    # Add confusion matrix image references to the test table
-    if last_train_confusion_image:
-        test_table += f"| Train Confusion Matrix | ![Train Confusion Matrix]({last_train_confusion_image}) |\n"
-    if last_val_confusion_image:
-        test_table += f"| Val Confusion Matrix | ![Val Confusion Matrix]({last_val_confusion_image}) |\n"
+    for image in val_confusion_images:
+        epoch = image.split('_')[-1].split('.')[0]  # Extract epoch number from filename
+        test_table += f"| Val Confusion Matrix (Epoch {epoch}) | ![Val Confusion Matrix Epoch {epoch}]({image}) |\n"
 
     # Write the test metrics table to a file
     with open("test_metrics.md", "w") as f:
