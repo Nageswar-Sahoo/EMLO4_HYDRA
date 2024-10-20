@@ -227,21 +227,6 @@ if not valid_val_metrics.empty:
     test_table += f"| Val Accuracy | {test_metrics['val/acc']:.4f} |\n"
     test_table += f"| Val Loss | {test_metrics['val/loss']:.4f} |\n"
 
-    # Add accuracy and loss curves to the test table
-    train_loss_file = "train_loss.png"
-    train_acc_file = "train_acc.png"
-    val_loss_file = "val_loss.png"
-    val_acc_file = "val_acc.png"
-
-    if os.path.exists(train_loss_file):
-        test_table += f"| Training Loss Curve | ![Training Loss Curve]({train_loss_file}) |\n"
-    if os.path.exists(train_acc_file):
-        test_table += f"| Training Accuracy Curve | ![Training Accuracy Curve]({train_acc_file}) |\n"
-    if os.path.exists(val_loss_file):
-        test_table += f"| Validation Loss Curve | ![Validation Loss Curve]({val_loss_file}) |\n"
-    if os.path.exists(val_acc_file):
-        test_table += f"| Validation Accuracy Curve | ![Validation Accuracy Curve]({val_acc_file}) |\n"
-
     # Add all confusion matrix image references to the test table
     for image in train_confusion_images:
         epoch = image.split('_')[-1].split('.')[0]  # Extract epoch number from filename
