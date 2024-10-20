@@ -46,11 +46,8 @@ All Hydra configurations are located in the following directory. Any updates to 
 
 <img width="886" alt="image" src="https://github.com/user-attachments/assets/4150a98c-7f47-44b5-a388-fc11f2ac831a">
 
- 
 
-
-
-Model  Summery : 
+         Model  Summery : 
              ┏━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┓
              ┃     ┃ Name                           ┃ Type                      ┃ Params ┃ Mode  ┃
              ┡━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━┩
