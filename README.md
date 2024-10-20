@@ -4,7 +4,7 @@ This repository contains a PyTorch Lightning-based project for classifying cat d
 
 Features
    
-           1> Train and evaluate a deep learning model on the Dog Breed Image Dataset
+           1> Train and evaluate a deep learning model on the Dog Cat Image Dataset
 	   
            2> Docker containerization for easy deployment and reproducibility
 	   	   
@@ -117,7 +117,7 @@ The pipeline performs the following key steps:
 	     
              3. Pull Data from DVC: Retrieves the dataset from DVC storage (Google Drive in this case).
 	     
-             4. Train Model: Runs the dvc repro command to train the model based on the DVC pipeline.
+             4. Train Model: Runs the  dvc repro command to train the model based on the DVC pipeline.
 	     
              5. Generate CML Report: Produces a report that includes training metrics (e.g., accuracy, loss) and test results, which is automatically posted as a comment in the relevant pull request.
 	     
@@ -472,15 +472,15 @@ This repository includes a Dockerfile to containerize the training, evaluation, 
 
 
 ouput from :  src/train.py
-<img width="1075" alt="image" src="https://github.com/user-attachments/assets/6a844b1a-9553-4c19-8a00-9d6241ace6ec">
+<img width="1311" alt="image" src="https://github.com/user-attachments/assets/2aff76fa-1f47-4859-9945-48cf01923f9c">
 ouput from :  src/eval.py
-<img width="1262" alt="image" src="https://github.com/user-attachments/assets/b56d2f54-71e9-4ce5-9a76-60aef51cfa10">
+<img width="1304" alt="image" src="https://github.com/user-attachments/assets/38371873-70dd-4bcc-a1e0-b516afc545b9">
 ouput from :  src/infer.py
-<img width="1615" alt="image" src="https://github.com/user-attachments/assets/95dae635-e28f-4da6-afb5-6ceebc0e90bf">
+<img width="1691" alt="image" src="https://github.com/user-attachments/assets/291e4bda-8beb-4cbc-a651-09b8d70d4a29">
 
 
 
-<h3>Model Training Results on (Smaller Dataset) </h3>
+<h3>Model Training Results </h3>
 
   The model prediction gets saved in the predicted_images folder in the model artifacts.
 
