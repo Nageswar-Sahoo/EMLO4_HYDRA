@@ -90,7 +90,7 @@ class CatDogImageDataModule(L.LightningDataModule):
     def setup(self, stage: str = None):
         if self._dataset is None:
             self.train_dataset = self.create_dataset(
-                self.data_path  / "test",
+                self.data_path  / "train",
                 self.train_transform,
             )
             self.val_dataset = self.create_dataset(

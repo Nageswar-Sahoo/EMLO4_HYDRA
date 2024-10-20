@@ -3,7 +3,7 @@ on:
   push:
     branches: [ origin/feature/dvc ]
   pull_request:
-    branches: [ origin/feature/dvc ]
+    branches: [ origin/feature/dvc , main ]
 jobs:
   train-and-report:
     runs-on: ubuntu-latest
