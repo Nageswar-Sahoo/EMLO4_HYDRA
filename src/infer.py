@@ -37,7 +37,7 @@ def infer(model, image_tensor):
         probabilities = F.softmax(output, dim=1)
         predicted_class = torch.argmax(probabilities, dim=1).item()
     
-    class_labels = ['dog', 'cat']
+    class_labels = ['cat', 'dog']
     predicted_label = class_labels[predicted_class]
     confidence = probabilities[0][predicted_class].item()
     return predicted_label, confidence
