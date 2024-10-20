@@ -4,6 +4,8 @@ import torch
 import torch.nn.functional as F
 from torch import optim
 from torchmetrics import Accuracy
+from torchmetrics.classification import ConfusionMatrix
+import pandas as pd
 
 
 class TimmClassifier(L.LightningModule):
@@ -17,6 +19,7 @@ class TimmClassifier(L.LightningModule):
         factor: float = 0.1,
         patience: int = 10,
         min_lr: float = 1e-6,
+        log_dir: str = "logs",
     ):
         super().__init__()
         self.save_hyperparameters()
@@ -30,6 +33,15 @@ class TimmClassifier(L.LightningModule):
         self.train_acc = Accuracy(task="multiclass", num_classes=num_classes)
         self.val_acc = Accuracy(task="multiclass", num_classes=num_classes)
         self.test_acc = Accuracy(task="multiclass", num_classes=num_classes)
+        # Initialize confusion matrix metrics for training and validation
+        self.train_conf_matrix = ConfusionMatrix(task="multiclass", num_classes=num_classes)
+        self.val_conf_matrix = ConfusionMatrix(task="multiclass", num_classes=num_classes)
+
+        # Paths to save confusion matrix CSV files
+        self.train_output_csv_path = log_dir + "train_confusion_matrix_details.csv"
+        self.val_output_csv_path = log_dir   + "val_confusion_matrix_details.csv"
+        self.log_dir = log_dir
+        
 
     def forward(self, x):
         return self.model(x)
@@ -42,8 +54,17 @@ class TimmClassifier(L.LightningModule):
         self.train_acc(preds, y)
         self.log("train/loss", loss, prog_bar=True)
         self.log("train/acc", self.train_acc, prog_bar=True)
+        # Update confusion matrix for training
+        self.train_conf_matrix.update(preds, y)
         return loss
-
+    def on_train_epoch_end(self):
+        # Compute and save confusion matrix for training at the end of each epoch
+        cm_train = self.train_conf_matrix.compute().cpu().numpy()
+        self.save_confusion_matrix_to_csv(cm_train, self.train_output_csv_path)
+        self.save_confusion_matrix_to_csv(cm_train, f"{self.log_dir}/train_confusion_matrix_epoch_{self.current_epoch}.csv")
+        # Reset confusion matrix for the next epoch
+        self.train_conf_matrix.reset()
+        
     def validation_step(self, batch, batch_idx):
         x, y = batch
         logits = self(x)
@@ -52,7 +73,26 @@ class TimmClassifier(L.LightningModule):
         self.val_acc(preds, y)
         self.log("val/loss", loss, prog_bar=True)
         self.log("val/acc", self.val_acc, prog_bar=True)
+        # Update confusion matrix for validation
+        self.val_conf_matrix.update(preds, y)
+   
+    def on_validation_epoch_end(self):
+        # Compute and save confusion matrix for validation at the end of each epoch
+        cm_val = self.val_conf_matrix.compute().cpu().numpy()
+        self.save_confusion_matrix_to_csv(cm_val, self.val_output_csv_path)
+        self.save_confusion_matrix_to_csv(cm_val, f"{self.log_dir}/val_confusion_matrix_epoch_{self.current_epoch}.csv")
 
+        # Reset confusion matrix for the next epoch
+        self.val_conf_matrix.reset()
+    
+    def save_confusion_matrix_to_csv(self, cm, output_csv_path):
+        # Convert confusion matrix to DataFrame
+        cm_df = pd.DataFrame(cm, index=range(cm.shape[0]), columns=range(cm.shape[1]))
+        print(cm_df)
+
+        # Save confusion matrix to a CSV file (overwrite if file exists)
+        cm_df.to_csv(output_csv_path, header=True, index=False)    
+    
     def test_step(self, batch, batch_idx):
         x, y = batch
         logits = self(x)
