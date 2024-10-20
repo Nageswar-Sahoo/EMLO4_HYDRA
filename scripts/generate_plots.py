@@ -5,6 +5,7 @@ from glob import glob
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
 import random
+import numpy as np
 
 
 # Find the most recent metrics.csv file
@@ -136,7 +137,7 @@ def plot_confusion_matrix(csv_path, title="Confusion Matrix", output_image_path=
     plt.close()
     print(f"Confusion matrix image saved to {output_image_path}")
 
-def plot_predicted_images(num_images=10, output_file="predicted_images.png"):
+def plot_predicted_images(num_images=16, output_file="predicted_images.png"):
     # Get all image files from the logs/infer/runs folders
     image_files = glob("logs/infer/runs/*/*.png")
     
@@ -150,20 +151,27 @@ def plot_predicted_images(num_images=10, output_file="predicted_images.png"):
     # Randomly select num_images from the folder
     selected_images = random.sample(image_files, num_images)
     
-    print(selected_images)
+    # Calculate grid dimensions
+    grid_size = int(np.ceil(np.sqrt(num_images)))
     
     # Create a grid of subplots
-    fig, axes = plt.subplots(2, 2, figsize=(20, 8))
+    fig, axes = plt.subplots(grid_size, grid_size, figsize=(20, 20))
     fig.suptitle("Sample Predicted Images", fontsize=16)
     
     # Plot each image
     for i, image_path in enumerate(selected_images):
         img = plt.imread(image_path)
-        row = i // 2
-        col = i % 2
+        row = i // grid_size
+        col = i % grid_size
         axes[row, col].imshow(img)
         axes[row, col].axis('off')
         axes[row, col].set_title(f"Image {i+1}")
+    
+    # Remove any empty subplots
+    for i in range(num_images, grid_size * grid_size):
+        row = i // grid_size
+        col = i % grid_size
+        fig.delaxes(axes[row, col])
     
     # Adjust layout and save the figure
     plt.tight_layout()
