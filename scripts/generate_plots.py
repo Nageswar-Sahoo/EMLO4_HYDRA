@@ -153,7 +153,7 @@ def plot_predicted_images(num_images=10, output_file="predicted_images.png"):
     print(selected_images)
     
     # Create a grid of subplots
-    fig, axes = plt.subplots(2, 5, figsize=(20, 8))
+    fig, axes = plt.subplots(2, 2, figsize=(20, 8))
     fig.suptitle("Sample Predicted Images", fontsize=16)
     
     # Plot each image
