@@ -25,14 +25,18 @@ jobs:
       - name: Install dependencies
         env:
           UV_EXTRA_INDEX_URL: https://download.pytorch.org/whl/cpu
+          GRPC_SSL_CIPHER_SUITES: HIGH+ECDSA
+
         run: |
           uv sync
 
       - name: Pull data from DVC
         env:
           GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
+          GRPC_SSL_CIPHER_SUITES: HIGH+ECDSA
+
         run: |
-          uv run dvc pull
+          uv run dvc pull --jobs 4 --no-verify -vv
 
       - name: Train model
         run: |
