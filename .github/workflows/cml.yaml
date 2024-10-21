@@ -36,7 +36,7 @@ jobs:
           GRPC_SSL_CIPHER_SUITES: HIGH+ECDSA
 
         run: |
-          uv run dvc pull --jobs 8 -vv --no-cache
+          uv run dvc pull --jobs 8 -vv --no-run-cache
 
       - name: Train model
         run: |
