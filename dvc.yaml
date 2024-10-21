@@ -4,7 +4,7 @@ stages:
     deps:
     - configs/train.yaml
     - src/train.py
-    - data
+    - data_catdog
     outs:
     - logs/train:
         cache: false
@@ -13,7 +13,7 @@ stages:
     deps:
     - configs/eval.yaml
     - src/eval.py
-    - data
+    - data_catdog
     outs:
     - logs/eval:
         cache: false
@@ -22,7 +22,7 @@ stages:
     deps:
     - configs/infer.yaml
     - src/infer.py
-    - data
+    - data_catdog
     outs:
     - logs/infer:
         cache: false
