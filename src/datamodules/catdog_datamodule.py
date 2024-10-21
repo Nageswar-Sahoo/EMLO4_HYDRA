@@ -35,8 +35,9 @@ class CatDogImageDataModule(L.LightningDataModule):
             
             # Google Drive file ID (from the shareable link)
 
+            #https://drive.google.com/drive/folders/18jHd-wtnBJ12MbcCWh7JngWakHYxKL_R?usp=sharing
             # URL to download the file
-            download_url = f"https://drive.google.com/uc?id=1lylGUWzGUK9GKIIid3Pm0pEdKN7POYzh"
+            download_url = f"https://drive.google.com/uc?id=18jHd-wtnBJ12MbcCWh7JngWakHYxKL_R"
 
             # Name of the output zip file (it will be downloaded in the current directory)
             output_zip = 'data.zip'

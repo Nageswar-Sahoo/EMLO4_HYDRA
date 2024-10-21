@@ -1,0 +1,68 @@
+schema: '2.0'
+stages:
+  train:
+    cmd: python src/train.py experiment=catdog_ex +trainer.log_every_n_steps=1
+    deps:
+    - path: configs/train.yaml
+      hash: md5
+      md5: 27174c892065f5d2e1c403abf7ccee32
+      size: 1108
+    - path: data
+      hash: md5
+      md5: 84e84da102a55a9443d141327af7009f.dir
+      size: 848903298
+      nfiles: 25004
+    - path: src/train.py
+      hash: md5
+      md5: 71945f7cea08f666f1e575b027950793
+      size: 2733
+    outs:
+    - path: logs/train
+      hash: md5
+      md5: a4a7470c250806a2f3a824d5981282d9.dir
+      size: 77999
+      nfiles: 8
+  eval:
+    cmd: python src/eval.py ckpt_path=./logs/checkpoints/last.ckpt
+    deps:
+    - path: configs/eval.yaml
+      hash: md5
+      md5: 13e75cd833e2d55f3a916bfa7b769d0a
+      size: 1207
+    - path: data
+      hash: md5
+      md5: 84e84da102a55a9443d141327af7009f.dir
+      size: 848903298
+      nfiles: 25004
+    - path: src/eval.py
+      hash: md5
+      md5: ec3d09eff476817738f322162fac5c98
+      size: 2471
+    outs:
+    - path: logs/eval
+      hash: md5
+      md5: a28a6d735f64cd8e0a3580dbbfbc5297.dir
+      size: 10010
+      nfiles: 8
+  infer:
+    cmd: python src/infer.py ckpt_path=./logs/checkpoints/last.ckpt
+    deps:
+    - path: configs/infer.yaml
+      hash: md5
+      md5: 793ac3e26a548599bcc87e181af9aeb7
+      size: 780
+    - path: data
+      hash: md5
+      md5: 84e84da102a55a9443d141327af7009f.dir
+      size: 848903298
+      nfiles: 25004
+    - path: src/infer.py
+      hash: md5
+      md5: 0bcbcf42b137783022e917004cc27e7b
+      size: 3919
+    outs:
+    - path: logs/infer
+      hash: md5
+      md5: 5aec2ada6274a25941e8ff128dd0ba4c.dir
+      size: 8176745
+      nfiles: 24
