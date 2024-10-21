@@ -36,7 +36,7 @@ jobs:
           GRPC_SSL_CIPHER_SUITES: HIGH+ECDSA
 
         run: |
-          uv run dvc pull --jobs 4 --no-verify -vv
+          uv run dvc pull --jobs 4 -vv
 
       - name: Train model
         run: |
