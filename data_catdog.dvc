@@ -1,6 +1,6 @@
-outs:
-- md5: b9586daea992d5308c216d631fe78e20.dir
-  nfiles: 24998
-  hash: md5
-  path: data_catdog
-  size: 848866410
+#outs:
+#- md5: b9586daea992d5308c216d631fe78e20.dir
+#  nfiles: 24998
+#  hash: md5
+#  path: data_catdog
+#  size: 848866410
