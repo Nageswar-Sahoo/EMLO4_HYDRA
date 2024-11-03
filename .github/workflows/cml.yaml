@@ -1,9 +1,9 @@
 name: Train and Report
 on:
   push:
-    branches: [ origin/feature/dvc, origin/feature/optuna ]
+    branches: [ origin/feature/optuna ]
   pull_request:
-    branches: [ origin/feature/dvc , main, origin/feature/optuna ]
+    branches: [ main, origin/feature/optuna ]
 jobs:
   train-and-report:
     runs-on: ubuntu-latest
