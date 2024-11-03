@@ -9,7 +9,7 @@ import numpy as np
 
 
 # Find the most recent metrics.csv file
-csv_files = glob("logs/train/runs/*/csv/version_*/metrics.csv")
+csv_files = glob("logs/train/multiruns/*/*/csv/version_*/metrics.csv")
 if not csv_files:
     raise FileNotFoundError("No metrics.csv file found")
 latest_csv = max(csv_files, key=os.path.getctime)
