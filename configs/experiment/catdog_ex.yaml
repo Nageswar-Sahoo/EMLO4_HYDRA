@@ -16,16 +16,25 @@ defaults:
 
 seed: 42
 someley: "somevalue"
+experiment_name: "catdog_classification_vit"
 
 data:
   batch_size: 64
   num_workers: 0
   pin_memory: True
+  resize: [160, 160]  
 
 model:
-  base_model: "vit_tiny_patch16_224"
-  num_classes: 2
+  base_model: test_vit.r160_in1k
+  pretrained: False
+  num_classes: 10
+  patch_size: 16
+  embed_dim: 64
+  depth: 6
+  num_heads: 4
+  mlp_ratio: 3
   lr: 1e-3
+  
 
 trainer:
   min_epochs: 1

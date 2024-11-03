@@ -1,10 +1,10 @@
 stages:
   train:
-    cmd: python src/train.py experiment=catdog_ex +trainer.log_every_n_steps=1
+    cmd: python src/train.py  --multirun hparam=catdog_vit_hparam +trainer.log_every_n_steps=5 hydra.sweeper.n_jobs=4
     deps:
     - configs/train.yaml
     - src/train.py
-    - cat_dog_small
+    - data_dogbreed/
     outs:
     - logs/train:
         cache: false
@@ -13,7 +13,7 @@ stages:
     deps:
     - configs/eval.yaml
     - src/eval.py
-    - cat_dog_small
+    - data_dogbreed/
     outs:
     - logs/eval:
         cache: false
@@ -22,7 +22,7 @@ stages:
     deps:
     - configs/infer.yaml
     - src/infer.py
-    - cat_dog_small
+    - data_dogbreed/
     outs:
     - logs/infer:
         cache: false

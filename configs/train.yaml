@@ -11,11 +11,11 @@ defaults:
   - trainer: default
   - paths: default
   - hydra: default
+  - hparam: null
 
   # experiment configs allow for version control of specific hyperparameters
   # e.g. best hyperparameters for given model and datamodule
   - experiment: catdog_ex
-
 
   # debugging config (enable through command line, e.g. `python train.py debug=default)
   - debug: null
@@ -30,6 +30,8 @@ tags: ["dev"]
 
 # set False to skip model training
 train: True
+test: True
+
 
 # simply provide checkpoint path to resume training
 ckpt_path: null

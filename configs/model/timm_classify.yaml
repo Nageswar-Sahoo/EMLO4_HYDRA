@@ -2,7 +2,7 @@ _target_: src.models.timm_classifier.TimmClassifier
 
 # Model parameters
 base_model: resnet18
-num_classes: 2
+num_classes: 10
 pretrained: True
 
 # Optimizer parameters

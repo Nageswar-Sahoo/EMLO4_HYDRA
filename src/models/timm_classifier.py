@@ -3,7 +3,7 @@ import timm
 import torch
 import torch.nn.functional as F
 from torch import optim
-from torchmetrics import Accuracy
+from torchmetrics import Accuracy, MaxMetric
 from torchmetrics.classification import ConfusionMatrix
 import pandas as pd
 
@@ -20,13 +20,14 @@ class TimmClassifier(L.LightningModule):
         patience: int = 10,
         min_lr: float = 1e-6,
         log_dir: str = "logs",
+        **kwargs,
     ):
         super().__init__()
         self.save_hyperparameters()
 
         # Load pre-trained model
         self.model = timm.create_model(
-            base_model, pretrained=pretrained, num_classes=num_classes
+            base_model, pretrained=pretrained, num_classes=num_classes, **kwargs
         )
 
         # Multi-class accuracy
@@ -41,6 +42,8 @@ class TimmClassifier(L.LightningModule):
         self.train_output_csv_path = log_dir + "train_confusion_matrix_details.csv"
         self.val_output_csv_path = log_dir   + "val_confusion_matrix_details.csv"
         self.log_dir = log_dir
+        self.test_acc_best = MaxMetric()
+
         
 
     def forward(self, x):
@@ -77,6 +80,7 @@ class TimmClassifier(L.LightningModule):
         self.val_conf_matrix.update(preds, y)
    
     def on_validation_epoch_end(self):
+        print("on_validation_epoch_end")
         # Compute and save confusion matrix for validation at the end of each epoch
         cm_val = self.val_conf_matrix.compute().cpu().numpy()
         self.save_confusion_matrix_to_csv(cm_val, self.val_output_csv_path)
@@ -85,11 +89,16 @@ class TimmClassifier(L.LightningModule):
         # Reset confusion matrix for the next epoch
         self.val_conf_matrix.reset()
     
+    def on_test_epoch_end(self):
+        print("on_test_epoch_end")
+        self.test_acc_best(self.test_acc.compute())  # update best so far test acc
+        # log `test_acc_best` as a value through `.compute()` method, instead of as a metric object
+        # otherwise metric would be reset by lightning after each epoch
+        self.log("test/acc_best", self.test_acc_best.compute(), prog_bar=True)
+    
     def save_confusion_matrix_to_csv(self, cm, output_csv_path):
         # Convert confusion matrix to DataFrame
         cm_df = pd.DataFrame(cm, index=range(cm.shape[0]), columns=range(cm.shape[1]))
-        print(cm_df)
-
         # Save confusion matrix to a CSV file (overwrite if file exists)
         cm_df.to_csv(output_csv_path, header=True, index=False)    
     

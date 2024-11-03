@@ -19,6 +19,8 @@ task_name: "infer"
 tags: ["dev"]
 
 infer: True
+data:
+  resize: [160, 160]
 
 # seed for random number generators in pytorch, numpy and python.random
 seed: null
