@@ -11,7 +11,7 @@ import numpy as np
 # Find the most recent metrics.csv file
 csv_files = glob("logs/train/multiruns/*/*/csv/version_*/metrics.csv")
 if not csv_files:
-    raise FileNotFoundError("No metrics.csv file found")
+    raise FileNotFoundError("No metrics.csv 2 file found")
 latest_csv = max(csv_files, key=os.path.getctime)
 
 # Read the CSV file
@@ -205,9 +205,9 @@ else:
     print("No validation confusion matrix CSV files found.")
 
 # Generate test metrics table (use the last available validation metrics)
-csv_files = glob("logs/train/runs/*/csv/version_*/metrics.csv")
+csv_files = glob("logs/train/multiruns/*/*/csv/version_*/metrics.csv")
 if not csv_files:
-    raise FileNotFoundError("No metrics.csv file found")
+    raise FileNotFoundError("No metrics.csv 1 file found")
 latest_csv = max(csv_files, key=os.path.getctime)
 
 # Read the CSV file
