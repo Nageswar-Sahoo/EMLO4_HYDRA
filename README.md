@@ -1,4 +1,4 @@
-<h1>Dogs vs. Cats Classification Dataset Training, Evaluation, and Inference with Docker , Hydra , DVC </h1>
+<h1>Dogs Breed Classification Dataset Training, Evaluation, and Inference with Docker , Hydra , DVC , Optuna </h1>
 
 This repository contains a PyTorch Lightning-based project for classifying cat dog using a dataset from Kaggle. The project includes Docker support, a DevContainer setup, and inference using a pre-trained model. Configuration management is handled using Hydra.
 
@@ -15,6 +15,10 @@ Features
            5> infer.py for inference on sample images
 	   
            6>  DVC as Data version tool  
+
+           7>  optuna for hyper param training 
+
+
 
 <h3>About Dataset</h3>
 
@@ -79,12 +83,58 @@ Before proceeding, ensure you have the following installed:
 	 git commit -m "Track data with DVC"
 	 git push
 
+<h2>Hyperparameter Tuning with Optuna</h2>
+
+Hyperparameter Tuning with Optuna
+Optuna is an efficient and easy-to-use hyperparameter optimization library designed to automate the process of finding the best parameters for your model. By leveraging Optuna, you can maximize your model's performance through an intelligent search process over hyperparameter space.
+
+<h3>Installation</h3>
+To use Optuna, first ensure it’s installed in your environment:
+    pip install optuna
+    
+
+<h4>Below is the Optuna hyper param with Hydra config : </h4>
+
+          hydra:
+            sweeper:
+              sampler:
+                _target_: optuna.samplers.TPESampler
+               seed: 123
+               n_startup_trials: 3
+               direction: maximize
+               study_name: catdog_vit_hparam_optimization
+               storage: null
+               n_trials: 10
+               n_jobs: 1
+
+         params:
+            # Model architecture params
+            model.drop_rate: interval(0.0, 0.3)
+            model.drop_path_rate: interval(0.0, 0.3)
+            model.head_init_scale: interval(0.5, 2.0)
+            data.batch_size: choice(32, 64, 128, 256)
 
 
+<h1>Hydra-Optuna Sweeper Configuration</h1>
 
+This configuration file integrates Hydra and Optuna to manage hyperparameter optimization for a model using the Tree-structured Parzen Estimator (TPE) sampler. The settings are designed to maximize the model's performance.
 
-     
+<h4>Sweeper: </h4> Configures Hydra to use Optuna for sweeping hyperparameters.</h1>
 
+<h4>Sampler: </h4> Defines the Optuna TPESampler as the optimization algorithm, with a fixed random seed for reproducibility and n_startup_trials set to 3 for initial random explorations.</h1>
+
+<h4>Study: </h4> The study_name is set to catdog_vit_hparam_optimization, enabling tracking for this specific experiment. The direction is set to maximize, meaning we aim to maximize the objective function (e.g., accuracy).
+
+<h4>Trials and Jobs: </h4> The n_trials parameter is set to 10, specifying the number of trials to run, and n_jobs is set to 1, so each trial runs sequentially.
+<h4>Hyperparameters (params):</h4>
+
+   <h4>Model architecture: </h4> Hyperparameters for model regularization, such as drop_rate and drop_path_rate, are explored within a range of 0.0 to 0.3. The scaling factor, head_init_scale, is varied between 0.5 and 2.0.</h4>
+
+   <h4>Batch Size: </h4> The batch size (data.batch_size) is chosen from discrete options (32, 64, 128, 256), allowing exploration of different data processing loads.
+
+This setup offers a balance between exploration and computational efficiency, enabling a quick sweep over a key set of hyperparameters for initial performance tuning.
+      
+              
 
 
 <h2>Using Hydra for Configuration Management</h2>
@@ -100,7 +150,7 @@ To run the training script with a specified configuration, use the following com
 
 All Hydra configurations are located in the following directory. Any updates to the parameters can be made there.
 
-<img width="886" alt="image" src="https://github.com/user-attachments/assets/4150a98c-7f47-44b5-a388-fc11f2ac831a">
+<img width="886" alt="image" src="<img width="663" alt="image" src="https://github.com/user-attachments/assets/dac805bd-d788-4907-b710-589d12f3ee20">
 
 
 
