@@ -1,6 +1,6 @@
 stages:
   train:
-    cmd: python src/train.py  --multirun hparam=catdog_vit_hparam +trainer.log_every_n_steps=5 hydra.sweeper.n_jobs=4
+    cmd: python src/train.py --multirun hydra/launcher=joblib hparam=catdog_vit_hparam +trainer.log_every_n_steps=5 hydra.sweeper.n_jobs=4
     deps:
     - configs/train.yaml
     - src/train.py

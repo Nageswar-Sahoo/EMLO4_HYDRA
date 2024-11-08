@@ -27,8 +27,7 @@ class TimmClassifier(L.LightningModule):
 
         # Load pre-trained model
         self.model = timm.create_model(
-            base_model, pretrained=pretrained, num_classes=num_classes, **kwargs
-        )
+            base_model, pretrained=pretrained, num_classes=num_classes, **kwargs )
 
         # Multi-class accuracy
         self.train_acc = Accuracy(task="multiclass", num_classes=num_classes)
