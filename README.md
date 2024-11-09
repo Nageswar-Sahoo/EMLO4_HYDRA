@@ -128,7 +128,7 @@ To use Optuna, first ensure it’s installed in your environment:
 
 <h1>Hydra-Optuna Sweeper Configuration</h1>
 
-This configuration file integrates Hydra and Optuna to manage hyperparameter optimization for a model using the Tree-structured Parzen Estimator (TPE) sampler. The settings are designed to maximize the model's performance.
+Above configuration file integrates Hydra and Optuna to manage hyperparameter optimization for a model using the Tree-structured Parzen Estimator (TPE) sampler. The settings are designed to maximize the model's performance.
 
 <h4>Sweeper: </h4> Configures Hydra to use Optuna for sweeping hyperparameters.</h1>
 
@@ -161,7 +161,7 @@ To run the training script with a specified configuration, use the following com
 
 All Hydra configurations are located in the following directory. Any updates to the parameters can be made there.
 
-<img width="886" alt="image" src="<img width="663" alt="image" src="https://github.com/user-attachments/assets/dac805bd-d788-4907-b710-589d12f3ee20">
+<img width="663" alt="image" src="https://github.com/user-attachments/assets/dac805bd-d788-4907-b710-589d12f3ee20">
 
 
 
