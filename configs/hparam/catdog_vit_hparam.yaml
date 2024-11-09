@@ -23,8 +23,7 @@ hydra:
 
     params:
       # Model architecture params
-      # model.drop_rate: interval(0.0, 0.3)
-      # model.drop_path_rate: interval(0.0, 0.3)
-      model.head_init_scale: interval(0.5, 2.0)
-      data.batch_size: choice(32, 64)
-      #data.batch_size: choice(32, 64, 128, 256)
+      model.drop_rate: interval(0.0, 0.3)
+      model.drop_path_rate: interval(0.0, 0.3)
+      model.head_init_scale: interval(0.5, 1.0)
+      data.batch_size: choice(8, 16, 32)
