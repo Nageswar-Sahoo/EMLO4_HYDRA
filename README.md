@@ -280,22 +280,10 @@ ouput from :  src/infer.py
   The model prediction gets saved in the predicted_images folder in the model artifacts.
 
 
-  <table>
-  <tr>
-    <td><img src="https://github.com/user-attachments/assets/ea8181c3-e3d2-4fed-9a4e-b24123b7fabc" width="500"/></td>
-    <td><img src="https://github.com/user-attachments/assets/9cb2c6dd-7631-46f4-bb13-f78f72e0c20e" width="500"/></td>
-  </tr>
-  <tr>
-    <td><img src="https://github.com/user-attachments/assets/ed4e8bf3-0cb9-4927-818d-658d1e5e05e1" width="500"/></td>
-    <td><img src="https://github.com/user-attachments/assets/9929a2c7-d860-486a-a62d-80783b4fda17" width="500"/></td>
-  </tr>
-   <tr>
-    <td><img src="https://github.com/user-attachments/assets/8627575f-148e-4af8-93f8-036972ee503f" width="500"/></td>
-    <td><img src="https://github.com/user-attachments/assets/192cd16a-85c3-4a50-88e5-b644ef2c5854" width="500"/></td>
-  </tr>
-</table>
+<img width="1771" alt="image" src="https://github.com/user-attachments/assets/b18c6015-160a-416f-806e-657b4756708d">
 
-![image](https://github.com/user-attachments/assets/fd741a76-a17a-46ab-9d44-3696cfdbf5d1)
+
+![image](https://github.com/user-attachments/assets/afe01bd4-57d9-4f7a-afaf-77576de3e64f)
 
 
 
