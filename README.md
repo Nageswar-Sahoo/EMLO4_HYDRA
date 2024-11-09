@@ -1,6 +1,6 @@
-<h1>Dogs Breed Classification Dataset Training, Evaluation, and Inference with Docker , Hydra , DVC , Optuna </h1>
+<h1>Dog Breed Image Dataset Training, Evaluation, and Inference with Docker , Hydra , DVC , Optuna </h1>
 
-This repository contains a PyTorch Lightning-based project for classifying cat dog using a dataset from Kaggle. The project includes Docker support, a DevContainer setup, and inference using a pre-trained model. Configuration management is handled using Hydra.
+This repository hosts a PyTorch Lightning project designed for classifying dog breeds, using a dataset from Kaggle. The setup includes Docker support, a DevContainer environment, and inference capabilities with a pre-trained model. Configuration management is powered by Hydra, and hyperparameter optimization is facilitated through Optuna.
 
 Features
    
@@ -16,7 +16,7 @@ Features
 	   
            6>  DVC as Data version tool  
 
-           7>  optuna for hyper param training 
+           7>  Hyperparameter optimization is facilitated through Optuna
 
 
 
@@ -24,7 +24,18 @@ Features
 
 Description
 
-This project aims to develop a binary image classification model to differentiate between dogs and cats using the popular Dogs vs. Cats dataset from Kaggle. The dataset contains 25,000 labeled images (12,500 dogs and 12,500 cats), making it an ideal resource for training deep learning models.
+This dataset contains a collection of images for 10 different dog breeds, meticulously gathered and organized to facilitate various computer vision tasks such as image classification and object detection. The dataset includes the following breeds:
+
+       Golden Retriever
+       German Shepherd
+       Labrador Retriever
+       Bulldog
+       Beagle
+       Poodle
+       Rottweiler
+       Yorkshire Terrier
+       Boxer
+       Dachshund
 
 
 
