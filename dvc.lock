@@ -1,8 +1,8 @@
 schema: '2.0'
 stages:
   train:
-    cmd: python src/train.py  --multirun hparam=catdog_vit_hparam +trainer.log_every_n_steps=5
-      hydra.sweeper.n_jobs=4
+    cmd: python src/train.py --multirun hydra/launcher=joblib hparam=catdog_vit_hparam
+      +trainer.log_every_n_steps=5 hydra.sweeper.n_jobs=4
     deps:
     - path: configs/train.yaml
       hash: md5
@@ -20,9 +20,9 @@ stages:
     outs:
     - path: logs/train
       hash: md5
-      md5: 1e94f5efc8b287b358e0ebbf36dc87e4.dir
-      size: 164607
-      nfiles: 91
+      md5: 8b51e4f5d4d3b44306a1e3311d263a87.dir
+      size: 14533
+      nfiles: 10
   eval:
     cmd: python src/eval.py ckpt_path=./logs/checkpoints/last.ckpt
     deps:
@@ -42,8 +42,8 @@ stages:
     outs:
     - path: logs/eval
       hash: md5
-      md5: 1c1700e18c683fb3a439d38699591a1f.dir
-      size: 10598
+      md5: 5b5b2223e14a101fb7a9c28349d87103.dir
+      size: 12136
       nfiles: 8
   infer:
     cmd: python src/infer.py ckpt_path=./logs/checkpoints/last.ckpt
@@ -59,11 +59,11 @@ stages:
       nfiles: 1176
     - path: src/infer.py
       hash: md5
-      md5: b44f9bbf96c2d4b0054f3c508cdb4c7d
-      size: 4112
+      md5: f1f20ec6aebe9d46b303a502c384c320
+      size: 4108
     outs:
     - path: logs/infer
       hash: md5
-      md5: f3c823f18e6c12af7595c5897ddf3074.dir
-      size: 21443185
+      md5: 61a9e3ce613d39063be00ed2b68f6d4b.dir
+      size: 21089611
       nfiles: 193

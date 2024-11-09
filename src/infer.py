@@ -13,7 +13,7 @@ from lightning.pytorch.loggers import Logger
 import logging
 import rootutils
 root = rootutils.setup_root(__file__, indicator=".project-root", pythonpath=True)
-from models.catdog_classifier import CatDogClassifier
+from models.timm_classifier import TimmClassifier
 from utils.logging_utils import setup_logger, task_wrapper, get_rich_progress
 import lightning as L
 
