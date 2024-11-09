@@ -125,7 +125,8 @@ To use Optuna, first ensure it’s installed in your environment:
             model.head_init_scale: interval(0.5, 2.0)
             data.batch_size: choice(32, 64, 128, 256)
 
-<h4>RUN : </h4>  python src/train.py --multirun hydra/launcher=joblib hparam=catdog_vit_hparam +trainer.log_every_n_steps=5 hydra.sweeper.n_jobs=4
+<h4>RUN : </h4>                    
+                     python src/train.py --multirun hydra/launcher=joblib hparam=catdog_vit_hparam +trainer.log_every_n_steps=5 hydra.sweeper.n_jobs=4
 
 <h1>Hydra-Optuna Sweeper Configuration</h1>
 
