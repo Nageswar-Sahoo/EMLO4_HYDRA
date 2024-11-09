@@ -26,4 +26,4 @@ hydra:
       model.drop_rate: interval(0.0, 0.3)
       model.drop_path_rate: interval(0.0, 0.3)
       model.head_init_scale: interval(0.5, 1.0)
-      data.batch_size: choice(8, 16, 32)
+      #data.batch_size: choice(8, 16, 32)
