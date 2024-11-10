@@ -26,13 +26,15 @@ data:
 
 model:
   _target_: src.models.timm_classifier.TimmClassifier
-  base_model: "convnext_tiny"  # Smallest ConvNeXt variant
-  pretrained: True            # Use ImageNet pretrained weights
+  base_model: "convnext_small"  # Smallest ConvNeXt variant
+  pretrained: False            # Use ImageNet pretrained weights
   num_classes: 10             # Binary classification for cat/dog
   drop_rate: 0.1            # Dropout rate
   drop_path_rate: 0.1       # Stochastic depth rate
   head_init_scale: 1.0      # Classification head init scale
-  head_norm_first: True  
+  head_norm_first: True
+  depths: [2,2,2,2]
+  dims: [16,32,64,128]
 
 trainer:
   min_epochs: 1

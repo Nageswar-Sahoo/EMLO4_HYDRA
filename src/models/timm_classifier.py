@@ -24,6 +24,12 @@ class TimmClassifier(L.LightningModule):
     ):
         super().__init__()
         self.save_hyperparameters()
+        
+        if 'depths' in kwargs:
+            kwargs['depths'] = tuple(kwargs['depths'])
+
+        if 'dims' in kwargs:
+            kwargs['dims'] = tuple(kwargs['dims'])       
 
         # Load pre-trained model
         self.model = timm.create_model(
