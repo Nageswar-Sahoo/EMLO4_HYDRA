@@ -20,8 +20,8 @@ stages:
     outs:
     - path: logs/train
       hash: md5
-      md5: 1508035fdd9cb2c39962d5005e8f782c.dir
-      size: 14097
+      md5: 193767fc7f3dcf270a0d23f12a2fd45d.dir
+      size: 16817
       nfiles: 10
   eval:
     cmd: python src/eval.py ckpt_path=./logs/checkpoints/last.ckpt
@@ -42,8 +42,8 @@ stages:
     outs:
     - path: logs/eval
       hash: md5
-      md5: a172802613474211322028212b07019e.dir
-      size: 10851
+      md5: e77529ecfb086c49bd374f4e210c13f7.dir
+      size: 11029
       nfiles: 8
   infer:
     cmd: python src/infer.py ckpt_path=./logs/checkpoints/last.ckpt
@@ -64,6 +64,6 @@ stages:
     outs:
     - path: logs/infer
       hash: md5
-      md5: cd36df57a1d931cac62d79c7d1c565f1.dir
-      size: 21255809
+      md5: 24810c889f985a33f7d7aebf52a4fa7c.dir
+      size: 21339409
       nfiles: 193
