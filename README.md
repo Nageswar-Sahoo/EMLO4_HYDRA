@@ -281,7 +281,11 @@ ConvNeXt is a modernized version of the classic convolutional neural network (CN
 
 
  
-      
+ <h3>optimization_results.yaml</h3>
+ <img width="1781" alt="image" src="https://github.com/user-attachments/assets/1dc53991-210b-4699-89d4-768fd12f6afa">
+
+
+     
 
 
 ouput from :  src/train.py 
