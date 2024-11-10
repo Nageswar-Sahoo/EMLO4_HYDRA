@@ -1,0 +1,28 @@
+stages:
+  train:
+    cmd: python src/train.py --multirun hydra/launcher=joblib hparam=catdog_vit_hparam +trainer.log_every_n_steps=5 hydra.sweeper.n_jobs=4
+    deps:
+    - configs/train.yaml
+    - src/train.py
+    - data_dogbreed/
+    outs:
+    - logs/train:
+        cache: false
+  eval:
+    cmd: python src/eval.py ckpt_path=./logs/checkpoints/last.ckpt
+    deps:
+    - configs/eval.yaml
+    - src/eval.py
+    - data_dogbreed/
+    outs:
+    - logs/eval:
+        cache: false
+  infer:
+    cmd: python src/infer.py ckpt_path=./logs/checkpoints/last.ckpt
+    deps:
+    - configs/infer.yaml
+    - src/infer.py
+    - data_dogbreed/
+    outs:
+    - logs/infer:
+        cache: false

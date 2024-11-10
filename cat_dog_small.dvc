@@ -1,0 +1,6 @@
+outs:
+- md5: 5d87721ee93273844ec175842f32ea11.dir
+  size: 3732583
+  nfiles: 102
+  hash: md5
+  path: cat_dog_small

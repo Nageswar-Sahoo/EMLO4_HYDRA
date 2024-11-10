@@ -13,17 +13,17 @@ from lightning.pytorch.loggers import Logger
 import logging
 import rootutils
 root = rootutils.setup_root(__file__, indicator=".project-root", pythonpath=True)
-from models.catdog_classifier import CatDogClassifier
+from models.timm_classifier import TimmClassifier
 from utils.logging_utils import setup_logger, task_wrapper, get_rich_progress
 import lightning as L
 
 log = logging.getLogger(__name__)
 
 @task_wrapper
-def load_image(image_path):
+def load_image(image_path, img_resize):
     img = Image.open(image_path).convert('RGB')
     transform = transforms.Compose([
-        transforms.Resize((224, 224)),
+        transforms.Resize(img_resize),
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ])
@@ -86,13 +86,14 @@ def main(cfg: DictConfig):
      output_folder = Path(cfg.paths.output_dir)
      output_folder.mkdir(exist_ok=True, parents=True)
      image_files = list(input_folder.glob('*/*'))
+     img_resize = cfg.data.resize
      print(image_files)
      with get_rich_progress() as progress:
         task = progress.add_task("[green]Processing images...", total=len(image_files))
 
         for image_file in image_files:
             if image_file.suffix.lower() in ['.jpg', '.jpeg', '.png']:
-                img, img_tensor = load_image(image_file)
+                img, img_tensor = load_image(image_file, img_resize)
                 predicted_label, confidence = infer(model, img_tensor.to(model.device))
                 
                 output_file = output_folder / f"{image_file.stem}_prediction.png"

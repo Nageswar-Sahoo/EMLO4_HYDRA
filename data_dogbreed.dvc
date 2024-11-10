@@ -1,0 +1,6 @@
+outs:
+- md5: c9b2d402081987455ada67301071cc93.dir
+  size: 4960821
+  nfiles: 1176
+  hash: md5
+  path: data_dogbreed

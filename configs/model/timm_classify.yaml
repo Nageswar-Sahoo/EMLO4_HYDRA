@@ -3,7 +3,7 @@ _target_: src.models.timm_classifier.TimmClassifier
 # Model parameters
 base_model: resnet18
 num_classes: 10
-pretrained: true
+pretrained: True
 
 # Optimizer parameters
 lr: 1e-3
@@ -13,3 +13,4 @@ weight_decay: 1e-5
 factor: 0.1
 patience: 10
 min_lr: 1e-6
+log_dir: ${paths.log_dir}
