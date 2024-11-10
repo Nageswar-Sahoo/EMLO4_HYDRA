@@ -304,6 +304,7 @@ ouput from :  src/infer.py
 <img width="1792" alt="image" src="https://github.com/user-attachments/assets/21394f2c-b03d-40f7-86e0-028071c6e428">
 <img width="1771" alt="image" src="https://github.com/user-attachments/assets/afe01bd4-57d9-4f7a-afaf-77576de3e64f">
 <img width="928" alt="image" src="https://github.com/user-attachments/assets/b3786d17-e7c5-43da-9f8e-6735077f2b25">
+<img width="1772" alt="image" src="https://github.com/user-attachments/assets/27e1087a-b38b-44ee-9bc3-0b7a9b869e44">
 <img width="926" alt="image" src="https://github.com/user-attachments/assets/e1cb039a-f6a2-4e35-970f-56ceb4693f02">
 
 
