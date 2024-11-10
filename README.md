@@ -106,24 +106,40 @@ To use Optuna, first ensure it’s installed in your environment:
 
 <h4>Below is the Optuna hyper param with Hydra config : </h4>
 
-          hydra:
-            sweeper:
-              sampler:
-                _target_: optuna.samplers.TPESampler
-               seed: 123
-               n_startup_trials: 3
-               direction: maximize
-               study_name: catdog_vit_hparam_optimization
-               storage: null
-               n_trials: 10
-               n_jobs: 1
+# @package _global_
 
-         params:
-            # Model architecture params
-            model.drop_rate: interval(0.0, 0.3)
-            model.drop_path_rate: interval(0.0, 0.3)
-            model.head_init_scale: interval(0.5, 2.0)
-            data.batch_size: choice(32, 64, 128, 256)
+defaults:
+  - override /hydra/sweeper: optuna
+
+# We want to optimize for the highest test accuracy
+optimization_metric: "test/acc_best"
+
+# Override the experiment name
+experiment_name: "catdog_vit_hparam_optimization"
+
+            hydra:
+              sweeper:
+                sampler:
+                 _target_: optuna.samplers.TPESampler
+                 seed: 123
+                 n_startup_trials: 3
+                direction: maximize
+                study_name: catdog_vit_hparam_optimization
+                storage: null
+                n_trials: 10
+                n_jobs: 1
+
+                params:
+                 # Model architecture params
+                  model.drop_rate: interval(0.0, 0.3)
+                  model.drop_path_rate: interval(0.0, 0.3)
+                  model.head_init_scale: interval(0.5, 1.0)
+                  data.batch_size: choice(8, 16)
+                  model.depths: choice([2, 2, 4, 2],[2, 2, 6, 2],[2, 2, 8, 2])
+                  model.dims: choice([32, 64, 128, 256],[40, 80, 160, 320])
+                  model.patch_size: choice(4,8)
+
+
 
 <h4>RUN : </h4>                    
                      python src/train.py --multirun hydra/launcher=joblib hparam=catdog_vit_hparam +trainer.log_every_n_steps=5 hydra.sweeper.n_jobs=4
