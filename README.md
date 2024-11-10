@@ -106,16 +106,16 @@ To use Optuna, first ensure it’s installed in your environment:
 
 <h4>Below is the Optuna hyper param with Hydra config : </h4>
 
-# @package _global_
+         # @package _global_
 
-defaults:
-  - override /hydra/sweeper: optuna
+         defaults:
+         - override /hydra/sweeper: optuna
 
-# We want to optimize for the highest test accuracy
-optimization_metric: "test/acc_best"
+         # We want to optimize for the highest test accuracy
+         optimization_metric: "test/acc_best"
 
-# Override the experiment name
-experiment_name: "catdog_vit_hparam_optimization"
+        # Override the experiment name
+        experiment_name: "catdog_vit_hparam_optimization"
 
             hydra:
               sweeper:
