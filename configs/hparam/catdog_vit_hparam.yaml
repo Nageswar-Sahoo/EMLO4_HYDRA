@@ -27,7 +27,7 @@ hydra:
       # model.drop_path_rate: interval(0.0, 0.3)
       # model.head_init_scale: interval(0.5, 1.0)
       # data.batch_size: choice(8, 16)
-      model.depths: choice([2, 2, 4, 2],[2, 2, 6, 2],[2, 2, 8, 2])
-      model.dims: choice([32, 64, 128, 256],[40, 80, 160, 320])
-      model.patch_size: choice(4,8)
+      # model.depths: choice([2, 2, 4, 2],[2, 2, 6, 2],[2, 2, 8, 2])
+      # model.dims: choice([32, 64, 128, 256],[40, 80, 160, 320])
+      #model.patch_size: choice(4,8)
 
