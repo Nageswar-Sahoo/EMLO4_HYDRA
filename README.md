@@ -295,7 +295,8 @@ ouput from :  src/infer.py
 
   The model prediction gets saved in the predicted_images folder in the model artifacts.
 
-<img width="1771" alt="image" src="https://github.com/user-attachments/assets/b18c6015-160a-416f-806e-657b4756708d">
+<img width="1717" alt="image" src="https://github.com/user-attachments/assets/a3d96c4e-278b-46d2-be8a-bbb2005d240f">
+<img width="1792" alt="image" src="https://github.com/user-attachments/assets/21394f2c-b03d-40f7-86e0-028071c6e428">
 <img width="1771" alt="image" src="https://github.com/user-attachments/assets/afe01bd4-57d9-4f7a-afaf-77576de3e64f">
 
 <h3>Requirements</h3>
