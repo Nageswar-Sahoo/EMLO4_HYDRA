@@ -33,8 +33,7 @@ jobs:
 
       - name: Set DVC Remote
         run: |
-          dvc remote add -d myremote s3://your-bucket-name/path
-          dvc remote modify myremote region ap-south-1
+          dvc remote add -d myremote s3://dvc-nagsh-demo
 
       - name: Pull DVC Data
         run: |
