@@ -3,10 +3,11 @@ name: DVC with S3
 on:
   push:
     branches:
-      - main  # Specify the branches to trigger the workflow
+      - feature/aws_dvc_latest/*
   pull_request:
     branches:
       - main
+
 jobs:
   dvc:
     runs-on: ubuntu-latest
@@ -18,7 +19,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.8'  # Choose your preferred Python version
+          python-version: '3.8'
 
       - name: Install DVC and Boto3
         run: |
@@ -30,6 +31,9 @@ jobs:
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws configure set region ${{ secrets.AWS_REGION }}
 
+      - name: Set DVC Remote
+        run: |
+          dvc remote add -d myremote s3://your-bucket-name/path
       - name: Pull DVC Data
         run: |
           dvc pull
