@@ -3,10 +3,10 @@ name: DVC with S3
 on:
   push:
     branches:
-      - main  # Specify the branches to trigger the workflow
+      - feature/aws_dvc_latest/  # Specify the branches to trigger the workflow
   pull_request:
     branches:
-      - main
+      - feature/aws_dvc_latest/
 jobs:
   dvc:
     runs-on: ubuntu-latest
