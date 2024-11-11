@@ -1,0 +1,44 @@
+name: DVC with S3
+
+on:
+  push:
+    branches:
+      - feature/aws_dvc_latest  # Specify the branches to trigger the workflow
+  pull_request:
+    branches:
+      - feature/aws_dvc_latest
+
+jobs:
+  dvc:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'  # Choose your preferred Python version
+
+      - name: Install DVC and Boto3
+        run: |
+          pip install dvc[s3] boto3
+
+      - name: Configure AWS Credentials
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}  # Optional if region is fixed in DVC config
+
+      - name: Pull DVC Data
+        run: |
+          dvc pull
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+
+      - name: Verify DVC Data Files
+        run: |
+          dvc status
