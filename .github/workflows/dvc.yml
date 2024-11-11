@@ -3,10 +3,10 @@ name: DVC with S3
 on:
   push:
     branches:
-      - feature/aws_dvc_latest  # Specify the branches to trigger the workflow
+      - main  # Specify the branches to trigger the workflow
   pull_request:
     branches:
-      - feature/aws_dvc_latest
+      - main
 
 jobs:
   dvc:
@@ -26,10 +26,10 @@ jobs:
           pip install dvc[s3] boto3
 
       - name: Configure AWS Credentials
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}  # Optional if region is fixed in DVC config
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region ${{ secrets.AWS_REGION }}
 
       - name: Pull DVC Data
         run: |
