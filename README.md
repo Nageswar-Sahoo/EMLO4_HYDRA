@@ -133,6 +133,32 @@ This guide outlines how to configure an Amazon S3 bucket as a remote storage for
                dvc status
      
 
+<h3>GitHub Actions Workflow for Building and Pushing Docker Image to Amazon ECR</h3>
+
+This guide provides instructions to set up a GitHub Actions workflow for building a Docker image and pushing it to Amazon ECR (Elastic Container Registry). This is useful for automating the deployment of Docker images in AWS.
+
+<h4>Prerequisites</h4>
+
+    1. AWS Account: Ensure you have an AWS account and necessary permissions for ECR.
+    
+    2. ECR Repository: Set up an Amazon ECR repository in your AWS console to store your Docker images.
+    
+    3. GitHub Repository: A repository where you can configure GitHub Actions.
+    
+<h3>Steps to Set Up GitHub Actions</h3>
+
+1. Add Workflow Configuration: Copy the following code to your workflow file. This configuration will:
+
+       Build a Docker image from your repository
+
+       Tag the image
+
+       Log in to Amazon ECR
+
+       Push the Docker image to your specified ECR repository
+
+
+      
 
 
 <h2>Using Hydra for Configuration Management</h2>
