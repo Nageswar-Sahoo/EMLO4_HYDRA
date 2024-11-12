@@ -1,12 +1,10 @@
 name: CI/CD Pipeline
-
-
 on:
   workflow_run:
-    workflows: ["DVC with S3"]   # Name of the first workflow
-    types:
+    workflows: ["DVC_with_S3"]  # Match with the exact name of the first workflow
+    types: 
+      - requested
       - completed
-
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
