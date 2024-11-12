@@ -147,19 +147,100 @@ This guide provides instructions to set up a GitHub Actions workflow for buildin
     
 <h3>Steps to Set Up GitHub Actions</h3>
 
-1. Add Workflow Configuration: Copy the following code to your workflow file. This configuration will:
+<h4>Add Workflow Configuration: Copy the following code to your workflow file. This configuration will:</h4>
 
-       Build a Docker image from your repository
+   1.Build a Docker image from your repository
 
-       Tag the image
+   2.Tag the image
 
-       Log in to Amazon ECR
+   3.Log in to Amazon ECR
 
-       Push the Docker image to your specified ECR repository
+   4.Push the Docker image to your specified ECR repository
 
 
-      
 
+        build-and-push-image:
+        needs: dvc
+        runs-on: ubuntu-latest
+        permissions:
+          contents: read
+          packages: write
+    
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+    
+        - name: Configure AWS Credentials
+          run: |
+            aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws configure set region ${{ secrets.AWS_REGION }}
+
+        - name: Login to Amazon ECR
+          id: login-ecr
+          uses: aws-actions/amazon-ecr-login@v1
+                      
+        - name: Get commit hash
+          id: get-commit-hash
+          run: echo "::set-output name=commit-hash::$(git rev-parse --short HEAD)"
+        - name: Get timestamp
+          id: get-timestamp
+          run: echo "::set-output name=timestamp::$(date +'%Y-%m-%d-%H-%M')"
+  
+        - name: Build, tag, and push the image to Amazon ECR
+          id: build-image
+          env:
+            ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+            ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
+            IMAGE_TAG: ${{ steps.get-commit-hash.outputs.commit-hash }}-${{ steps.get-timestamp.outputs.timestamp }}
+          run: |
+            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+            docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+
+<h3>Explanation of Workflow Steps</h3>
+<h4>1.Checkout Repository:</h4>
+
+    Uses the actions/checkout@v4 action to pull the repository code to the GitHub Actions runner.
+
+<h4>2.Configure AWS Credentials:</h4>
+
+    Configures AWS CLI with the necessary credentials to access AWS services.
+    The AWS access key, secret access key, and region are stored as GitHub secrets (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION).
+
+<h4>3.Login to Amazon ECR:</h4>
+
+     Uses the aws-actions/amazon-ecr-login@v1 action to authenticate the GitHub Actions runner with Amazon ECR.
+<h4>4.Get Commit Hash and Timestamp:</h4>
+
+            Retrieves the latest commit hash and timestamp to create a unique tag for the Docker image. 
+	    This ensures each image is uniquely identifiable.
+
+<h4>5.Build, Tag, and Push Docker Image:</h4>
+
+             Builds the Docker image using the Dockerfile in the repository.
+             Tags the image with the ECR registry URL, ECR repository name, commit hash, and timestamp.
+             Pushes the image to the specified Amazon ECR repository.      
+
+
+<h4>Setting Up GitHub Secrets</h4>
+To ensure security and proper access, add the following secrets to your GitHub repository under 
+
+Settings > Secrets and variables > Actions:
+
+AWS_ACCESS_KEY_ID: Your AWS access key.
+
+AWS_SECRET_ACCESS_KEY: Your AWS secret key.
+
+AWS_REGION: The AWS region of your ECR repository (e.g., us-east-1).
+
+REPO_NAME: The name of your Amazon ECR repository.
+
+<h4>Triggering the Workflow</h4>
+This workflow will trigger on every push to the main branch. You can adjust the triggering branch by modifying the branches section in the on: push configuration.
+
+<h4>Viewing the Image in Amazon ECR</h4>
+Once the workflow completes, navigate to your Amazon ECR repository in the AWS Console. You should see a new image tagged with the commit hash and timestamp.
 
 <h2>Using Hydra for Configuration Management</h2>
 The project utilizes Hydra to manage configurations. Configuration files are located in the configs/ directory. You can modify these files to adjust various parameters for training, evaluation, and inference.
