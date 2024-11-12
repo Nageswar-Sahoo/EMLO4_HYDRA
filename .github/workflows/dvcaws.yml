@@ -80,19 +80,16 @@ jobs:
         - name: Checkout repository
           uses: actions/checkout@v4
     
+        - name: Configure AWS Credentials
+          run: |
+            aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws configure set region ${{ secrets.AWS_REGION }}
+
         - name: Login to Amazon ECR
           id: login-ecr
           uses: aws-actions/amazon-ecr-login@v1
-    
-        - name: Extract metadata (tags, labels) for Docker
-          id: meta
-          uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-          with:
-            images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-            tags: |
-              type=raw,value=session-05
-              type=sha
-                  
+                      
         - name: Get commit hash
           id: get-commit-hash
           run: echo "::set-output name=commit-hash::$(git rev-parse --short HEAD)"
