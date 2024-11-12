@@ -34,7 +34,9 @@ jobs:
       - name: Set DVC Remote
         run: |
           dvc remote add -d myremote s3://dvc-nagsh-demo
-
+      - name: Enable Debug Logging
+        run: export DVC_LOGLEVEL=DEBUG
+        
       - name: Pull DVC Data
         run: |
           dvc pull -v
