@@ -32,6 +32,109 @@ This dataset contains a collection of images for 10 different dog breeds, meticu
        Dachshund
 
 
+<h3>Setting Up S3 as a DVC Remote for Data Storage</h3>
+
+This guide outlines how to configure an Amazon S3 bucket as a remote storage for DVC (Data Version Control). This setup enables version-controlled data storage in S3, perfect for large datasets in machine learning and data science workflows.
+
+<h4>Prerequisites</h4>
+
+    1.AWS account with access to create and manage S3 buckets.
+    
+    2.IAM credentials with permissions to read, write, and list objects in the S3 bucket.
+    
+    3.DVC installed locally (pip install dvc[s3]).
+    
+    4.Git and GitHub repository setup.
+
+<h4>Steps to Configure S3 as a DVC Remote</h4>
+
+1. Create an S3 Bucket
+
+        Go to the AWS Management Console and create a new S3 bucket (e.g., my-dvc-bucket).
+
+        Note the bucket name and region (e.g., ap-south-1 for Mumbai).
+
+2. Configure IAM Permissions
+
+      Assign permissions to your IAM user to access the S3 bucket. Use the following policy, replacing my-dvc-bucket with your actual bucket name:
+
+
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "s3:ListBucket"
+              ],
+              "Resource": "arn:aws:s3:::my-dvc-bucket"
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "s3:GetObject",
+                "s3:PutObject"              ],
+              "Resource": "arn:aws:s3:::my-dvc-bucket/*"
+            }
+          ]
+        }
+
+3. Set Up DVC Remote
+
+       In your local Git repository, configure the S3 bucket as the DVC remote:
+
+       dvc remote add -d myremote s3://my-dvc-bucket/path/to/data
+
+4. Push Data to S3 with DVC
+
+        After configuring the remote, add files to DVC, then push to the S3 bucket:
+
+         dvc add data
+         git add data .gitignore
+         git commit -m "Add large file with DVC"
+         dvc push
+
+6. Setting Up GitHub Actions for Automated DVC Pull
+
+       To automate data pulls from S3 in GitHub Actions, add the following workflow file (.github/workflows/dvc_pull.yml):
+
+       name: DVC with S3
+   
+         steps:
+           - name: Checkout Repository
+             uses: actions/checkout@v3
+
+           - name: Install DVC and Boto3
+             run: |
+               pip install dvc[s3] boto3
+
+           - name: Configure AWS Credentials
+             run: |
+               aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+               aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+               aws configure set region ${{ secrets.AWS_REGION }}
+
+           - name: Set DVC Remote
+             run: |
+               dvc remote add -d myremote s3://dvc-nagsh-demo
+           - name: Enable Debug Logging
+             run: export DVC_LOGLEVEL=DEBUG
+        
+           - name: Pull DVC Data
+             run: |
+               dvc pull -v
+             env:
+               AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+               AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+               AWS_REGION: ${{ secrets.AWS_REGION }}
+
+           - name: Verify DVC Data Files
+             run: |
+               dvc status
+     
+
+
+
 <h2>Using Hydra for Configuration Management</h2>
 The project utilizes Hydra to manage configurations. Configuration files are located in the configs/ directory. You can modify these files to adjust various parameters for training, evaluation, and inference.
 
