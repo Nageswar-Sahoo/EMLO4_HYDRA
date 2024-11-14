@@ -93,6 +93,14 @@ This helps in scaling horizontally and ensures that no single instance is overlo
 Example:
 
 
+<h3>6. Half Precision (FP16)</h3>
+
+Half Precision (FP16) in LitServe refers to using 16-bit floating-point numbers (instead of the standard 32-bit floating-point numbers or FP32) for model inference. Using half-precision can significantly reduce memory usage and speed up inference, especially on GPUs that support FP16 operations, without sacrificing much accuracy for many types of models.
+
+
+
+
+
 
 
 
