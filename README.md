@@ -54,27 +54,40 @@ LitServe, part of the Lightning AI ecosystem, provides a framework for serving m
 
 Here are some ways to handle concurrent requests in LitServe:
 
-<h3>1. Use Multiple Workers with LitServe</h3>
-LitServe supports running the server with multiple workers. Each worker handles incoming requests concurrently, improving throughput and ensuring that the server can handle multiple requests without blocking.
+<h3>1. Simple Request And Response Handling </h3>
 
+LitServe does not handle multiple requests by default . LitServe requires additional configuration to efficiently handle multiple concurrent requests, especially if you are running inference jobs or serving models.
+
+
+Issue : 
+
+By default, LitServe may be single-threaded, meaning it processes requests one by one on a single worker process or thread. While this works for light traffic, it is not ideal for handling concurrent requests in a production environment.
+
+
+<h3>1. Batching Requests for Efficiency</h3>
+If your model supports batching (processing multiple inputs at once), you can configure LitServe to batch incoming requests. Batching allows you to process multiple inference requests simultaneously, which improves performance and reduces processing time for each individual request.
+
+You can implement batching logic in the request handler to group multiple requests and send them in a single inference call to the model.
+
+Example:
+
+
+<h3>2. Use Multiple Workers with LitServe</h3>
+LitServe supports running the server with multiple workers, This allows the server to spin up separate processes, each capable of handling requests independently. 
+. Each worker handles incoming requests concurrently, improving throughput and ensuring that the server can handle multiple requests without blocking.
 You can configure multiple workers in the LitServe configuration to enable parallel processing.
 
 Example:
 
-<h3>2. Enable Multi-Threading (For Models with Heavy Inference)</h3>
+Issue : 
+
+<h3>3. Enable Multi-Threading (For Models with Heavy Inference)</h3>
 LitServe can handle multi-threaded requests, especially for CPU-bound tasks like model inference. This can help serve multiple requests at the same time without creating separate processes for each request.
 
 For CPU-bound models, multi-threading allows multiple requests to be processed in parallel by splitting the tasks across available CPU cores. In LitServe, the number of threads can often be controlled based on the underlying model's framework or using server settings.
 
 Example:
 
-
-<h3>3. Batching Requests for Efficiency</h3>
-If your model supports batching (processing multiple inputs at once), you can configure LitServe to batch incoming requests. Batching allows you to process multiple inference requests simultaneously, which improves performance and reduces processing time for each individual request.
-
-You can implement batching logic in the request handler to group multiple requests and send them in a single inference call to the model.
-
-Example:
 
 <h3>4. Asynchronous Request Handling </h3>
 
@@ -83,19 +96,18 @@ If you need better performance with I/O-bound tasks, such as pre- or post-proces
 
 Example:
 
+<h3>5. Half Precision (FP16)</h3>
 
-<h3>5. Load Balancing Across Multiple LitServe Instances</h3>
+Half Precision (FP16) in LitServe refers to using 16-bit floating-point numbers (instead of the standard 32-bit floating-point numbers or FP32) for model inference. Using half-precision can significantly reduce memory usage and speed up inference, especially on GPUs that support FP16 operations, without sacrificing much accuracy for many types of models.
+
+
+<h3>6. Load Balancing Across Multiple LitServe Instances</h3>
 
 To handle even higher levels of concurrency, you can deploy multiple LitServe instances (possibly in different regions or clusters) and configure a load balancer (like Nginx or HAProxy) or use a cloud-based load balancer (AWS ELB, Google Cloud Load Balancer, etc.) to distribute traffic across LitServe instances.
 
 This helps in scaling horizontally and ensures that no single instance is overloaded.
 
 Example:
-
-
-<h3>6. Half Precision (FP16)</h3>
-
-Half Precision (FP16) in LitServe refers to using 16-bit floating-point numbers (instead of the standard 32-bit floating-point numbers or FP32) for model inference. Using half-precision can significantly reduce memory usage and speed up inference, especially on GPUs that support FP16 operations, without sacrificing much accuracy for many types of models.
 
 
 
