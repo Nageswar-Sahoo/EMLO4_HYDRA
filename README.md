@@ -1,4 +1,4 @@
-<h1>Dog Breed Image Dataset Training, Evaluation, and Inference with Docker </h1>
+<h1>Dog Breed Image Dataset Inference with LitServe </h1>
 
 This repository contains a PyTorch Lightning-based project for classifying dog breeds using a dataset from Kaggle. The project includes Docker support, a DevContainer setup, and inference using a pre-trained model. Configuration management is handled using Hydra.
 
@@ -32,244 +32,67 @@ This dataset contains a collection of images for 10 different dog breeds, meticu
        Dachshund
 
 
-<h2>Using Hydra for Configuration Management</h2>
-The project utilizes Hydra to manage configurations. Configuration files are located in the configs/ directory. You can modify these files to adjust various parameters for training, evaluation, and inference.
+<h2>LitServer: Fast, Simple, and Scalable Model Serving </h2>
 
-Running with Hydra
-To run the training script with a specified configuration, use the following command:
+LitServer is a lightweight, high-performance model-serving framework designed to make deploying machine learning models easy and efficient. Built on Lightning AI, LitServer provides a straightforward way to serve deep learning and machine learning models as RESTful APIs with minimal configuration. Whether you're deploying a computer vision model, natural language processing pipeline, or custom machine learning workflow, LitServer helps streamline model deployment with a focus on speed, scalability, and ease of use.
 
-        python src/train.py 
-	    python src/eval.py 
-        python src/infer.py 
+<h3>Key Features</h3>
+<h4>Quick Deployment: </h4> Easily deploy machine learning models without complex setup. LitServer supports frameworks like PyTorch, TensorFlow, and Hugging Face Transformers out of the box.
 
-All Hydra configurations are located in the following directory. Any updates to the parameters can be made there.
+<h4>High-Performance Inference: </h4> Built with optimized processing to handle high-throughput and low-latency requests, making it ideal for production environments.
 
-<img width="886" alt="image" src="https://github.com/user-attachments/assets/4150a98c-7f47-44b5-a388-fc11f2ac831a">
+<h4>Scalability:  </h4>Supports concurrent request handling with configurable worker threads and process scaling, allowing you to handle multiple requests efficiently.
 
- 
+<h4>FP16 Support: </h4> LitServer can serve models in half-precision (FP16) mode, which reduces memory usage and improves inference speed on compatible hardware.
 
+<h4>Customizable API:  </h4> LitServer allows you to define custom routes and request handling, giving you control over how the model serves and responds to requests.
 
 
-Model  Summery : 
-   
-        ┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┓
-        ┃    ┃ Name                        ┃ Type                 ┃ Params ┃ Mode  ┃
-        ┡━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━┩
-        │ 0  │ model                       │ ResNet               │ 11.2 M │ train │
-        │ 1  │ model.conv1                 │ Conv2d               │  9.4 K │ train │
-        │ 2  │ model.bn1                   │ BatchNorm2d          │    128 │ train │
-        │ 3  │ model.act1                  │ ReLU                 │      0 │ train │
-        │ 4  │ model.maxpool               │ MaxPool2d            │      0 │ train │
-        │ 5  │ model.layer1                │ Sequential           │  147 K │ train │
-        │ 6  │ model.layer1.0              │ BasicBlock           │ 74.0 K │ train │
-        │ 7  │ model.layer1.0.conv1        │ Conv2d               │ 36.9 K │ train │
-        │ 8  │ model.layer1.0.bn1          │ BatchNorm2d          │    128 │ train │
-        │ 9  │ model.layer1.0.drop_block   │ Identity             │      0 │ train │
-        │ 10 │ model.layer1.0.act1         │ ReLU                 │      0 │ train │
-        │ 11 │ model.layer1.0.aa           │ Identity             │      0 │ train │
-        │ 12 │ model.layer1.0.conv2        │ Conv2d               │ 36.9 K │ train │
-        │ 13 │ model.layer1.0.bn2          │ BatchNorm2d          │    128 │ train │
-        │ 14 │ model.layer1.0.act2         │ ReLU                 │      0 │ train │
-        │ 15 │ model.layer1.1              │ BasicBlock           │ 74.0 K │ train │
-        │ 16 │ model.layer1.1.conv1        │ Conv2d               │ 36.9 K │ train │
-        │ 17 │ model.layer1.1.bn1          │ BatchNorm2d          │    128 │ train │
-        │ 18 │ model.layer1.1.drop_block   │ Identity             │      0 │ train │
-        │ 19 │ model.layer1.1.act1         │ ReLU                 │      0 │ train │
-        │ 20 │ model.layer1.1.aa           │ Identity             │      0 │ train │
-        │ 21 │ model.layer1.1.conv2        │ Conv2d               │ 36.9 K │ train │
-        │ 22 │ model.layer1.1.bn2          │ BatchNorm2d          │    128 │ train │
-        │ 23 │ model.layer1.1.act2         │ ReLU                 │      0 │ train │
-        │ 24 │ model.layer2                │ Sequential           │  525 K │ train │
-        │ 25 │ model.layer2.0              │ BasicBlock           │  230 K │ train │
-        │ 26 │ model.layer2.0.conv1        │ Conv2d               │ 73.7 K │ train │
-        │ 27 │ model.layer2.0.bn1          │ BatchNorm2d          │    256 │ train │
-        │ 28 │ model.layer2.0.drop_block   │ Identity             │      0 │ train │
-        │ 29 │ model.layer2.0.act1         │ ReLU                 │      0 │ train │
-        │ 30 │ model.layer2.0.aa           │ Identity             │      0 │ train │
-        │ 31 │ model.layer2.0.conv2        │ Conv2d               │  147 K │ train │
-        │ 32 │ model.layer2.0.bn2          │ BatchNorm2d          │    256 │ train │
-        │ 33 │ model.layer2.0.act2         │ ReLU                 │      0 │ train │
-        │ 34 │ model.layer2.0.downsample   │ Sequential           │  8.4 K │ train │
-        │ 35 │ model.layer2.0.downsample.0 │ Conv2d               │  8.2 K │ train │
-        │ 36 │ model.layer2.0.downsample.1 │ BatchNorm2d          │    256 │ train │
-        │ 37 │ model.layer2.1              │ BasicBlock           │  295 K │ train │
-        │ 38 │ model.layer2.1.conv1        │ Conv2d               │  147 K │ train │
-        │ 39 │ model.layer2.1.bn1          │ BatchNorm2d          │    256 │ train │
-        │ 40 │ model.layer2.1.drop_block   │ Identity             │      0 │ train │
-        │ 41 │ model.layer2.1.act1         │ ReLU                 │      0 │ train │
-        │ 42 │ model.layer2.1.aa           │ Identity             │      0 │ train │
-        │ 43 │ model.layer2.1.conv2        │ Conv2d               │  147 K │ train │
-        │ 44 │ model.layer2.1.bn2          │ BatchNorm2d          │    256 │ train │
-        │ 45 │ model.layer2.1.act2         │ ReLU                 │      0 │ train │
-        │ 46 │ model.layer3                │ Sequential           │  2.1 M │ train │
-        │ 47 │ model.layer3.0              │ BasicBlock           │  919 K │ train │
-        │ 48 │ model.layer3.0.conv1        │ Conv2d               │  294 K │ train │
-        │ 49 │ model.layer3.0.bn1          │ BatchNorm2d          │    512 │ train │
-        │ 50 │ model.layer3.0.drop_block   │ Identity             │      0 │ train │
-        │ 51 │ model.layer3.0.act1         │ ReLU                 │      0 │ train │
-        │ 52 │ model.layer3.0.aa           │ Identity             │      0 │ train │
-        │ 53 │ model.layer3.0.conv2        │ Conv2d               │  589 K │ train │
-        │ 54 │ model.layer3.0.bn2          │ BatchNorm2d          │    512 │ train │
-        │ 55 │ model.layer3.0.act2         │ ReLU                 │      0 │ train │
-        │ 56 │ model.layer3.0.downsample   │ Sequential           │ 33.3 K │ train │
-        │ 57 │ model.layer3.0.downsample.0 │ Conv2d               │ 32.8 K │ train │
-        │ 58 │ model.layer3.0.downsample.1 │ BatchNorm2d          │    512 │ train │
-        │ 59 │ model.layer3.1              │ BasicBlock           │  1.2 M │ train │
-        │ 60 │ model.layer3.1.conv1        │ Conv2d               │  589 K │ train │
-        │ 61 │ model.layer3.1.bn1          │ BatchNorm2d          │    512 │ train │
-        │ 62 │ model.layer3.1.drop_block   │ Identity             │      0 │ train │
-        │ 63 │ model.layer3.1.act1         │ ReLU                 │      0 │ train │
-        │ 64 │ model.layer3.1.aa           │ Identity             │      0 │ train │
-        │ 65 │ model.layer3.1.conv2        │ Conv2d               │  589 K │ train │
-        │ 66 │ model.layer3.1.bn2          │ BatchNorm2d          │    512 │ train │
-        │ 67 │ model.layer3.1.act2         │ ReLU                 │      0 │ train │
-        │ 68 │ model.layer4                │ Sequential           │  8.4 M │ train │
-        │ 69 │ model.layer4.0              │ BasicBlock           │  3.7 M │ train │
-        │ 70 │ model.layer4.0.conv1        │ Conv2d               │  1.2 M │ train │
-        │ 71 │ model.layer4.0.bn1          │ BatchNorm2d          │  1.0 K │ train │
-        │ 72 │ model.layer4.0.drop_block   │ Identity             │      0 │ train │
-        │ 73 │ model.layer4.0.act1         │ ReLU                 │      0 │ train │
-        │ 74 │ model.layer4.0.aa           │ Identity             │      0 │ train │
-        │ 75 │ model.layer4.0.conv2        │ Conv2d               │  2.4 M │ train │
-        │ 76 │ model.layer4.0.bn2          │ BatchNorm2d          │  1.0 K │ train │
-        │ 77 │ model.layer4.0.act2         │ ReLU                 │      0 │ train │
-        │ 78 │ model.layer4.0.downsample   │ Sequential           │  132 K │ train │
-        │ 79 │ model.layer4.0.downsample.0 │ Conv2d               │  131 K │ train │
-        │ 80 │ model.layer4.0.downsample.1 │ BatchNorm2d          │  1.0 K │ train │
-        │ 81 │ model.layer4.1              │ BasicBlock           │  4.7 M │ train │
-        │ 82 │ model.layer4.1.conv1        │ Conv2d               │  2.4 M │ train │
-        │ 83 │ model.layer4.1.bn1          │ BatchNorm2d          │  1.0 K │ train │
-        │ 84 │ model.layer4.1.drop_block   │ Identity             │      0 │ train │
-        │ 85 │ model.layer4.1.act1         │ ReLU                 │      0 │ train │
-        │ 86 │ model.layer4.1.aa           │ Identity             │      0 │ train │
-        │ 87 │ model.layer4.1.conv2        │ Conv2d               │  2.4 M │ train │
-        │ 88 │ model.layer4.1.bn2          │ BatchNorm2d          │  1.0 K │ train │
-        │ 89 │ model.layer4.1.act2         │ ReLU                 │      0 │ train │
-        │ 90 │ model.global_pool           │ SelectAdaptivePool2d │      0 │ train │
-        │ 91 │ model.global_pool.pool      │ AdaptiveAvgPool2d    │      0 │ train │
-        │ 92 │ model.global_pool.flatten   │ Flatten              │      0 │ train │
-        │ 93 │ model.fc                    │ Linear               │  5.1 K │ train │
-        │ 94 │ train_acc                   │ MulticlassAccuracy   │      0 │ train │
-        │ 95 │ val_acc                     │ MulticlassAccuracy   │      0 │ train │
-        │ 96 │ test_acc                    │ MulticlassAccuracy   │      0 │ train │
-        └────┴─────────────────────────────┴──────────────────────┴────────┴───────┘
+<h2>LitServe Request Handling </h2>
 
-How to Train, Evaluate, and Infer Using Docker
+LitServe, part of the Lightning AI ecosystem, provides a framework for serving machine learning models and handling inference requests. To handle concurrent requests effectively in LitServe, you'll need to leverage scaling, multi-threading, and possibly load balancing to ensure the model server can manage multiple requests at once.
 
- 1. Build the Docker image:
+Here are some ways to handle concurrent requests in LitServe:
 
-          docker build -t dogbreed-classification .
- 
- 2. To run training:
+<h3>1. Use Multiple Workers with LitServe</h3>
+LitServe supports running the server with multiple workers. Each worker handles incoming requests concurrently, improving throughput and ensuring that the server can handle multiple requests without blocking.
 
-          docker run -v $(pwd)/model_artifacts:/app/logs dogbreed-classification src/train.py
+You can configure multiple workers in the LitServe configuration to enable parallel processing.
 
-          Above docker script will generate the model artifact in below directory .
-    
- <img width="470" alt="image" src="https://github.com/user-attachments/assets/6f518288-0ecd-4995-8eb9-4a73319d6f0f">
- 
- 3. To run evaluation:
-
-          docker run -v $(pwd)/model_artifacts:/app/logs dogbreed-classification src/eval.py ckpt_path=./logs/train/runs/2024-10-08_10-50-43/checkpoints/epoch_001.ckpt
-
-          please update the best model check point path generated from training script . 
-    
- 4. To run inference:
-
-          docker run -v $(pwd)/model_artifacts:/app/logs dogbreed-classification src/infer.py ckpt_path=./logs/train/runs/2024-10-08_10-50-43/checkpoints/epoch_001.ckpt
-
-          please update the best model check point path generated from training script . 
+Example:
 
 
- 5 By default it performs inference on the images present in the dataset folder.
+   <h1>add yaml here </h1>
 
-          To modify the infer arguments, you can do the following:
+<h3>2. Enable Multi-Threading (For Models with Heavy Inference)</h3>
+LitServe can handle multi-threaded requests, especially for CPU-bound tasks like model inference. This can help serve multiple requests at the same time without creating separate processes for each request.
 
-          docker run -v $(pwd)/model_artifacts:/app/checkpoints dogbreed-classification infer --input_folder="path/to/custom/input" --  output_folder="path/to/custom/output" --     ckpt_path="path/to/custom/checkpoint.ckpt"
+For CPU-bound models, multi-threading allows multiple requests to be processed in parallel by splitting the tasks across available CPU cores. In LitServe, the number of threads can often be controlled based on the underlying model's framework or using server settings.
+
+Example in Python-based models with LitServe:
+
+
+<h3>3. Batching Requests for Efficiency</h3>
+If your model supports batching (processing multiple inputs at once), you can configure LitServe to batch incoming requests. Batching allows you to process multiple inference requests simultaneously, which improves performance and reduces processing time for each individual request.
+
+You can implement batching logic in the request handler to group multiple requests and send them in a single inference call to the model.
+
+Example of batch processing:
+
+<h3>4. Asynchronous Request Handling </h3>
+
+
+If you need better performance with I/O-bound tasks, such as pre- or post-processing, you can handle requests asynchronously. LitServe may provide hooks for async handling, or you can implement async logic using Python’s asyncio for non-blocking operations.
+
+<h3>5. Load Balancing Across Multiple LitServe Instances</h3>
+
+To handle even higher levels of concurrency, you can deploy multiple LitServe instances (possibly in different regions or clusters) and configure a load balancer (like Nginx or HAProxy) or use a cloud-based load balancer (AWS ELB, Google Cloud Load Balancer, etc.) to distribute traffic across LitServe instances.
+
+This helps in scaling horizontally and ensures that no single instance is overloaded.
 
 
 
-<h3>Docker Setup</h3>
-
-1. Dockerfile
-This repository includes a Dockerfile to containerize the training, evaluation, and inference process. The Docker image includes the necessary dependencies and installs the project package.
-         # Build stage
-         FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS builder
-
-         ENV UV_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cpu
-         ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
-
-         WORKDIR /app
-
-         # Install dependencies
-          RUN --mount=type=cache,target=/root/.cache/uv \
-         	--mount=type=bind,source=uv.lock,target=uv.lock \
-        	--mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-        	uv sync --frozen --no-install-project --no-dev
-
-         # Copy the rest of the application
-         ADD . /app
-
-         # Install the project and its dependencies
-         RUN --mount=type=cache,target=/root/.cache/uv \
-     	uv sync --frozen --no-dev
-
-         # Final stage
-         FROM python:3.12-slim-bookworm
-
-         # Copy the application from the builder
-         COPY --from=builder --chown=app:app /app /app
-
-         # Place executables in the environment at the front of the path
-         ENV PATH="/app/.venv/bin:$PATH"
-
-         # Set the working directory
-         WORKDIR /app
-
-ouput from :  src/train.py
-<img width="1075" alt="image" src="https://github.com/user-attachments/assets/6a844b1a-9553-4c19-8a00-9d6241ace6ec">
-ouput from :  src/eval.py
-<img width="1262" alt="image" src="https://github.com/user-attachments/assets/b56d2f54-71e9-4ce5-9a76-60aef51cfa10">
-ouput from :  src/infer.py
-<img width="1615" alt="image" src="https://github.com/user-attachments/assets/95dae635-e28f-4da6-afb5-6ceebc0e90bf">
 
 
 
-<h3>Prediction Results</h3>
-
-  The model prediction gets saved in the predicted_images folder in the model artifacts.
-
-
-  <table>
-  <tr>
-    <td><img src="https://github.com/user-attachments/assets/92cb4dd8-8f37-4ae5-a906-7447554720a9" width="500"/></td>
-    <td><img src="https://github.com/user-attachments/assets/2cde3ce2-3596-4bf9-bb88-9d2c996407eb" width="500"/></td>
-  </tr>
-  <tr>
-    <td><img src="https://github.com/user-attachments/assets/c2a4bc37-078d-49d2-afbe-65cc0ccd3a82" width="500"/></td>
-    <td><img src="https://github.com/user-attachments/assets/7ca0ca0e-3295-49eb-a266-e2009eca271e" width="500"/></td>
-  </tr>
-   <tr>
-    <td><img src="https://github.com/user-attachments/assets/97d12ed1-9f40-4d9e-929f-d282be82e882" width="500"/></td>
-    <td><img src="https://github.com/user-attachments/assets/3adf2fc0-2753-4cb9-bd93-b4bbcb236077" width="500"/></td>
-  </tr>
-  <tr>
-    <td><img src="https://github.com/user-attachments/assets/c6bb007a-d7be-4942-8b04-2d8148e57522" width="500"/></td>
-    <td><img src="https://github.com/user-attachments/assets/2d96e61d-b49b-41cb-b342-871f2a43476d" width="500"/></td>
-  </tr>
-  <tr>
-    <td><img src="https://github.com/user-attachments/assets/20e0d992-23dc-4816-a6d1-d01efd04b0bb" width="500"/></td>
-    <td><img src="https://github.com/user-attachments/assets/c5ebc356-60f7-4ab1-bcca-22cfc5e281de" width="500"/></td>
-  </tr>
-</table>
-
-
-<h3>Requirements</h3>
-
-         Docker
-         Kaggle API (for downloading the dataset)
-         GitHub Codespaces or Visual Studio Code with the Remote Containers extension (for DevContainer setup)
-
-  
-    
 
