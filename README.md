@@ -61,15 +61,12 @@ You can configure multiple workers in the LitServe configuration to enable paral
 
 Example:
 
-
-   <h1>add yaml here </h1>
-
 <h3>2. Enable Multi-Threading (For Models with Heavy Inference)</h3>
 LitServe can handle multi-threaded requests, especially for CPU-bound tasks like model inference. This can help serve multiple requests at the same time without creating separate processes for each request.
 
 For CPU-bound models, multi-threading allows multiple requests to be processed in parallel by splitting the tasks across available CPU cores. In LitServe, the number of threads can often be controlled based on the underlying model's framework or using server settings.
 
-Example in Python-based models with LitServe:
+Example:
 
 
 <h3>3. Batching Requests for Efficiency</h3>
@@ -77,18 +74,23 @@ If your model supports batching (processing multiple inputs at once), you can co
 
 You can implement batching logic in the request handler to group multiple requests and send them in a single inference call to the model.
 
-Example of batch processing:
+Example:
 
 <h3>4. Asynchronous Request Handling </h3>
 
 
 If you need better performance with I/O-bound tasks, such as pre- or post-processing, you can handle requests asynchronously. LitServe may provide hooks for async handling, or you can implement async logic using Python’s asyncio for non-blocking operations.
 
+Example:
+
+
 <h3>5. Load Balancing Across Multiple LitServe Instances</h3>
 
 To handle even higher levels of concurrency, you can deploy multiple LitServe instances (possibly in different regions or clusters) and configure a load balancer (like Nginx or HAProxy) or use a cloud-based load balancer (AWS ELB, Google Cloud Load Balancer, etc.) to distribute traffic across LitServe instances.
 
 This helps in scaling horizontally and ensures that no single instance is overloaded.
+
+Example:
 
 
 
