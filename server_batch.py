@@ -4,24 +4,41 @@ from PIL import Image
 import io
 import litserve as ls
 import base64
+from datetime import datetime
 
-class ImageClassifierAPI(ls.LitAPI):
+# Define labels for the specific dog breeds
+DOG_BREEDS = ['beagle', 'boxer', 'bulldog', 'dachshund', 'german_shepherd',
+              'golden_retriever', 'labrador_retriever', 'poodle', 'rottweiler', 'yorkshire_terrier']
+
+class DogBreedClassifierAPI(ls.LitAPI):
     def setup(self, device):
         """Initialize the model and necessary components"""
         self.device = device
-        # Create model and move to appropriate device
-        self.model = timm.create_model('mambaout_base.in1k', pretrained=True)
+        self.labels = DOG_BREEDS
+        self.num_classes = len(self.labels)
+
+        # Load a pre-trained model and adjust for 10-class output
+        self.model = timm.create_model('mambaout_base.in1k', pretrained=True, num_classes=10)
         self.model = self.model.to(device)
         self.model.eval()
 
-        # Get model specific transforms
+        # Get model-specific transforms for preprocessing
         data_config = timm.data.resolve_model_data_config(self.model)
         self.transforms = timm.data.create_transform(**data_config, is_training=False)
 
-        # Load ImageNet labels
-        import requests
-        url = 'https://storage.googleapis.com/bit_models/ilsvrc2012_wordnet_lemmas.txt'
-        self.labels = [line.split(', ') for line in requests.get(url).text.strip().split('\n')]
+    # def decode_request(self, request):
+    #     """Convert base64 encoded image to tensor"""
+    #     image_bytes = request.get("image")
+    #     if not image_bytes:
+    #         raise ValueError("No image data provided")
+        
+    #     # Decode base64 string to bytes and convert to PIL image
+    #     img_bytes = base64.b64decode(image_bytes)
+    #     image = Image.open(io.BytesIO(img_bytes)).convert("RGB")
+        
+    #     # Apply transformations and move to device
+    #     tensor = self.transforms(image).unsqueeze(0).to(self.device)
+    #     return tensor
 
     def decode_request(self, request):
         """Convert base64 encoded image to tensor"""
@@ -59,21 +76,25 @@ class ImageClassifierAPI(ls.LitAPI):
 
     def encode_response(self, output):
         """Convert model output to API response"""
-        # Get top 5 predictions
-        probs, indices = torch.topk(output, k=5)
-        
-        return {
-            "predictions": [
-                {
-                    "label": self.labels[idx.item()],
-                    "probability": prob.item()
-                }
-                for prob, idx in zip(probs, indices)
-            ]
-        }
+        responses = []
+        for i in range(len(output)):  # Loop over the batch
+            # Each output[i] should be a 1D tensor of shape [num_classes]
+            probs, indices = torch.topk(output[i], k=1)  # Get top 1 prediction for each image
+            idx = indices.item()  # Get the index of the top class
+            prob = probs.item()   # Get the probability of the top class
+            responses.append({
+                "predictions": [
+                    {
+                        "label": self.labels[idx],
+                        "probability": prob
+                    }
+                ]
+            })
+        return responses
+
 
 if __name__ == "__main__":
-    api = ImageClassifierAPI()
+    api = DogBreedClassifierAPI()
     # Configure server with batching
     server = ls.LitServer(
         api,
