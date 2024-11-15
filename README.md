@@ -65,9 +65,7 @@ LitServe does not handle multiple requests by default . LitServe requires additi
 ![image](https://github.com/user-attachments/assets/43d0a2ab-61e9-4551-9427-d14ddf12ecc0)
 
 
-
-
-By default, LitServe may be single-threaded, meaning it processes requests one by one on a single worker process or thread. While this works for light traffic, it is not ideal for handling concurrent requests in a production environment.
+By default, LitServe may be single-threaded, meaning it processes requests one by one on a single worker process or thread this is one of the primary reasion for less Requests per Second. 
 
 
 <h3>2. Batching Requests for Efficiency</h3>
@@ -77,11 +75,11 @@ You can implement batching logic in the request handler to group multiple reques
 
 <img width="1417" alt="image" src="https://github.com/user-attachments/assets/791b032b-6752-455a-8d07-d7cc4a714008">
 
-
 ![image](https://github.com/user-attachments/assets/5e2778b1-9bbd-4ff2-9557-703c1ee04707)
 
 ![image](https://github.com/user-attachments/assets/77ebcd25-01bc-434a-8820-b3ca92e31e7f)
 
+As LitServe queues requests for a specified duration and processes them collectively, we observe a slight improvement in performance in terms of Requests per Second and memory usage.
 
 Example:
 
@@ -97,7 +95,7 @@ You can configure multiple workers in the LitServe configuration to enable paral
 
 ![image](https://github.com/user-attachments/assets/f0e91db7-0114-4839-b4c8-e55ae6dc58f5)
 
-
+With multiple workers running as separate server instances, the system can handle multiple requests per instance. As each instance processes requests, there is a noticeable improvement in performance, with Requests per Second increasing. However, memory usage is also significantly higher, reaching levels of 80-90% or more.
 
 Example:
 
