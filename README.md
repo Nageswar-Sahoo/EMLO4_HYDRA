@@ -1,4 +1,4 @@
-<h1>Dog Breed Image Dataset Inference with LitServe </h1>
+<img width="1791" alt="image" src="https://github.com/user-attachments/assets/ee70cd12-6bab-48d7-a607-8c34324614b5"><h1>Dog Breed Image Dataset Inference with LitServe </h1>
 
 This repository contains a PyTorch Lightning-based project for classifying dog breeds using a dataset from Kaggle. The project includes Docker support, a DevContainer setup, and inference using a pre-trained model. Configuration management is handled using Hydra.
 
@@ -65,7 +65,7 @@ LitServe does not handle multiple requests by default . LitServe requires additi
 ![image](https://github.com/user-attachments/assets/43d0a2ab-61e9-4551-9427-d14ddf12ecc0)
 
 
-By default, LitServe may be single-threaded, meaning it processes requests one by one on a single worker process or thread this is one of the primary reasion for less Requests per Second. 
+By default, LitServe may be single-threaded, meaning it processes requests one by one on a single worker process or thread this is one of the primary reasion for less Requests per Second and CPU Usage . 
 
 
 <h3>2. Batching Requests for Efficiency</h3>
@@ -79,7 +79,7 @@ You can implement batching logic in the request handler to group multiple reques
 
 ![image](https://github.com/user-attachments/assets/77ebcd25-01bc-434a-8820-b3ca92e31e7f)
 
-As LitServe queues requests for a specified duration and processes them collectively, we observe a slight improvement in performance in terms of Requests per Second and memory usage.
+As LitServe queues requests for a specified duration and processes them collectively, we observe a slight improvement in performance in terms of Requests per Second and CPU usage.
 
 Example:
 
@@ -95,7 +95,7 @@ You can configure multiple workers in the LitServe configuration to enable paral
 
 ![image](https://github.com/user-attachments/assets/f0e91db7-0114-4839-b4c8-e55ae6dc58f5)
 
-With multiple workers running as separate server instances, the system can handle multiple requests per instance. As each instance processes requests, there is a noticeable improvement in performance, with Requests per Second increasing. However, memory usage is also significantly higher, reaching levels of 80-90% or more.
+With multiple workers running as separate server instances, the system can handle multiple requests per instance. As each instance processes requests, there is a noticeable improvement in performance, with Requests per Second increasing. However, CPU usage is also significantly higher, reaching levels of 80-90% or more.
 
 Example:
 
