@@ -1,4 +1,4 @@
-<img width="1791" alt="image" src="https://github.com/user-attachments/assets/ee70cd12-6bab-48d7-a607-8c34324614b5"><h1>Dog Breed Image Dataset Inference with LitServe </h1>
+<h1>Dog Breed Image Dataset Inference with LitServe </h1>
 
 This repository contains a PyTorch Lightning-based project for classifying dog breeds using a dataset from Kaggle. The project includes Docker support, a DevContainer setup, and inference using a pre-trained model. Configuration management is handled using Hydra.
 
@@ -54,7 +54,7 @@ LitServe, part of the Lightning AI ecosystem, provides a framework for serving m
 
 Here are some ways to handle concurrent requests in LitServe:
 
-<h3>1. Simple Request And Response Handling </h3>
+<h3>1. Default Request And Response Handling </h3>
 
 LitServe does not handle multiple requests by default . LitServe requires additional configuration to efficiently handle multiple concurrent requests, especially if you are running inference jobs or serving models.
 
@@ -67,11 +67,17 @@ LitServe does not handle multiple requests by default . LitServe requires additi
 
 By default, LitServe may be single-threaded, meaning it processes requests one by one on a single worker process or thread this is one of the primary reasion for less Requests per Second and CPU Usage . 
 
+Server Config : 
+
+      server = ls.LitServer(
+        api,
+        accelerator="gpu",
+       )
+       server.run(port=8000)
+
 
 <h3>2. Batching Requests for Efficiency</h3>
 If your model supports batching (processing multiple inputs at once), you can configure LitServe to batch incoming requests. Batching allows you to process multiple inference requests simultaneously, which improves performance and reduces processing time for each individual request.
-
-You can implement batching logic in the request handler to group multiple requests and send them in a single inference call to the model.
 
 <img width="1417" alt="image" src="https://github.com/user-attachments/assets/791b032b-6752-455a-8d07-d7cc4a714008">
 
@@ -81,10 +87,18 @@ You can implement batching logic in the request handler to group multiple reques
 
 As LitServe queues requests for a specified duration and processes them collectively, we observe a slight improvement in performance in terms of Requests per Second and CPU usage.
 
-Example:
+Server Config : 
 
+    server = ls.LitServer(
+        api,
+        accelerator="gpu",
+        max_batch_size=64,  
+        batch_timeout=0.01,  
+    )
+    server.run(port=8000)
 
 <h3>3. Use Multiple Workers with LitServe</h3>
+
 LitServe supports running the server with multiple workers, This allows the server to spin up separate processes, each capable of handling requests independently. 
 . Each worker handles incoming requests concurrently, improving throughput and ensuring that the server can handle multiple requests without blocking.
 You can configure multiple workers in the LitServe configuration to enable parallel processing.
@@ -97,20 +111,43 @@ You can configure multiple workers in the LitServe configuration to enable paral
 
 With multiple workers running as separate server instances, the system can handle multiple requests per instance. As each instance processes requests, there is a noticeable improvement in performance, with Requests per Second increasing. However, CPU usage is also significantly higher, reaching levels of 80-90% or more.
 
-Example:
+Server Config : 
 
-Issue : 
+      server = ls.LitServer(
+        api,
+        accelerator="gpu",
+        max_batch_size=64,  # Adjust based on your GPU memory and requirements
+        batch_timeout=0.01,  # Timeout in seconds to wait for forming batches
+        workers_per_device=4
+       )
+       server.run(port=8000)
 
 <h3>4. Half Precision (FP16)</h3>
 
 Half Precision (FP16) in LitServe refers to using 16-bit floating-point numbers (instead of the standard 32-bit floating-point numbers or FP32) for model inference. Using half-precision can significantly reduce memory usage and speed up inference, especially on GPUs that support FP16 operations, without sacrificing much accuracy for many types of models.
 
+<img width="1425" alt="image" src="https://github.com/user-attachments/assets/cfb16eee-5d14-48b7-9f74-44e1772a7028">
+
 ![image](https://github.com/user-attachments/assets/88536a2d-b024-49dc-abde-569d5986e498)
 
 ![image](https://github.com/user-attachments/assets/f7b9d9dd-d90a-4e18-8b7d-15c83980ee2e)
 
-<img width="1425" alt="image" src="https://github.com/user-attachments/assets/cfb16eee-5d14-48b7-9f74-44e1772a7028">
 
+Using 16-bit floating-point numbers (half-precision) can significantly reduce memory usage and accelerate inference, with minimal impact on accuracy for many model types. This improvement is evident from the benchmark results.
+
+Server Config : 
+
+        self.model = self.model.to(device).to(precision)
+	torch.stack(batched_tensors).to(self.device).to(precision)
+
+     server = ls.LitServer(
+        api,
+        accelerator="gpu",
+        max_batch_size=64,  # Adjust based on your GPU memory and requirements
+        batch_timeout=0.01,  # Timeout in seconds to wait for forming batches
+        workers_per_device=4
+       )
+    server.run(port=8000)
 
 <h3>5. Load Balancing Across Multiple LitServe Instances</h3>
 
