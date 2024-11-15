@@ -157,7 +157,7 @@ To handle even higher levels of concurrency, you can deploy multiple LitServe in
 
 This helps in scaling horizontally and ensures that no single instance is overloaded.
 
-<h2>Assignment-1 </h2>
+<h2>Assignment-2 </h2>
 
 
 
