@@ -58,50 +58,63 @@ Here are some ways to handle concurrent requests in LitServe:
 
 LitServe does not handle multiple requests by default . LitServe requires additional configuration to efficiently handle multiple concurrent requests, especially if you are running inference jobs or serving models.
 
+<img width="1413" alt="image" src="https://github.com/user-attachments/assets/883edc6d-223b-4d65-b98c-466c9368e039">
 
-Issue : 
+![image](https://github.com/user-attachments/assets/c732908c-5fc0-4f55-a95b-bd1919b23a22)
+
+![image](https://github.com/user-attachments/assets/43d0a2ab-61e9-4551-9427-d14ddf12ecc0)
+
+
+
 
 By default, LitServe may be single-threaded, meaning it processes requests one by one on a single worker process or thread. While this works for light traffic, it is not ideal for handling concurrent requests in a production environment.
 
 
-<h3>1. Batching Requests for Efficiency</h3>
+<h3>2. Batching Requests for Efficiency</h3>
 If your model supports batching (processing multiple inputs at once), you can configure LitServe to batch incoming requests. Batching allows you to process multiple inference requests simultaneously, which improves performance and reduces processing time for each individual request.
 
 You can implement batching logic in the request handler to group multiple requests and send them in a single inference call to the model.
 
+<img width="1417" alt="image" src="https://github.com/user-attachments/assets/791b032b-6752-455a-8d07-d7cc4a714008">
+
+
+![image](https://github.com/user-attachments/assets/5e2778b1-9bbd-4ff2-9557-703c1ee04707)
+
+![image](https://github.com/user-attachments/assets/77ebcd25-01bc-434a-8820-b3ca92e31e7f)
+
+
 Example:
 
 
-<h3>2. Use Multiple Workers with LitServe</h3>
+<h3>3. Use Multiple Workers with LitServe</h3>
 LitServe supports running the server with multiple workers, This allows the server to spin up separate processes, each capable of handling requests independently. 
 . Each worker handles incoming requests concurrently, improving throughput and ensuring that the server can handle multiple requests without blocking.
 You can configure multiple workers in the LitServe configuration to enable parallel processing.
+
+<img width="1408" alt="image" src="https://github.com/user-attachments/assets/93058fca-1e3c-4036-8229-46c4ba854f6c">
+
+![image](https://github.com/user-attachments/assets/ae359b3f-36c6-4799-9b45-718370a2af18)
+
+![image](https://github.com/user-attachments/assets/f0e91db7-0114-4839-b4c8-e55ae6dc58f5)
+
+
 
 Example:
 
 Issue : 
 
-<h3>3. Enable Multi-Threading (For Models with Heavy Inference)</h3>
-LitServe can handle multi-threaded requests, especially for CPU-bound tasks like model inference. This can help serve multiple requests at the same time without creating separate processes for each request.
-
-For CPU-bound models, multi-threading allows multiple requests to be processed in parallel by splitting the tasks across available CPU cores. In LitServe, the number of threads can often be controlled based on the underlying model's framework or using server settings.
-
-Example:
-
-
-<h3>4. Asynchronous Request Handling </h3>
-
-
-If you need better performance with I/O-bound tasks, such as pre- or post-processing, you can handle requests asynchronously. LitServe may provide hooks for async handling, or you can implement async logic using Python’s asyncio for non-blocking operations.
-
-Example:
-
-<h3>5. Half Precision (FP16)</h3>
+<h3>4. Half Precision (FP16)</h3>
 
 Half Precision (FP16) in LitServe refers to using 16-bit floating-point numbers (instead of the standard 32-bit floating-point numbers or FP32) for model inference. Using half-precision can significantly reduce memory usage and speed up inference, especially on GPUs that support FP16 operations, without sacrificing much accuracy for many types of models.
 
+![image](https://github.com/user-attachments/assets/88536a2d-b024-49dc-abde-569d5986e498)
 
-<h3>6. Load Balancing Across Multiple LitServe Instances</h3>
+![image](https://github.com/user-attachments/assets/f7b9d9dd-d90a-4e18-8b7d-15c83980ee2e)
+
+<img width="1425" alt="image" src="https://github.com/user-attachments/assets/cfb16eee-5d14-48b7-9f74-44e1772a7028">
+
+
+<h3>5. Load Balancing Across Multiple LitServe Instances</h3>
 
 To handle even higher levels of concurrency, you can deploy multiple LitServe instances (possibly in different regions or clusters) and configure a load balancer (like Nginx or HAProxy) or use a cloud-based load balancer (AWS ELB, Google Cloud Load Balancer, etc.) to distribute traffic across LitServe instances.
 
