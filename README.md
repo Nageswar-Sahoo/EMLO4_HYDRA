@@ -47,6 +47,8 @@ LitServer is a lightweight, high-performance model-serving framework designed to
 
 <h4>Customizable API:  </h4> LitServer allows you to define custom routes and request handling, giving you control over how the model serves and responds to requests.
 
+<h2>Assignment-1 </h2>
+
 
 <h2>LitServe Request Handling </h2>
 
@@ -155,7 +157,8 @@ To handle even higher levels of concurrency, you can deploy multiple LitServe in
 
 This helps in scaling horizontally and ensures that no single instance is overloaded.
 
-Example:
+<h2>Assignment-1 </h2>
+
 
 
 
