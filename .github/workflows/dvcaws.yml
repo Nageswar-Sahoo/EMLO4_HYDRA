@@ -106,3 +106,55 @@ jobs:
           run: |
             docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
             docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+
+  pull-and-run-image:
+   needs: build-and-push-image
+   runs-on: self-hosted
+   permissions:
+    contents: read
+    packages: write
+
+   steps:
+    # Step 1: Configure AWS Credentials
+    - name: Configure AWS Credentials
+      run: |
+        aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws configure set region ${{ secrets.AWS_REGION }}
+
+    # Step 2: Login to Amazon ECR
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    # Step 3: Pull the Docker Image from Amazon ECR
+    - name: Pull Docker Image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
+        COMMIT_HASH: ${{ env.commit-hash }}
+        TIMESTAMP: ${{ env.timestamp }}
+      run: |
+        IMAGE_TAG="${COMMIT_HASH}-${TIMESTAMP}"
+        FULL_IMAGE_URI="${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}"
+
+        echo "Pulling Docker image: ${FULL_IMAGE_URI}"
+        docker pull "${FULL_IMAGE_URI}"
+
+    # Step 4: Run the Docker Image
+    - name: Run Docker Image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
+        COMMIT_HASH: ${{ env.commit-hash }}
+        TIMESTAMP: ${{ env.timestamp }}
+      run: |
+        IMAGE_TAG="${COMMIT_HASH}-${TIMESTAMP}"
+        FULL_IMAGE_URI="${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}"
+
+        echo "Running Docker image: ${FULL_IMAGE_URI}"
+        docker run --rm "${FULL_IMAGE_URI}"
+
+
+            
