@@ -1,0 +1,48 @@
+name: Run Docker Image from ECR
+
+on:
+  workflow_dispatch: # Manual trigger
+    inputs:
+      ecr_image_name:
+        description: "ECR Image name to run (e.g., dvcawsacr:e502079-2024-11-16-05-39)"
+        required: true
+
+jobs:
+  pull-and-run-image:
+    runs-on: self-hosted
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      # Step 1: Configure AWS Credentials
+      - name: Configure AWS Credentials
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region ${{ secrets.AWS_REGION }}
+
+      # Step 2: Login to Amazon ECR
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      # Step 3: Pull the Docker Image
+      - name: Pull Docker Image
+        env:
+          ECR_IMAGE_NAME: ${{ github.event.inputs.ecr_image_name }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          FULL_IMAGE_URI="${ECR_REGISTRY}/${ECR_IMAGE_NAME}"
+          echo "Pulling Docker image: ${FULL_IMAGE_URI}"
+          docker pull "${FULL_IMAGE_URI}"
+
+      # Step 4: Run the Docker Image
+      - name: Run Docker Image
+        env:
+          ECR_IMAGE_NAME: ${{ github.event.inputs.ecr_image_name }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          FULL_IMAGE_URI="${ECR_REGISTRY}/${ECR_IMAGE_NAME}"
+          echo "Running Docker image: ${FULL_IMAGE_URI}"
+          docker run --rm "${FULL_IMAGE_URI}"
