@@ -10,7 +10,7 @@ on:
 
 jobs:
   dvc:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout Repository
@@ -71,7 +71,7 @@ jobs:
     
   build-and-push-image:
         needs: dvc
-        runs-on: ubuntu-latest
+        runs-on: self-hosted
         permissions:
           contents: read
           packages: write
