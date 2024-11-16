@@ -365,6 +365,8 @@ This GitHub Actions workflow pulls a specified Docker image from Amazon ECR and 
                       "${FULL_IMAGE_URI}"
                 # Step 5: Display Logs (Optional - If logs are stored in a volume)
 
+<img width="1436" alt="image" src="https://github.com/user-attachments/assets/24230e8a-b0bf-4872-9156-5eda9568f6cc">
+
 
 <h2>How to Train, Evaluate, and Infer Using Docker</h2>
 
