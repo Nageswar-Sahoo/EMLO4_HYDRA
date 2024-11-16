@@ -243,6 +243,7 @@ This workflow will trigger on every push to the main branch. You can adjust the 
 Once the workflow completes, navigate to your Amazon ECR repository in the AWS Console. You should see a new image tagged with the commit hash and timestamp.
 <img width="1470" alt="image" src="https://github.com/user-attachments/assets/47d42e23-90ef-4dc5-8c0b-9a2519db0421">
 
+<h2>GitHub Self-Hosted Runner on EC2</h2>
 
 <h2>Using Hydra for Configuration Management</h2>
 The project utilizes Hydra to manage configurations. Configuration files are located in the configs/ directory. You can modify these files to adjust various parameters for training, evaluation, and inference.
