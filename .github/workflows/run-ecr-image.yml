@@ -18,6 +18,8 @@ jobs:
       packages: write
 
     steps:
+      - name: Grant Execute Permissions to Script
+        run: chmod +x src/train.py
       # Step 1: Configure AWS Credentials
       - name: Configure AWS Credentials
         run: |
