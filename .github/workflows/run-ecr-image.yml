@@ -55,5 +55,8 @@ jobs:
       - name: Show Logs
         if: always()
         run: |
-          echo "Displaying logs from model_artifacts..."
-          cat model_artifacts/*
+         echo "Displaying logs from model_artifacts..."
+         WORKSPACE="$(pwd)"
+         ls "${WORKSPACE}/model_artifacts"
+
+          
