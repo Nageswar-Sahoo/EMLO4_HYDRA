@@ -132,6 +132,7 @@ This guide outlines how to configure an Amazon S3 bucket as a remote storage for
              run: |
                dvc status
      
+<img width="1788" alt="image" src="https://github.com/user-attachments/assets/5488b75d-7e02-48d4-b157-d6c381510751">
 
 <h2>GitHub Actions Workflow for Building and Pushing Docker Image to Amazon ECR</h2>
 
