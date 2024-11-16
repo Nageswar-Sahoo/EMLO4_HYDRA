@@ -30,3 +30,5 @@ ENV PATH="/app/.venv/bin:$PATH"
 
 # Set the working directory
 WORKDIR /app
+
+CMD ["python", "src/train.py"]
