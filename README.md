@@ -32,7 +32,7 @@ This dataset contains a collection of images for 10 different dog breeds, meticu
        Dachshund
 
 
-<h3>Setting Up S3 as a DVC Remote for Data Storage</h3>
+<h2>Setting Up S3 as a DVC Remote for Data Storage</h2>
 
 This guide outlines how to configure an Amazon S3 bucket as a remote storage for DVC (Data Version Control). This setup enables version-controlled data storage in S3, perfect for large datasets in machine learning and data science workflows.
 
@@ -133,7 +133,7 @@ This guide outlines how to configure an Amazon S3 bucket as a remote storage for
                dvc status
      
 
-<h3>GitHub Actions Workflow for Building and Pushing Docker Image to Amazon ECR</h3>
+<h2>GitHub Actions Workflow for Building and Pushing Docker Image to Amazon ECR</h2>
 
 This guide provides instructions to set up a GitHub Actions workflow for building a Docker image and pushing it to Amazon ECR (Elastic Container Registry). This is useful for automating the deployment of Docker images in AWS.
 
