@@ -6,9 +6,6 @@ on:
       ecr_image_name:
         description: "ECR Image name to run (e.g., dogbreed-classification)"
         required: true
-      script_path:
-        description: "Path to the script to execute inside the container (e.g., src/train.py)"
-        required: true
 
 jobs:
   pull-and-run-image:
@@ -47,16 +44,13 @@ jobs:
         env:
           ECR_IMAGE_NAME: ${{ github.event.inputs.ecr_image_name }}
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          SCRIPT_PATH: ${{ github.event.inputs.script_path }}
         run: |
           FULL_IMAGE_URI="${ECR_REGISTRY}/${ECR_IMAGE_NAME}"
           WORKSPACE="$(pwd)"
           echo "Running Docker image: ${FULL_IMAGE_URI} with script ${SCRIPT_PATH}"
           docker run \
             -v "${WORKSPACE}/model_artifacts:/app/logs" \
-            "${FULL_IMAGE_URI}" \
-            "${SCRIPT_PATH}"
-
+            "${FULL_IMAGE_URI}"
       # Step 5: Display Logs (Optional - If logs are stored in a volume)
       - name: Show Logs
         if: always()
