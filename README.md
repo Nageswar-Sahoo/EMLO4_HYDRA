@@ -367,6 +367,16 @@ This GitHub Actions workflow pulls a specified Docker image from Amazon ECR and 
 
 <img width="1436" alt="image" src="https://github.com/user-attachments/assets/24230e8a-b0bf-4872-9156-5eda9568f6cc">
 
+<h2>Using Amazon S3 for Model Checkpoints</h2>
+
+Amazon S3 (Simple Storage Service) is a highly scalable and durable object storage service provided by AWS. It is commonly used for storing and managing large datasets, backups, and model checkpoints in machine learning workflows. By storing model checkpoints on S3, you can ensure that your models are securely backed up and easily accessible for future inference or further training.
+
+In machine learning projects, model checkpoints are saved at various stages of training to allow recovery from interruptions, fine-tuning, or evaluation at later stages. Using S3 to store these checkpoints enables seamless integration with cloud-based infrastructure, making it easy to manage and retrieve checkpoints from different environments.
+
+By integrating AWS CLI or SDKs into your training pipeline, you can automatically upload checkpoints to an S3 bucket during the training process. This approach improves data accessibility, security, and scalability.
+
+<img width="1759" alt="image" src="https://github.com/user-attachments/assets/98c52f96-1296-451f-bd90-107f5628c09c">
+
 
 <h2>How to Train, Evaluate, and Infer Using Docker</h2>
 
