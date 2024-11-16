@@ -246,6 +246,71 @@ Once the workflow completes, navigate to your Amazon ECR repository in the AWS C
 
 <h2>GitHub Self-Hosted Runner on EC2</h2>
 
+Continuous Integration (CI) and Continuous Deployment (CD) have become essential practices in modern software development, streamlining development processes and accelerating delivery. GitHub Actions offers a powerful CI/CD platform, and one of its standout features is the use of self-hosted runners. These runners allow you to run workflows on infrastructure you control, such as EC2 instances, providing greater flexibility, cost savings, and control over your environment. In this blog post, we will explore what self-hosted runners are, their advantages, and provide a step-by-step guide to setting up an EC2 Ubuntu instance as a self-hosted runner for your GitHub workflows.
+
+
+<h3>Adding an EC2 Ubuntu Instance as a Self-Hosted Runner:</h3>
+Now, let’s walk through the steps to add an EC2 Ubuntu instance as a self-hosted runner on GitHub:
+
+<h4>Step 1: Set Up an EC2 Instance on AWS</h4>
+
+Log in to the AWS Management Console.
+Navigate to the EC2 dashboard and launch a new Ubuntu instance.
+Ensure that the instance has the necessary network configurations, security groups, and key pairs.
+
+<img width="1533" alt="image" src="https://github.com/user-attachments/assets/1807a49d-eb62-49cb-b998-5f079ddf5aa4">
+
+
+
+<h4>Step 2: Install GitHub Runner on the EC2 Instance</h4>
+  
+  Connect to your EC2 instance using SSH.
+  Download the GitHub Actions self-hosted runner package from the GitHub repository.
+  Extract the downloaded package.
+  Run the configuration script and follow the prompts.
+  Replace your-username and your-repository with your GitHub username and repository name.
+
+  
+  Create a folder
+  mkdir actions-runner && cd actions-runner
+ 
+  Download the latest runner package
+  curl -o actions-runner-linux-x64-2.320.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.320.0/actions-runner-linux-x64-2.320.0.tar.gz
+ 
+  Extract the installer
+  tar xzf ./actions-runner-linux-x64-2.320.0.tar.gz
+ 
+  Create the runner and start the configuration experience
+  ./config.sh --url https://github.com/Nageswar-Sahoo/EMLO4_HYDRA --token <token>
+ 
+
+
+<h4>Step 3: Start the Self-Hosted Runner Service </h4>
+
+  Copied!# Last step, run it!
+  ./run.sh
+
+<h4>Step 4: Verify and Monitor the Runner</h4>
+
+Go to your GitHub repository, navigate to “Settings,” and click on “Actions.”
+You should see your self-hosted runner listed under the “Runners” section.
+
+
+<h4>Step 5: Use Self-Hosted Runners in Your Workflow:</h4>
+
+Once your self-hosted runner is set up, integrating it into your GitHub Actions workflow is a breeze. Simply add the following line to your workflow YAML file:
+
+        jobs:
+          pull-and-run-image:
+            runs-on: self-hosted
+
+
+  
+
+<img width="1739" alt="image" src="https://github.com/user-attachments/assets/ca1ca4bb-b8c9-41c5-9001-4947d302d163">
+
+
+
 
 <h2>Run Docker Image from ECR with GitHub Actions</h2>
 
