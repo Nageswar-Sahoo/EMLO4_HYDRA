@@ -1,9 +1,11 @@
 name: CI/CD Pipeline
 
 on:
-  push:
-    branches: [ main ]
-
+  workflow_run:
+    workflows: ["DVC_with_S3"]
+    types: [requested]
+    branches:
+      - feature/aws_dvc_latest
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}

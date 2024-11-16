@@ -32,6 +32,219 @@ This dataset contains a collection of images for 10 different dog breeds, meticu
        Dachshund
 
 
+<h2>Setting Up S3 as a DVC Remote for Data Storage</h2>
+
+This guide outlines how to configure an Amazon S3 bucket as a remote storage for DVC (Data Version Control). This setup enables version-controlled data storage in S3, perfect for large datasets in machine learning and data science workflows.
+
+<h4>Prerequisites</h4>
+
+    1.AWS account with access to create and manage S3 buckets.
+    
+    2.IAM credentials with permissions to read, write, and list objects in the S3 bucket.
+    
+    3.DVC installed locally (pip install dvc[s3]).
+    
+    4.Git and GitHub repository setup.
+
+<h4>Steps to Configure S3 as a DVC Remote</h4>
+
+1. Create an S3 Bucket
+
+        Go to the AWS Management Console and create a new S3 bucket (e.g., my-dvc-bucket).
+
+        Note the bucket name and region (e.g., ap-south-1 for Mumbai).
+
+2. Configure IAM Permissions
+
+      Assign permissions to your IAM user to access the S3 bucket. Use the following policy, replacing my-dvc-bucket with your actual bucket name:
+
+
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "s3:ListBucket"
+              ],
+              "Resource": "arn:aws:s3:::my-dvc-bucket"
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "s3:GetObject",
+                "s3:PutObject"              ],
+              "Resource": "arn:aws:s3:::my-dvc-bucket/*"
+            }
+          ]
+        }
+
+3. Set Up DVC Remote
+
+       In your local Git repository, configure the S3 bucket as the DVC remote:
+
+       dvc remote add -d myremote s3://my-dvc-bucket/path/to/data
+
+4. Push Data to S3 with DVC
+
+        After configuring the remote, add files to DVC, then push to the S3 bucket:
+
+         dvc add data
+         git add data .gitignore
+         git commit -m "Add large file with DVC"
+         dvc push
+
+6. Setting Up GitHub Actions for Automated DVC Pull
+
+       To automate data pulls from S3 in GitHub Actions, add the following workflow file (.github/workflows/dvc_pull.yml):
+
+       name: DVC with S3
+   
+         steps:
+           - name: Checkout Repository
+             uses: actions/checkout@v3
+
+           - name: Install DVC and Boto3
+             run: |
+               pip install dvc[s3] boto3
+
+           - name: Configure AWS Credentials
+             run: |
+               aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+               aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+               aws configure set region ${{ secrets.AWS_REGION }}
+
+           - name: Set DVC Remote
+             run: |
+               dvc remote add -d myremote s3://dvc-nagsh-demo
+           - name: Enable Debug Logging
+             run: export DVC_LOGLEVEL=DEBUG
+        
+           - name: Pull DVC Data
+             run: |
+               dvc pull -v
+             env:
+               AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+               AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+               AWS_REGION: ${{ secrets.AWS_REGION }}
+
+           - name: Verify DVC Data Files
+             run: |
+               dvc status
+     
+
+<h2>GitHub Actions Workflow for Building and Pushing Docker Image to Amazon ECR</h2>
+
+This guide provides instructions to set up a GitHub Actions workflow for building a Docker image and pushing it to Amazon ECR (Elastic Container Registry). This is useful for automating the deployment of Docker images in AWS.
+
+<h4>Prerequisites</h4>
+
+    1. AWS Account: Ensure you have an AWS account and necessary permissions for ECR.
+    
+    2. ECR Repository: Set up an Amazon ECR repository in your AWS console to store your Docker images.
+    
+    3. GitHub Repository: A repository where you can configure GitHub Actions.
+    
+<h3>Steps to Set Up GitHub Actions</h3>
+
+<h4>Add Workflow Configuration: Copy the following code to your workflow file. This configuration will:</h4>
+
+   1.Build a Docker image from your repository
+
+   2.Tag the image
+
+   3.Log in to Amazon ECR
+
+   4.Push the Docker image to your specified ECR repository
+
+
+
+        build-and-push-image:
+        needs: dvc
+        runs-on: ubuntu-latest
+        permissions:
+          contents: read
+          packages: write
+    
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+    
+        - name: Configure AWS Credentials
+          run: |
+            aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws configure set region ${{ secrets.AWS_REGION }}
+
+        - name: Login to Amazon ECR
+          id: login-ecr
+          uses: aws-actions/amazon-ecr-login@v1
+                      
+        - name: Get commit hash
+          id: get-commit-hash
+          run: echo "::set-output name=commit-hash::$(git rev-parse --short HEAD)"
+        - name: Get timestamp
+          id: get-timestamp
+          run: echo "::set-output name=timestamp::$(date +'%Y-%m-%d-%H-%M')"
+  
+        - name: Build, tag, and push the image to Amazon ECR
+          id: build-image
+          env:
+            ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+            ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
+            IMAGE_TAG: ${{ steps.get-commit-hash.outputs.commit-hash }}-${{ steps.get-timestamp.outputs.timestamp }}
+          run: |
+            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+            docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+
+<h3>Explanation of Workflow Steps</h3>
+<h4>1.Checkout Repository:</h4>
+
+    Uses the actions/checkout@v4 action to pull the repository code to the GitHub Actions runner.
+
+<h4>2.Configure AWS Credentials:</h4>
+
+    Configures AWS CLI with the necessary credentials to access AWS services.
+    The AWS access key, secret access key, and region are stored as GitHub secrets (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION).
+
+<h4>3.Login to Amazon ECR:</h4>
+
+     Uses the aws-actions/amazon-ecr-login@v1 action to authenticate the GitHub Actions runner with Amazon ECR.
+<h4>4.Get Commit Hash and Timestamp:</h4>
+
+            Retrieves the latest commit hash and timestamp to create a unique tag for the Docker image. 
+	    This ensures each image is uniquely identifiable.
+
+<h4>5.Build, Tag, and Push Docker Image:</h4>
+
+             Builds the Docker image using the Dockerfile in the repository.
+             Tags the image with the ECR registry URL, ECR repository name, commit hash, and timestamp.
+             Pushes the image to the specified Amazon ECR repository.      
+
+
+<h4>Setting Up GitHub Secrets</h4>
+To ensure security and proper access, add the following secrets to your GitHub repository under 
+
+Settings > Secrets and variables > Actions:
+
+AWS_ACCESS_KEY_ID: Your AWS access key.
+
+AWS_SECRET_ACCESS_KEY: Your AWS secret key.
+
+AWS_REGION: The AWS region of your ECR repository (e.g., us-east-1).
+
+REPO_NAME: The name of your Amazon ECR repository.
+
+<h4>Triggering the Workflow</h4>
+This workflow will trigger on every push to the main branch. You can adjust the triggering branch by modifying the branches section in the on: push configuration.
+
+<h4>Viewing the Image in Amazon ECR</h4>
+Once the workflow completes, navigate to your Amazon ECR repository in the AWS Console. You should see a new image tagged with the commit hash and timestamp.
+<img width="1470" alt="image" src="https://github.com/user-attachments/assets/47d42e23-90ef-4dc5-8c0b-9a2519db0421">
+
+<h2>GitHub Self-Hosted Runner on EC2</h2>
+
 <h2>Using Hydra for Configuration Management</h2>
 The project utilizes Hydra to manage configurations. Configuration files are located in the configs/ directory. You can modify these files to adjust various parameters for training, evaluation, and inference.
 
