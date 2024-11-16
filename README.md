@@ -295,6 +295,8 @@ Ensure that the instance has the necessary network configurations, security grou
 Go to your GitHub repository, navigate to “Settings,” and click on “Actions.”
 You should see your self-hosted runner listed under the “Runners” section.
 
+<img width="1488" alt="image" src="https://github.com/user-attachments/assets/627b87ed-11fb-48c2-b48a-b890162dd07f">
+
 
 <h4>Step 5: Use Self-Hosted Runners in Your Workflow:</h4>
 
@@ -305,7 +307,8 @@ Once your self-hosted runner is set up, integrating it into your GitHub Actions 
             runs-on: self-hosted
 
 
-  
+ <img width="1341" alt="image" src="https://github.com/user-attachments/assets/a880bb33-c4f3-4f4b-be77-062f1f340706">
+ 
 
 <img width="1739" alt="image" src="https://github.com/user-attachments/assets/ca1ca4bb-b8c9-41c5-9001-4947d302d163">
 
