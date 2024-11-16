@@ -135,6 +135,7 @@ This guide outlines how to configure an Amazon S3 bucket as a remote storage for
 
 <h2>GitHub Actions Workflow for Building and Pushing Docker Image to Amazon ECR</h2>
 
+
 This guide provides instructions to set up a GitHub Actions workflow for building a Docker image and pushing it to Amazon ECR (Elastic Container Registry). This is useful for automating the deployment of Docker images in AWS.
 
 <h4>Prerequisites</h4>
@@ -245,129 +246,59 @@ Once the workflow completes, navigate to your Amazon ECR repository in the AWS C
 
 <h2>GitHub Self-Hosted Runner on EC2</h2>
 
-<h2>Using Hydra for Configuration Management</h2>
-The project utilizes Hydra to manage configurations. Configuration files are located in the configs/ directory. You can modify these files to adjust various parameters for training, evaluation, and inference.
 
-Running with Hydra
-To run the training script with a specified configuration, use the following command:
+<h2>Run Docker Image from ECR with GitHub Actions</h2>
 
-        python src/train.py 
-	    python src/eval.py 
-        python src/infer.py 
-
-All Hydra configurations are located in the following directory. Any updates to the parameters can be made there.
-
-<img width="886" alt="image" src="https://github.com/user-attachments/assets/4150a98c-7f47-44b5-a388-fc11f2ac831a">
-
- 
+This GitHub Actions workflow pulls a specified Docker image from Amazon ECR and runs it with a mounted volume for logging. The workflow is triggered manually (workflow_dispatch) and accepts the ecr_image_name as input. It authenticates to AWS using configured secrets, pulls the image, and runs it with the local model_artifacts directory mounted to /app/logs inside the container. Logs are optionally displayed after execution.
 
 
+           pull-and-run-image:
+              runs-on: self-hosted
+              permissions:
+                contents: read
+                packages: write
 
-Model  Summery : 
-   
-        ┏━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┓
-        ┃    ┃ Name                        ┃ Type                 ┃ Params ┃ Mode  ┃
-        ┡━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━┩
-        │ 0  │ model                       │ ResNet               │ 11.2 M │ train │
-        │ 1  │ model.conv1                 │ Conv2d               │  9.4 K │ train │
-        │ 2  │ model.bn1                   │ BatchNorm2d          │    128 │ train │
-        │ 3  │ model.act1                  │ ReLU                 │      0 │ train │
-        │ 4  │ model.maxpool               │ MaxPool2d            │      0 │ train │
-        │ 5  │ model.layer1                │ Sequential           │  147 K │ train │
-        │ 6  │ model.layer1.0              │ BasicBlock           │ 74.0 K │ train │
-        │ 7  │ model.layer1.0.conv1        │ Conv2d               │ 36.9 K │ train │
-        │ 8  │ model.layer1.0.bn1          │ BatchNorm2d          │    128 │ train │
-        │ 9  │ model.layer1.0.drop_block   │ Identity             │      0 │ train │
-        │ 10 │ model.layer1.0.act1         │ ReLU                 │      0 │ train │
-        │ 11 │ model.layer1.0.aa           │ Identity             │      0 │ train │
-        │ 12 │ model.layer1.0.conv2        │ Conv2d               │ 36.9 K │ train │
-        │ 13 │ model.layer1.0.bn2          │ BatchNorm2d          │    128 │ train │
-        │ 14 │ model.layer1.0.act2         │ ReLU                 │      0 │ train │
-        │ 15 │ model.layer1.1              │ BasicBlock           │ 74.0 K │ train │
-        │ 16 │ model.layer1.1.conv1        │ Conv2d               │ 36.9 K │ train │
-        │ 17 │ model.layer1.1.bn1          │ BatchNorm2d          │    128 │ train │
-        │ 18 │ model.layer1.1.drop_block   │ Identity             │      0 │ train │
-        │ 19 │ model.layer1.1.act1         │ ReLU                 │      0 │ train │
-        │ 20 │ model.layer1.1.aa           │ Identity             │      0 │ train │
-        │ 21 │ model.layer1.1.conv2        │ Conv2d               │ 36.9 K │ train │
-        │ 22 │ model.layer1.1.bn2          │ BatchNorm2d          │    128 │ train │
-        │ 23 │ model.layer1.1.act2         │ ReLU                 │      0 │ train │
-        │ 24 │ model.layer2                │ Sequential           │  525 K │ train │
-        │ 25 │ model.layer2.0              │ BasicBlock           │  230 K │ train │
-        │ 26 │ model.layer2.0.conv1        │ Conv2d               │ 73.7 K │ train │
-        │ 27 │ model.layer2.0.bn1          │ BatchNorm2d          │    256 │ train │
-        │ 28 │ model.layer2.0.drop_block   │ Identity             │      0 │ train │
-        │ 29 │ model.layer2.0.act1         │ ReLU                 │      0 │ train │
-        │ 30 │ model.layer2.0.aa           │ Identity             │      0 │ train │
-        │ 31 │ model.layer2.0.conv2        │ Conv2d               │  147 K │ train │
-        │ 32 │ model.layer2.0.bn2          │ BatchNorm2d          │    256 │ train │
-        │ 33 │ model.layer2.0.act2         │ ReLU                 │      0 │ train │
-        │ 34 │ model.layer2.0.downsample   │ Sequential           │  8.4 K │ train │
-        │ 35 │ model.layer2.0.downsample.0 │ Conv2d               │  8.2 K │ train │
-        │ 36 │ model.layer2.0.downsample.1 │ BatchNorm2d          │    256 │ train │
-        │ 37 │ model.layer2.1              │ BasicBlock           │  295 K │ train │
-        │ 38 │ model.layer2.1.conv1        │ Conv2d               │  147 K │ train │
-        │ 39 │ model.layer2.1.bn1          │ BatchNorm2d          │    256 │ train │
-        │ 40 │ model.layer2.1.drop_block   │ Identity             │      0 │ train │
-        │ 41 │ model.layer2.1.act1         │ ReLU                 │      0 │ train │
-        │ 42 │ model.layer2.1.aa           │ Identity             │      0 │ train │
-        │ 43 │ model.layer2.1.conv2        │ Conv2d               │  147 K │ train │
-        │ 44 │ model.layer2.1.bn2          │ BatchNorm2d          │    256 │ train │
-        │ 45 │ model.layer2.1.act2         │ ReLU                 │      0 │ train │
-        │ 46 │ model.layer3                │ Sequential           │  2.1 M │ train │
-        │ 47 │ model.layer3.0              │ BasicBlock           │  919 K │ train │
-        │ 48 │ model.layer3.0.conv1        │ Conv2d               │  294 K │ train │
-        │ 49 │ model.layer3.0.bn1          │ BatchNorm2d          │    512 │ train │
-        │ 50 │ model.layer3.0.drop_block   │ Identity             │      0 │ train │
-        │ 51 │ model.layer3.0.act1         │ ReLU                 │      0 │ train │
-        │ 52 │ model.layer3.0.aa           │ Identity             │      0 │ train │
-        │ 53 │ model.layer3.0.conv2        │ Conv2d               │  589 K │ train │
-        │ 54 │ model.layer3.0.bn2          │ BatchNorm2d          │    512 │ train │
-        │ 55 │ model.layer3.0.act2         │ ReLU                 │      0 │ train │
-        │ 56 │ model.layer3.0.downsample   │ Sequential           │ 33.3 K │ train │
-        │ 57 │ model.layer3.0.downsample.0 │ Conv2d               │ 32.8 K │ train │
-        │ 58 │ model.layer3.0.downsample.1 │ BatchNorm2d          │    512 │ train │
-        │ 59 │ model.layer3.1              │ BasicBlock           │  1.2 M │ train │
-        │ 60 │ model.layer3.1.conv1        │ Conv2d               │  589 K │ train │
-        │ 61 │ model.layer3.1.bn1          │ BatchNorm2d          │    512 │ train │
-        │ 62 │ model.layer3.1.drop_block   │ Identity             │      0 │ train │
-        │ 63 │ model.layer3.1.act1         │ ReLU                 │      0 │ train │
-        │ 64 │ model.layer3.1.aa           │ Identity             │      0 │ train │
-        │ 65 │ model.layer3.1.conv2        │ Conv2d               │  589 K │ train │
-        │ 66 │ model.layer3.1.bn2          │ BatchNorm2d          │    512 │ train │
-        │ 67 │ model.layer3.1.act2         │ ReLU                 │      0 │ train │
-        │ 68 │ model.layer4                │ Sequential           │  8.4 M │ train │
-        │ 69 │ model.layer4.0              │ BasicBlock           │  3.7 M │ train │
-        │ 70 │ model.layer4.0.conv1        │ Conv2d               │  1.2 M │ train │
-        │ 71 │ model.layer4.0.bn1          │ BatchNorm2d          │  1.0 K │ train │
-        │ 72 │ model.layer4.0.drop_block   │ Identity             │      0 │ train │
-        │ 73 │ model.layer4.0.act1         │ ReLU                 │      0 │ train │
-        │ 74 │ model.layer4.0.aa           │ Identity             │      0 │ train │
-        │ 75 │ model.layer4.0.conv2        │ Conv2d               │  2.4 M │ train │
-        │ 76 │ model.layer4.0.bn2          │ BatchNorm2d          │  1.0 K │ train │
-        │ 77 │ model.layer4.0.act2         │ ReLU                 │      0 │ train │
-        │ 78 │ model.layer4.0.downsample   │ Sequential           │  132 K │ train │
-        │ 79 │ model.layer4.0.downsample.0 │ Conv2d               │  131 K │ train │
-        │ 80 │ model.layer4.0.downsample.1 │ BatchNorm2d          │  1.0 K │ train │
-        │ 81 │ model.layer4.1              │ BasicBlock           │  4.7 M │ train │
-        │ 82 │ model.layer4.1.conv1        │ Conv2d               │  2.4 M │ train │
-        │ 83 │ model.layer4.1.bn1          │ BatchNorm2d          │  1.0 K │ train │
-        │ 84 │ model.layer4.1.drop_block   │ Identity             │      0 │ train │
-        │ 85 │ model.layer4.1.act1         │ ReLU                 │      0 │ train │
-        │ 86 │ model.layer4.1.aa           │ Identity             │      0 │ train │
-        │ 87 │ model.layer4.1.conv2        │ Conv2d               │  2.4 M │ train │
-        │ 88 │ model.layer4.1.bn2          │ BatchNorm2d          │  1.0 K │ train │
-        │ 89 │ model.layer4.1.act2         │ ReLU                 │      0 │ train │
-        │ 90 │ model.global_pool           │ SelectAdaptivePool2d │      0 │ train │
-        │ 91 │ model.global_pool.pool      │ AdaptiveAvgPool2d    │      0 │ train │
-        │ 92 │ model.global_pool.flatten   │ Flatten              │      0 │ train │
-        │ 93 │ model.fc                    │ Linear               │  5.1 K │ train │
-        │ 94 │ train_acc                   │ MulticlassAccuracy   │      0 │ train │
-        │ 95 │ val_acc                     │ MulticlassAccuracy   │      0 │ train │
-        │ 96 │ test_acc                    │ MulticlassAccuracy   │      0 │ train │
-        └────┴─────────────────────────────┴──────────────────────┴────────┴───────┘
+              steps:
+                - name: Grant Execute Permissions to Script
+                  run: chmod +x src/train.py
+                # Step 1: Configure AWS Credentials
+                - name: Configure AWS Credentials
+                  run: |
+                    aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+                    aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                    aws configure set region ${{ secrets.AWS_REGION }}
 
-How to Train, Evaluate, and Infer Using Docker
+                # Step 2: Login to Amazon ECR
+               - name: Login to Amazon ECR
+                  id: login-ecr
+                  uses: aws-actions/amazon-ecr-login@v1
+
+                # Step 3: Pull the Docker Image
+                - name: Pull Docker Image
+                  env:
+                    ECR_IMAGE_NAME: ${{ github.event.inputs.ecr_image_name }}
+                    ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+                  run: |
+                    FULL_IMAGE_URI="${ECR_REGISTRY}/${ECR_IMAGE_NAME}"
+                    echo "Pulling Docker image: ${FULL_IMAGE_URI}"
+                    docker pull "${FULL_IMAGE_URI}"
+
+                # Step 4: Run the Docker Image with Volume and Script
+                - name: Run Docker Image
+                  env:
+                    ECR_IMAGE_NAME: ${{ github.event.inputs.ecr_image_name }}
+                    ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+                  run: |
+                    FULL_IMAGE_URI="${ECR_REGISTRY}/${ECR_IMAGE_NAME}"
+                    WORKSPACE="$(pwd)"
+                    echo "Running Docker image: ${FULL_IMAGE_URI} with script ${SCRIPT_PATH}"
+                    docker run \
+                      -v "${WORKSPACE}/model_artifacts:/app/logs" \
+                      "${FULL_IMAGE_URI}"
+                # Step 5: Display Logs (Optional - If logs are stored in a volume)
+
+
+<h2>How to Train, Evaluate, and Infer Using Docker</h2>
 
  1. Build the Docker image:
 
