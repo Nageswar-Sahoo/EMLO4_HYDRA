@@ -16,7 +16,7 @@ except ImportError:
 
 # Constants
 SERVER_URL = "http://localhost:8000"
-MODEL_NAME = "HuggingFaceTB/SmolLM2-1.7B-Instruct"
+MODEL_NAME = "meta-llama/Llama-3.2-1B"
 TOKENIZE_TEXT = "The quick brown fox jumps over the lazy dog."
 
 # Load Llama-based model with TorchAO quantization
@@ -84,8 +84,60 @@ def get_system_metrics():
         metrics["gpu_usage"] = -1
     return metrics
 
-# API benchmark with concurrency
+
 def benchmark_api(num_requests=100, concurrency_level=10):
+    """Benchmark the API server with a restricted number of requests."""
+    payload = prepare_test_payload(AutoTokenizer.from_pretrained(MODEL_NAME))
+
+    system_metrics = []
+    response_times = []
+    status_codes = []
+    
+    # Limiting the number of requests to num_requests
+    #limited_encoded_images = encoded_images[:num_requests]
+
+    start_benchmark_time = time.time()
+    
+    # Create a ThreadPoolExecutor to handle the concurrent requests
+    with concurrent.futures.ThreadPoolExecutor(max_workers=concurrency_level) as executor:
+        futures = [executor.submit(send_request, payload) for _ in num_requests]
+        
+        # Collect system metrics during the benchmark
+        while any(not f.done() for f in futures):
+            system_metrics.append(get_system_metrics())
+            time.sleep(0.1)
+        
+        for future in futures:
+            response_time, status_code = future.result()
+            response_times.append(response_time)
+            status_codes.append(status_code)
+    
+    end_benchmark_time = time.time()
+    total_benchmark_time = end_benchmark_time - start_benchmark_time
+    
+    # Calculate system metrics like CPU and GPU usage
+    avg_cpu = np.mean([m["cpu_usage"] for m in system_metrics])
+    avg_gpu = np.mean([m["gpu_usage"] for m in system_metrics]) if GPU_AVAILABLE else -1
+    
+    # Calculate success rate and average response time
+    success_rate = (status_codes.count(200) / num_requests) * 100 if num_requests > 0 else 0
+    avg_response_time = np.mean(response_times) * 1000  # Convert to milliseconds
+    
+    # Calculate requests per second
+    requests_per_second = num_requests / total_benchmark_time if total_benchmark_time > 0 else 0
+    
+    return {
+        "total_requests": num_requests,
+        "concurrency_level": concurrency_level,
+        "total_time": total_benchmark_time,
+        "avg_response_time": avg_response_time,  # in ms
+        "success_rate": success_rate,
+        "requests_per_second": requests_per_second,
+        "avg_cpu_usage": avg_cpu,
+        "avg_gpu_usage": avg_gpu,
+    }
+# API benchmark with concurrency
+def benchmark_api1(num_requests=100, concurrency_level=10):
     payload = prepare_test_payload(AutoTokenizer.from_pretrained(MODEL_NAME))
     system_metrics = []
 
