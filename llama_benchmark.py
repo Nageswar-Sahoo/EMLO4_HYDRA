@@ -112,9 +112,35 @@ def prepare_test_payload(tokenizer):
 # Send request and measure response time
 def send_request(payload):
     start_time = time.time()
-    response = requests.post(SERVER_URL, json={"input_ids": payload.tolist()})
+    from openai import OpenAI
+
+    # Initialize the OpenAI client
+    client = OpenAI(
+     base_url="<http://localhost:8000/v1>",
+     api_key="dummy-key"
+     )
+
+     # Create a streaming chat completion
+    stream = client.chat.completions.create(
+     model="smol-lm",  # Model name doesn't matter
+     messages=[{"role": "user", "content": "What is the capital of France?"}],
+     stream=True,
+    )
+
+    # Collect and store the response
+    response_text = []
+
+    for chunk in stream:
+       if chunk.choices[0].delta.content is not None:
+          response_text.append(chunk.choices[0].delta.content)
+
+    # Combine the collected chunks into a full response
+    full_response = "".join(response_text)
+
+    print("Collected Response:", full_response)
+
     end_time = time.time()
-    return end_time - start_time, response.status_code
+    return end_time - start_time, full_response
 
 def get_system_metrics():
     metrics = {"cpu_usage": psutil.cpu_percent(0.1)}
@@ -148,7 +174,7 @@ def benchmark_api(num_requests=100, concurrency_level=10):
         for future in futures:
             response_time, status_code = future.result()
             response_times.append(response_time)
-            status_codes.append(status_code)
+            status_codes.append(status_code%)
 
     end_benchmark_time = time.time()
     total_benchmark_time = end_benchmark_time - start_benchmark_time

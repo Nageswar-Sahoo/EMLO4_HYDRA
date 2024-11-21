@@ -5,7 +5,7 @@ import litserve as ls
 
 class LlamaModel:
     def __init__(self, device):
-        checkpoint = "meta-llama/Llama-3.2-1B"  # Replace with the desired LLaMA checkpoint
+        checkpoint = "meta-llama/Llama-3.2-1B-Instruct"  # Replace with the desired LLaMA checkpoint
         self.device = device
         # Initialize tokenizer and model
         self.tokenizer = AutoTokenizer.from_pretrained(checkpoint, use_fast=False)  # LLaMA models often require `use_fast=False`
