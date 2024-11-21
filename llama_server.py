@@ -6,11 +6,12 @@ import litserve as ls
 class LlamaModel:
     def __init__(self, device):
         checkpoint = "meta-llama/Llama-3.2-1B"  # Replace with the desired LLaMA checkpoint
-        
+        self.device = device
         # Initialize tokenizer and model
         self.tokenizer = AutoTokenizer.from_pretrained(checkpoint, use_fast=False)  # LLaMA models often require `use_fast=False`
-        self.model = model = AutoModelForCausalLM.from_pretrained(checkpoint)  
+        self.model = model = AutoModelForCausalLM.from_pretrained(checkpoint).to(device)
         self.model.eval()
+        
         
     def apply_chat_template(self, messages):
         """Convert messages to LLaMA-specific input format"""
