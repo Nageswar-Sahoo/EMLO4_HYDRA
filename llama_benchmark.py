@@ -16,8 +16,8 @@ except ImportError:
 
 print("*********************"+ str(GPU_AVAILABLE))
 # Constants
-SERVER_URL = "http://localhost:8000"
-MODEL_NAME = "meta-llama/Llama-3.2-1B"
+SERVER_URL = "http://localhost:8000/v1"
+MODEL_NAME = "meta-llama/Llama-3.2-1B-Instruct"
 TOKENIZE_TEXT = "Write about india . I want many details . I want it 10k word "
 
 # Load Llama-based model with TorchAO quantization
@@ -116,7 +116,7 @@ def send_request(payload):
 
     # Initialize the OpenAI client
     client = OpenAI(
-     base_url="<http://localhost:8000/v1>",
+     base_url="http://localhost:8000/v1",
      api_key="dummy-key"
      )
 
@@ -129,13 +129,21 @@ def send_request(payload):
 
     # Collect and store the response
     response_text = []
+    token_count = 0
+
 
     for chunk in stream:
        if chunk.choices[0].delta.content is not None:
           response_text.append(chunk.choices[0].delta.content)
+          token_count += len(chunk.choices[0].delta.content.split())  # Approximate tokens by splitting on spaces
 
     # Combine the collected chunks into a full response
     full_response = "".join(response_text)
+    tokens_per_second = token_count / elapsed_time if elapsed_time > 0 else 0
+    print("Full Response:", full_response)
+    print(f"Tokens generated: {token_count}")
+    print(f"Elapsed time: {elapsed_time:.2f} seconds")
+    print(f"Throughput: {tokens_per_second:.2f} tokens/second")
 
     print("Collected Response:", full_response)
 
@@ -174,7 +182,7 @@ def benchmark_api(num_requests=100, concurrency_level=10):
         for future in futures:
             response_time, status_code = future.result()
             response_times.append(response_time)
-            status_codes.append(status_code%)
+            status_codes.append(status_code)
 
     end_benchmark_time = time.time()
     total_benchmark_time = end_benchmark_time - start_benchmark_time
