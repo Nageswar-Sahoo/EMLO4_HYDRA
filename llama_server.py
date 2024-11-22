@@ -2,6 +2,7 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from transformers import AutoTokenizer, LlamaForCausalLM
 import litserve as ls
+precision = torch.bfloat16
 
 class LlamaModel:
     def __init__(self, device):
@@ -9,19 +10,19 @@ class LlamaModel:
         self.device = device
         # Initialize tokenizer and model
         self.tokenizer = AutoTokenizer.from_pretrained(checkpoint, use_fast=False)  # LLaMA models often require `use_fast=False`
-        self.model = model = AutoModelForCausalLM.from_pretrained(checkpoint).to(device)
+        if self.tokenizer.pad_token is None:
+           self.tokenizer.pad_token = self.tokenizer.eos_token  # Use eos_token if available
+        self.model = model = AutoModelForCausalLM.from_pretrained(checkpoint).to(device).to(precision)
         self.model.eval()
         
-        
     def apply_chat_template(self, messages):
-        """Convert messages to LLaMA-specific input format"""
-        conversation = ""
-        for message in messages:
-            role = message["role"]
-            content = message["content"]
-            conversation += f"<{role}>: {content}\n"
-        conversation += "<assistant>:"
-        return conversation
+        """Convert messages to model input format"""
+        #print(messages)
+
+        return self.tokenizer.apply_chat_template(
+            messages,
+            tokenize=False
+        )    
     
     def __call__(self, prompt):
         """Run model inference"""
@@ -31,7 +32,7 @@ class LlamaModel:
             return_tensors="pt",
             padding=True,
             truncation=True
-        ).to(self.model.device)
+        ).to(self.model.device).to(precision)
         
         # Generate
         outputs = self.model.generate(
@@ -67,6 +68,8 @@ class LlamaAPI(ls.LitAPI):
 
     def encode_response(self, outputs):
         """Format the response"""
+        #print(outputs)
+
         for output in outputs:
             yield {"role": "assistant", "content": self.model.decode_tokens(output)}
 
@@ -76,6 +79,6 @@ if __name__ == "__main__":
         api,
         spec=ls.OpenAISpec(),
         accelerator="gpu",
-        workers_per_device=1
+        workers_per_device=2
     )
     server.run(port=8000)
