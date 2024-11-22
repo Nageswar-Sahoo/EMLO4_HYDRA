@@ -1,4 +1,4 @@
-<h1>Dog Breed Image Dataset Inference with LitServe </h1>
+<h1>Assignment-1 : Dog Breed Image Dataset Inference with LitServe </h1>
 
 This repository contains a PyTorch Lightning-based project for classifying dog breeds using a dataset from Kaggle. The project includes Docker support, a DevContainer setup, and inference using a pre-trained model. Configuration management is handled using Hydra.
 
