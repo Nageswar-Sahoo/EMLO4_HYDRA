@@ -157,11 +157,56 @@ To handle even higher levels of concurrency, you can deploy multiple LitServe in
 
 This helps in scaling horizontally and ensures that no single instance is overloaded.
 
-<h2>Assignment-2 </h2>
+<h2>Assignment-2 : Deploy any llama based llm (meta-llama/Llama-3.2-1B-Instruct) </h2>
+
+The Llama 3.2 collection of multilingual large language models (LLMs) is a collection of pretrained and instruction-tuned generative models in 1B and 3B sizes (text in/text out). The Llama 3.2 instruction-tuned text only models are optimized for multilingual dialogue use cases, including agentic retrieval and summarization tasks. 
+
+        checkpoint = "meta-llama/Llama-3.2-1B-Instruct"  # Replace with the desired LLaMA checkpoint
+        self.device = device
+        # Initialize tokenizer and model
+        self.tokenizer = AutoTokenizer.from_pretrained(checkpoint, use_fast=False)  # LLaMA models often require `use_fast=False`
+        if self.tokenizer.pad_token is None:
+           self.tokenizer.pad_token = self.tokenizer.eos_token  # Use eos_token if available
+        self.model = model = AutoModelForCausalLM.from_pretrained(checkpoint).to(device)
+        self.model.eval()
+
+<h3>1. Default Request And Response Handling </h3>
+
+<img width="1399" alt="image" src="https://github.com/user-attachments/assets/8b732aa4-cd62-4ebf-8bf7-6e643e4f10dc">
+
+![image](https://github.com/user-attachments/assets/d1b4e574-2c4b-4d59-9021-1f973c91331a)
+
+<img width="1423" alt="image" src="https://github.com/user-attachments/assets/4206502b-3d8b-4c39-ab60-e6f8eac3cca1">
+
+![image](https://github.com/user-attachments/assets/fd4996b8-618e-435c-be36-ba97e3434d7f)
+
+
+<h3>3. Use Multiple Workers with LitServe</h3>
+
+I have configure 2 workers in the LitServe configuration to enable parallel processing.
+
+<img width="1398" alt="image" src="https://github.com/user-attachments/assets/68a6047e-7aa9-494a-ac60-39fdbd71830d">
+
+![image](https://github.com/user-attachments/assets/ff8ff1d3-3d82-41c1-85f1-95415cdd8855)
+
+<img width="1448" alt="image" src="https://github.com/user-attachments/assets/25d4881a-c301-434c-8631-e7f94f5b67af">
+
+
+![image](https://github.com/user-attachments/assets/f48b934c-a774-4b01-8bbc-548d079c234a)
 
 
 
 
+<h3>4. Half Precision (FP16)</h3>
+
+<img width="1425" alt="image" src="https://github.com/user-attachments/assets/c63c7738-8e96-4e7a-a80d-9d65c6e7c74a">
+
+![image](https://github.com/user-attachments/assets/15cc18a7-126b-4369-bd54-b4a027fbe913)
+
+
+<img width="1415" alt="image" src="https://github.com/user-attachments/assets/03564ba2-1b8d-41f8-bf99-5dbee4298274">
+
+![image](https://github.com/user-attachments/assets/058b24c1-0782-4082-b5f5-32b8997c335a)
 
 
 
