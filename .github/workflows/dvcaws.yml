@@ -6,11 +6,11 @@ on:
       - feature/gradio_Latest
   pull_request:
     branches:
-      - feature/gradio_Latest
+      - feature/aws_dvc_latest
 
 jobs:
   dvc:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
