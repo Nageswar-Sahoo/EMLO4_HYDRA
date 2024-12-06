@@ -58,12 +58,12 @@ def train(
     train_metrics = trainer.callback_metrics
     log.info(f"Training metrics:\n{train_metrics}")
 
-    # Save the best model checkpoint to S3
+    # Save the best model checkpoint to S3 with a generic name
     best_model_path = trainer.checkpoint_callback.best_model_path
     if best_model_path:
         log.info(f"Best model found at {best_model_path}")
         s3_bucket = cfg.s3.bucket_name
-        s3_key = os.path.join(cfg.s3.key_prefix, os.path.basename(best_model_path))
+        s3_key = os.path.join(cfg.s3.key_prefix, "best-checkpoint.ckpt")  # Save as 'best-checkpoint.ckpt'
         upload_to_s3(best_model_path, s3_bucket, s3_key)
     else:
         log.warning("No best model checkpoint found!")
@@ -92,7 +92,6 @@ def test(
 
 @hydra.main(version_base="1.3", config_path="../configs", config_name="train")
 def main(cfg: DictConfig):
-    
     print(OmegaConf.to_yaml(cfg))
     # Set up paths
     log_dir = Path(cfg.paths.log_dir)
