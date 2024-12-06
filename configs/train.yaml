@@ -22,6 +22,9 @@ defaults:
 
 # task name, determines output directory path
 task_name: "train"
+s3:
+  bucket_name: "modelcheckpointnagesh"
+  key_prefix: "catdog"
 
 # tags to help you identify your experiments
 # you can overwrite this in experiment configs
