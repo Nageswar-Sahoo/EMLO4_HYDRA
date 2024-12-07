@@ -71,6 +71,7 @@ jobs:
 
       - name: Running tracing
         run: |
+            source .venv/bin/activate
             python src/script.py    
     
           # Step 2: Create a temporary branch with the required files
