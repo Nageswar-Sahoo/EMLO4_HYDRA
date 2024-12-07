@@ -34,3 +34,6 @@ test: True
 
 # simply provide checkpoint path to resume training
 ckpt_path: ./logs/train/runs/2024-12-06_06-08-45/checkpoints/last.ckpt
+s3:
+  bucket_name: "modelcheckpointnagesh"
+  key_prefix: "catdog"

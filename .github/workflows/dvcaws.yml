@@ -68,3 +68,35 @@ jobs:
             token: ${{ secrets.CODECOV_TOKEN }}
             files: ./coverage.xml
             fail_ci_if_error: true
+
+      - name: Running tracing
+        run: |
+            python src/script.py    
+    
+          # Step 2: Create a temporary branch with the required files
+      - name: Prepare files for Hugging Face
+        run: |
+              mkdir temp_push
+              cp traced_models/model.pt temp_push/
+              cp app.py temp_push/
+              cd temp_push
+              git init
+              git checkout -b temp-hf
+              git add .
+              git commit -m "Prepare files for Hugging Face"
+    
+          # Step 3: Add remote Hugging Face repository
+      - name: Add remote Hugging Face repository
+        env:
+          HF: ${{ secrets.HF }}
+        run: |
+              cd temp_push
+              git remote add space https://noahgift:$HF@huggingface.co/spaces/noahgift/demo
+    
+          # Step 4: Push files to Hugging Face
+      - name: Push to Hugging Face Hub
+        env:
+              HF: ${{ secrets.HF }}
+        run: |
+              cd temp_push
+              git push --force space temp-hf:main
