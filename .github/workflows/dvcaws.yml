@@ -87,8 +87,8 @@ jobs:
               git checkout -b temp-hf
               git config --global user.email "tech.nageswar@gmail.com"
               git config --global user.name "Nageswar-250"
-              git add traced_models/model.pt
-              git lfs track traced_models/model.pt
+              ls -a
+              git lfs track model.pt
               git add .
               git commit -m "Prepare files for Hugging Face"
     
