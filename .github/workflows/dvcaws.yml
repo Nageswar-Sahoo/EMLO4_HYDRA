@@ -94,7 +94,7 @@ jobs:
           HF: ${{ secrets.HF }}
         run: |
               cd temp_push
-              git remote add space https://Nageswar-250:$HF@huggingface.co/spaces//Nageswar-250/Dog_Breed_Classifier
+              git remote add space https://Nageswar-250:$HF@huggingface.co/spaces/Nageswar-250/Dog_Breed_Classifier
     
           # Step 4: Push files to Hugging Face
       - name: Push to Hugging Face Hub
