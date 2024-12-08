@@ -354,41 +354,6 @@ TorchScript is your solution for reliable, high-performance model deployment in 
 
 <img width="1426" alt="image" src="https://github.com/user-attachments/assets/f1dcf5b0-3010-418b-9d99-a7508d1504ed">
 
-
-
-<h2>How to Train, Evaluate, and Infer Using Docker</h2>
-
- 1. Build the Docker image:
-
-          docker build -t dogbreed-classification .
- 
- 2. To run training:
-
-          docker run -v $(pwd)/model_artifacts:/app/logs dogbreed-classification src/train.py
-
-          Above docker script will generate the model artifact in below directory .
-    
- <img width="470" alt="image" src="https://github.com/user-attachments/assets/6f518288-0ecd-4995-8eb9-4a73319d6f0f">
- 
- 3. To run evaluation:
-
-          docker run -v $(pwd)/model_artifacts:/app/logs dogbreed-classification src/eval.py ckpt_path=./logs/train/runs/2024-10-08_10-50-43/checkpoints/epoch_001.ckpt
-
-          please update the best model check point path generated from training script . 
-    
- 4. To run inference:
-
-          docker run -v $(pwd)/model_artifacts:/app/logs dogbreed-classification src/infer.py ckpt_path=./logs/train/runs/2024-10-08_10-50-43/checkpoints/epoch_001.ckpt
-
-          please update the best model check point path generated from training script . 
-
-
- 5 By default it performs inference on the images present in the dataset folder.
-
-          To modify the infer arguments, you can do the following:
-
-          docker run -v $(pwd)/model_artifacts:/app/checkpoints dogbreed-classification infer --input_folder="path/to/custom/input" --  output_folder="path/to/custom/output" --     ckpt_path="path/to/custom/checkpoint.ckpt"
-
 <h2>Gradio</h2>
 
 Gradio is an open-source Python library that simplifies the creation of interactive user interfaces (UIs) for machine learning models, APIs, and other Python-based applications. It enables you to build web-based UIs with minimal code, making it easy to showcase and test models in real-time.
