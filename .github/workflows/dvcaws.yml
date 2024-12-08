@@ -116,9 +116,12 @@ jobs:
         
           echo "Running Docker image: ${FULL_IMAGE_URI}"
           docker run \
-            --rm \
-            -v "${WORKSPACE}/model_artifacts:/app/logs" \
-            "${FULL_IMAGE_URI}"
+          --rm \
+          -v "${WORKSPACE}/model_artifacts:/app/logs" \
+          -e AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
+          -e AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
+          -e AWS_REGION="${AWS_REGION}" \
+          "${FULL_IMAGE_URI}"
   
       - name: Running tracing
         run: |
