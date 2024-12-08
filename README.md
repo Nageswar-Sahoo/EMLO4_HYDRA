@@ -439,31 +439,12 @@ Hugging Face Spaces and Gradio together form a powerful combination for building
 
 <h3>Prediction Results In Gradio </h3>
 
-  The model prediction gets saved in the predicted_images folder in the model artifacts.
+<img width="1585" alt="image" src="https://github.com/user-attachments/assets/91e90cc3-d4c4-41d9-8085-607e4827046c">
+<img width="1616" alt="image" src="https://github.com/user-attachments/assets/c607d9ab-d256-4ddd-ae35-9216ad3b3c0b">
 
 
-  <table>
-  <tr>
-    <td><img src="https://github.com/user-attachments/assets/92cb4dd8-8f37-4ae5-a906-7447554720a9" width="500"/></td>
-    <td><img src="https://github.com/user-attachments/assets/2cde3ce2-3596-4bf9-bb88-9d2c996407eb" width="500"/></td>
-  </tr>
-  <tr>
-    <td><img src="https://github.com/user-attachments/assets/c2a4bc37-078d-49d2-afbe-65cc0ccd3a82" width="500"/></td>
-    <td><img src="https://github.com/user-attachments/assets/7ca0ca0e-3295-49eb-a266-e2009eca271e" width="500"/></td>
-  </tr>
-   <tr>
-    <td><img src="https://github.com/user-attachments/assets/97d12ed1-9f40-4d9e-929f-d282be82e882" width="500"/></td>
-    <td><img src="https://github.com/user-attachments/assets/3adf2fc0-2753-4cb9-bd93-b4bbcb236077" width="500"/></td>
-  </tr>
-  <tr>
-    <td><img src="https://github.com/user-attachments/assets/c6bb007a-d7be-4942-8b04-2d8148e57522" width="500"/></td>
-    <td><img src="https://github.com/user-attachments/assets/2d96e61d-b49b-41cb-b342-871f2a43476d" width="500"/></td>
-  </tr>
-  <tr>
-    <td><img src="https://github.com/user-attachments/assets/20e0d992-23dc-4816-a6d1-d01efd04b0bb" width="500"/></td>
-    <td><img src="https://github.com/user-attachments/assets/c5ebc356-60f7-4ab1-bcca-22cfc5e281de" width="500"/></td>
-  </tr>
-</table>
+
+
 
 
 <h3>Requirements</h3>
