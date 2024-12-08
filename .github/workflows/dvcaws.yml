@@ -79,7 +79,7 @@ jobs:
         run: |
               mkdir temp_push
               cp traced_models/model.pt temp_push/
-              cp app.py temp_push/
+              cp src/app.py temp_push/
               cd temp_push
               git init
               git checkout -b temp-hf
