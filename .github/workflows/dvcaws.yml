@@ -79,14 +79,13 @@ jobs:
           # Step 2: Create a temporary branch with the required files
       - name: Prepare files for Hugging Face
         run: |
-              mkdir temp_push
+              git clone https://Nageswar-250:$HF@huggingface.co/spaces/Nageswar-250/Dog_Breed_Classifier temp_push
               cp traced_models/model.pt temp_push/
               cp src/app.py temp_push/
               cd temp_push
-              git init
-              git checkout -b temp-hf
               git config --global user.email "tech.nageswar@gmail.com"
               git config --global user.name "Nageswar-250"
+              git checkout -b temp-hf
               ls -a
               git lfs track model.pt
               git add .
