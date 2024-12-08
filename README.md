@@ -1,4 +1,4 @@
-<h1>Training, Evaluation, and Inference of a Dog Breed Image Dataset using Docker, AWS, Gradio, and HuggingFace, integrated with GitHub Actions. </h1>
+<h1>Training, Evaluation, and Inference of a Dog Breed Image Dataset using Docker, AWS, Gradio, and HuggingFace, Tracing integrated with GitHub Actions. </h1>
 
 This repository contains a PyTorch Lightning-based project for classifying dog breeds using a dataset from Kaggle. The project includes Docker support, a DevContainer setup, and inference using a pre-trained model. Configuration management is handled using Hydra.
 
@@ -273,7 +273,7 @@ This GitHub Actions workflow pulls a specified Docker image from Amazon ECR and 
           -e AWS_REGION="${AWS_REGION}" \
           "${FULL_IMAGE_URI}"
 
-<img width="1436" alt="image" src="https://github.com/user-attachments/assets/24230e8a-b0bf-4872-9156-5eda9568f6cc">
+<img width="1376" alt="image" src="https://github.com/user-attachments/assets/a7da7046-017a-4ad1-b086-284fcf3a12b6">
 
 <h2>Using Amazon S3 for Model Checkpoints</h2>
 
@@ -283,7 +283,76 @@ In machine learning projects, model checkpoints are saved at various stages of t
 
 By integrating AWS CLI or SDKs into your training pipeline, you can automatically upload checkpoints to an S3 bucket during the training process. This approach improves data accessibility, security, and scalability.
 
-<img width="1759" alt="image" src="https://github.com/user-attachments/assets/98c52f96-1296-451f-bd90-107f5628c09c">
+<img width="1788" alt="image" src="https://github.com/user-attachments/assets/cf0feb1e-fc9c-410c-8886-3fe0de56289a">
+<img width="1425" alt="image" src="https://github.com/user-attachments/assets/c3544264-c85e-467d-9dcc-c76d951fa26d">
+
+
+<h2>TorchScript</h2>
+
+TorchScript is an intermediate representation of PyTorch models that allows you to save, serialize, and run models independently of Python. It bridges the gap between research and production by enabling efficient deployment of PyTorch models in environments where Python runtime may not be available.
+
+Key features include:
+
+Serialization: Save models as .pt files for portability.
+Execution: Run models with optimized performance in C++ or other runtimes.
+Flexibility: Convert models written in standard PyTorch seamlessly using tracing or scripting.
+TorchScript makes it easier to transition from experimentation to deployment while preserving PyTorch's dynamic and flexible nature.
+
+TorchScript provides two ways to convert a PyTorch model into its intermediate representation: Scripting and Tracing. Here's a comparison to help understand the differences and when to use each:
+
+<h3>1. Scripting</h3>
+What It Is:
+Scripting involves directly converting a PyTorch nn.Module or function into TorchScript by analyzing its Python code.
+It captures the entire logic, including control flow (if-else, loops).
+
+<h4>Advantages:</h4>
+
+Handles dynamic control flows (e.g., loops, conditionals).
+Fully preserves the logic of the original Python code.
+Suitable for models with complex computations.
+
+<h4>Disadvantages:</h4>
+
+Requires code to follow certain TorchScript compatibility rules.
+Slightly more effort to debug due to strict type checking.
+
+<h3>2. Tracing</h3>
+
+What It Is:
+Tracing records the operations executed during a single run of the model with example inputs.
+It produces a static computational graph.
+
+<h4>Advantages:</h4>
+
+Quick and straightforward for static models without control flow.
+Easier to apply when the model's structure does not change with inputs.
+
+<h4>Disadvantages:</h4>
+
+Ignores dynamic control flows (e.g., if-else, loops); these are "baked in" during tracing.
+Requires careful testing to ensure the traced model behaves correctly for all inputs.
+
+<h2>Why Use TorchScript?</h2>
+TorchScript simplifies and accelerates the transition from research to production by:
+
+Enabling optimized inference.
+
+Supporting deployment on edge devices and servers.
+
+Reducing Python-specific dependencies for secure and scalable deployment.
+
+<h2>Getting Started</h2>
+
+Convert your PyTorch model to TorchScript using tracing or scripting.
+
+Save the TorchScript model using torch.jit.save().
+
+Deploy it using the Python or C++ runtime for efficient production integration.
+
+TorchScript is your solution for reliable, high-performance model deployment in the modern AI landscape.
+
+<img width="1426" alt="image" src="https://github.com/user-attachments/assets/f1dcf5b0-3010-418b-9d99-a7508d1504ed">
+
 
 
 <h2>How to Train, Evaluate, and Infer Using Docker</h2>
@@ -318,6 +387,52 @@ By integrating AWS CLI or SDKs into your training pipeline, you can automaticall
           To modify the infer arguments, you can do the following:
 
           docker run -v $(pwd)/model_artifacts:/app/checkpoints dogbreed-classification infer --input_folder="path/to/custom/input" --  output_folder="path/to/custom/output" --     ckpt_path="path/to/custom/checkpoint.ckpt"
+
+<h2>Gradio</h2>
+
+Gradio is an open-source Python library that simplifies the creation of interactive user interfaces (UIs) for machine learning models, APIs, and other Python-based applications. It enables you to build web-based UIs with minimal code, making it easy to showcase and test models in real-time.
+
+<h3>Key Features</h3>
+
+Ease of Use: Quickly create UIs with just a few lines of code.
+
+Interactive Components: Provides pre-built inputs (e.g., text, image, audio) and outputs for seamless integration.
+
+Web-Based: Automatically generates a local or shareable web interface.
+
+Customizable: Easily modify components to suit your application's needs.
+
+Integration: Works with popular frameworks like PyTorch, TensorFlow, Hugging Face, and more.
+
+<h2>Hugging Face Spaces</h2>
+
+Hugging Face Spaces is a free, collaborative platform for hosting and sharing machine learning demos and applications. It supports popular frameworks like Gradio and Streamlit, making it easy to build, deploy, and showcase interactive ML models and tools.
+
+<h3>Key Features</h3>
+
+User-Friendly Deployment: Host apps with minimal effort.
+
+Framework Support: Compatible with Gradio, Streamlit, and static HTML/JS.
+
+Community Sharing: Share your projects with the Hugging Face community.
+
+Free Hosting: Public spaces are hosted for free with GPU options available.
+
+<h2>Why Use Hugging Face Spaces?</h2>
+
+Showcase your ML models to a global audience.
+
+Collaborate and gather feedback easily.
+
+Streamline the deployment of interactive demos.
+
+<h2>Hugging Face Spaces and Gradio</h2>
+
+Hugging Face Spaces and Gradio together form a powerful combination for building, hosting, and sharing interactive machine learning demos effortlessly.
+
+<img width="1410" alt="image" src="https://github.com/user-attachments/assets/d6810603-942c-473c-9f30-e4834a3ec18e">
+
+<h3>Hugging Face Spaces Deployment Link : </h3> https://huggingface.co/spaces/Nageswar-250/Dog_Breed_Classifier
 
 
 
