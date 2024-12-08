@@ -1,4 +1,4 @@
-<h1>Dog Breed Image Dataset Training, Evaluation, and Inference with Docker And AWS with Github Action </h1>
+<h1>Training, Evaluation, and Inference of a Dog Breed Image Dataset using Docker, AWS, Gradio, and HuggingFace, integrated with GitHub Actions. </h1>
 
 This repository contains a PyTorch Lightning-based project for classifying dog breeds using a dataset from Kaggle. The project includes Docker support, a DevContainer setup, and inference using a pre-trained model. Configuration management is handled using Hydra.
 
