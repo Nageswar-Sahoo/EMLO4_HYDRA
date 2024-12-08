@@ -91,6 +91,29 @@ jobs:
         run: |
               docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
               docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      
+      - name: Grant Execute Permissions to Script
+        run: chmod +x src/train.py
+
+      # Step 5: Run the Docker container
+      - name: Run the Docker container
+        env:
+         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+         ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
+         IMAGE_TAG: ${{ steps.get-commit-hash.outputs.commit-hash }}-${{ steps.get-timestamp.outputs.timestamp }}
+        run: |
+          FULL_IMAGE_URI="${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}"
+          WORKSPACE="$(pwd)"
+        
+          echo "Pulling Docker image: ${FULL_IMAGE_URI}"
+          docker pull "${FULL_IMAGE_URI}"
+        
+          echo "Running Docker image: ${FULL_IMAGE_URI}"
+          docker run \
+            --rm \
+            -v "${WORKSPACE}/model_artifacts:/app/logs" \
+            "${FULL_IMAGE_URI}"
+  
       - name: Running tracing
         run: |
             source .venv/bin/activate
