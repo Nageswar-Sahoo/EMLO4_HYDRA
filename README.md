@@ -245,11 +245,6 @@ This workflow will trigger on every push to the main branch. You can adjust the 
 Once the workflow completes, navigate to your Amazon ECR repository in the AWS Console. You should see a new image tagged with the commit hash and timestamp.
 <img width="1470" alt="image" src="https://github.com/user-attachments/assets/47d42e23-90ef-4dc5-8c0b-9a2519db0421">
 
-<h2>GitHub Self-Hosted Runner on EC2</h2>
-
-Continuous Integration (CI) and Continuous Deployment (CD) have become essential practices in modern software development, streamlining development processes and accelerating delivery. GitHub Actions offers a powerful CI/CD platform, and one of its standout features is the use of self-hosted runners. These runners allow you to run workflows on infrastructure you control, such as EC2 instances, providing greater flexibility, cost savings, and control over your environment. In this blog post, we will explore what self-hosted runners are, their advantages, and provide a step-by-step guide to setting up an EC2 Ubuntu instance as a self-hosted runner for your GitHub workflows.
-
-
 <h2>Run Docker Image from ECR with GitHub Actions</h2>
 
 This GitHub Actions workflow pulls a specified Docker image from Amazon ECR and runs it with a mounted volume for logging. The workflow is triggered manually (workflow_dispatch) and accepts the ecr_image_name as input. It authenticates to AWS using configured secrets, pulls the image, and runs it with the local model_artifacts directory mounted to /app/logs inside the container. Logs are optionally displayed after execution.
@@ -326,53 +321,8 @@ By integrating AWS CLI or SDKs into your training pipeline, you can automaticall
 
 
 
-<h3>Docker Setup</h3>
 
-1. Dockerfile
-This repository includes a Dockerfile to containerize the training, evaluation, and inference process. The Docker image includes the necessary dependencies and installs the project package.
-         # Build stage
-         FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS builder
-
-         ENV UV_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cpu
-         ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
-
-         WORKDIR /app
-
-         # Install dependencies
-          RUN --mount=type=cache,target=/root/.cache/uv \
-         	--mount=type=bind,source=uv.lock,target=uv.lock \
-        	--mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-        	uv sync --frozen --no-install-project --no-dev
-
-         # Copy the rest of the application
-         ADD . /app
-
-         # Install the project and its dependencies
-         RUN --mount=type=cache,target=/root/.cache/uv \
-     	uv sync --frozen --no-dev
-
-         # Final stage
-         FROM python:3.12-slim-bookworm
-
-         # Copy the application from the builder
-         COPY --from=builder --chown=app:app /app /app
-
-         # Place executables in the environment at the front of the path
-         ENV PATH="/app/.venv/bin:$PATH"
-
-         # Set the working directory
-         WORKDIR /app
-
-ouput from :  src/train.py
-<img width="1075" alt="image" src="https://github.com/user-attachments/assets/6a844b1a-9553-4c19-8a00-9d6241ace6ec">
-ouput from :  src/eval.py
-<img width="1262" alt="image" src="https://github.com/user-attachments/assets/b56d2f54-71e9-4ce5-9a76-60aef51cfa10">
-ouput from :  src/infer.py
-<img width="1615" alt="image" src="https://github.com/user-attachments/assets/95dae635-e28f-4da6-afb5-6ceebc0e90bf">
-
-
-
-<h3>Prediction Results</h3>
+<h3>Prediction Results In Gradio </h3>
 
   The model prediction gets saved in the predicted_images folder in the model artifacts.
 
