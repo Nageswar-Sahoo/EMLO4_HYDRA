@@ -245,7 +245,7 @@ This workflow will trigger on every push to the main branch. You can adjust the 
 Once the workflow completes, navigate to your Amazon ECR repository in the AWS Console. You should see a new image tagged with the commit hash and timestamp.
 <img width="1470" alt="image" src="https://github.com/user-attachments/assets/47d42e23-90ef-4dc5-8c0b-9a2519db0421">
 
-<h2>Run Docker Image from ECR with GitHub Actions</h2>
+<h2>Training The Model : Run Docker Image from ECR with GitHub Actions</h2>
 
 This GitHub Actions workflow pulls a specified Docker image from Amazon ECR and runs it with a mounted volume for logging. The workflow is triggered manually (workflow_dispatch) and accepts the ecr_image_name as input. It authenticates to AWS using configured secrets, pulls the image, and runs it with the local model_artifacts directory mounted to /app/logs inside the container. Logs are optionally displayed after execution.
 
@@ -286,6 +286,7 @@ By integrating AWS CLI or SDKs into your training pipeline, you can automaticall
 <img width="1788" alt="image" src="https://github.com/user-attachments/assets/cf0feb1e-fc9c-410c-8886-3fe0de56289a">
 <img width="1425" alt="image" src="https://github.com/user-attachments/assets/c3544264-c85e-467d-9dcc-c76d951fa26d">
 
+<h1>Deploying The Model</h1>
 
 <h2>TorchScript</h2>
 
@@ -429,6 +430,8 @@ Streamline the deployment of interactive demos.
 <h2>Hugging Face Spaces and Gradio</h2>
 
 Hugging Face Spaces and Gradio together form a powerful combination for building, hosting, and sharing interactive machine learning demos effortlessly.
+
+<img width="1430" alt="image" src="https://github.com/user-attachments/assets/f530b621-b963-4be0-ab56-323fdb72fe2a">
 
 <img width="1410" alt="image" src="https://github.com/user-attachments/assets/d6810603-942c-473c-9f30-e4834a3ec18e">
 
