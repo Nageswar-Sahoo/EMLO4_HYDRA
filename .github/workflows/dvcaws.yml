@@ -83,6 +83,8 @@ jobs:
               cd temp_push
               git init
               git checkout -b temp-hf
+              git config --global user.email "tech.nageswar@gmail.com"
+              git config --global user.name "Nageswar-250"
               git add .
               git commit -m "Prepare files for Hugging Face"
     
