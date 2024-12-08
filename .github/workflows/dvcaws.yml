@@ -151,4 +151,4 @@ jobs:
               HF: ${{ secrets.HF }}
         run: |
               cd temp_push
-              git push --force space temp-hf:main
+              git push
