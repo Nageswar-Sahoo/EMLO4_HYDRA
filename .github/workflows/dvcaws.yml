@@ -1,4 +1,4 @@
-name: DVC_with_S3
+name: AWS_LAMBDA_DEPLOYMENT
 
 on:
   push:
@@ -9,12 +9,13 @@ on:
       - feature/aws_lambda
 
 jobs:
-  dvc:
+  aws_lambda_deployment:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
+
       - name: Install Git LFS
         run: git lfs install
 
@@ -23,25 +24,27 @@ jobs:
         with:
           python-version: '3.8'
 
-      - name: Install DVC and Boto3
+      - name: Install Dependencies
         run: |
-          pip install dvc[s3] boto3
-          pip install aws-cdk-lib==2.168.0
+          pip install dvc[s3] boto3 aws-cdk-lib==2.168.0
           npm install -g aws-cdk
 
       - name: Configure AWS Credentials
-        run: |
-          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws configure set region ${{ secrets.AWS_REGION }}
-
-      - name: Pull DVC Data
-        run: |
-          cdk bootstrap
-          cdk synthesize
-          cdk deploy
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+          aws configure set region $AWS_REGION
 
+      - name: CDK Deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          cdk bootstrap
+          cdk synthesize
+          cdk deploy --require-approval never
