@@ -1,34 +1,18 @@
-# Build stage
-FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS builder
+FROM public.ecr.aws/docker/library/python:3.11.10-slim
 
-ENV UV_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cpu
-ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
+# Install AWS Lambda Web Adapter
+COPY --from=public.ecr.aws/awsguru/aws-lambda-adapter:0.8.4 /lambda-adapter /opt/extensions/lambda-adapter
 
-WORKDIR /app
+WORKDIR /var/task
 
-# Install dependencies
-RUN --mount=type=cache,target=/root/.cache/uv \
-	--mount=type=bind,source=uv.lock,target=uv.lock \
-	--mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-	uv sync --frozen --no-install-project --no-dev
+# Copy and install requirements
+COPY requirements.txt ./
+RUN pip install -r requirements.txt
 
-# Copy the rest of the application
-ADD . /app
+# Copy application code and model
+COPY app.py ./
+COPY model.pt ./
+COPY examples/ ./examples/
 
-# Install the project and its dependencies
-RUN --mount=type=cache,target=/root/.cache/uv \
-	uv sync --frozen --no-dev
-
-# Final stage
-FROM python:3.12-slim-bookworm
-
-# Copy the application from the builder
-COPY --from=builder --chown=app:app /app /app
-
-# Place executables in the environment at the front of the path
-ENV PATH="/app/.venv/bin:$PATH"
-
-# Set the working directory
-WORKDIR /app
-
-CMD ["python", "src/train.py"]
+# Set command
+CMD ["python3", "app.py"] 
