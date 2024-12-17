@@ -5,7 +5,7 @@ from PIL import Image
 from gradio.flagging import SimpleCSVLogger
 
 class CatDogClassifier:
-    def __init__(self, model_path="model.pt"):
+    def __init__(self, model_path="best-checkpoint.ckpt"):
         self.device = torch.device('cpu')
         
         # Load the traced model
