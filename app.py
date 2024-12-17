@@ -3,11 +3,13 @@ import torch
 import torchvision.transforms as transforms
 from PIL import Image
 from gradio.flagging import SimpleCSVLogger
+import os
 
 class CatDogClassifier:
     def __init__(self, model_path="model.pt"):
         self.device = torch.device('cpu')
-        
+        print(f"Model path exists 1: {os.path.exists(model_path)}")
+        print(f"Model path exists 2: {os.path.exists("./model.pt")}")
         # Load the traced model
         self.model = torch.jit.load(model_path)
         self.model = self.model.to(self.device)
