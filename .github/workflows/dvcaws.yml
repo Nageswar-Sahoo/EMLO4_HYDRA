@@ -3,10 +3,10 @@ name: DVC_with_S3
 on:
   push:
     branches:
-      - feature/gradio_Latest
+      - feature/aws_lambda
   pull_request:
     branches:
-      - feature/aws_dvc_latest
+      - feature/aws_lambda
 
 jobs:
   dvc:
@@ -26,6 +26,8 @@ jobs:
       - name: Install DVC and Boto3
         run: |
           pip install dvc[s3] boto3
+          pip install aws-cdk-lib==2.168.0
+          npm install -g aws-cdk
 
       - name: Configure AWS Credentials
         run: |
@@ -33,122 +35,13 @@ jobs:
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws configure set region ${{ secrets.AWS_REGION }}
 
-      - name: Set DVC Remote
-        run: |
-          dvc remote add -d myremote s3://dvc-nagsh-demo
-      - name: Enable Debug Logging
-        run: export DVC_LOGLEVEL=DEBUG
-
       - name: Pull DVC Data
         run: |
-          dvc pull -v
+          cdk bootstrap
+          cdk synthesize
+          cdk deploy
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v2
-    
-      - name: Set up Python 3.12
-        run: uv python install 3.12
-    
-      - name: Install dependencies
-        env:
-          UV_EXTRA_INDEX_URL: https://download.pytorch.org/whl/cpu
-        run: |
-          uv sync
-    
-      - name: Run tests with coverage
-        run: |
-            uv run coverage run -m pytest
-            uv run coverage xml -o coverage.xml
-    
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-            token: ${{ secrets.CODECOV_TOKEN }}
-            files: ./coverage.xml
-            fail_ci_if_error: true
-      
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-                        
-      - name: Get commit hash
-        id: get-commit-hash
-        run: echo "::set-output name=commit-hash::$(git rev-parse --short HEAD)"
-      - name: Get timestamp
-        id: get-timestamp
-        run: echo "::set-output name=timestamp::$(date +'%Y-%m-%d-%H-%M')"
-    
-      - name: Build, tag, and push the image to Amazon ECR
-        id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
-          IMAGE_TAG: ${{ steps.get-commit-hash.outputs.commit-hash }}-${{ steps.get-timestamp.outputs.timestamp }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-        run: |
-              docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-              docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-      
-      - name: Grant Execute Permissions to Script
-        run: chmod +x src/train.py
-
-      # Step 5: Run the Docker container
-      - name: Run the Docker container
-        env:
-         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-         ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
-         IMAGE_TAG: ${{ steps.get-commit-hash.outputs.commit-hash }}-${{ steps.get-timestamp.outputs.timestamp }}
-         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-         AWS_REGION: ${{ secrets.AWS_REGION }}
-        run: |
-          FULL_IMAGE_URI="${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}"
-          WORKSPACE="$(pwd)"
-        
-          echo "Pulling Docker image: ${FULL_IMAGE_URI}"
-          docker pull "${FULL_IMAGE_URI}"
-        
-          echo "Running Docker image: ${FULL_IMAGE_URI}"
-          docker run \
-          --rm \
-          -v "${WORKSPACE}/model_artifacts:/app/logs" \
-          -e AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
-          -e AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
-          -e AWS_REGION="${AWS_REGION}" \
-          "${FULL_IMAGE_URI}"
-  
-      - name: Running tracing
-        run: |
-            source .venv/bin/activate
-            python src/script.py    
-    
-          # Step 2: Create a temporary branch with the required files
-      - name: Prepare files for Hugging Face
-        env:
-          HF: ${{ secrets.HF }}
-        run: |
-              git lfs install
-              git clone https://Nageswar-250:$HF@huggingface.co/spaces/Nageswar-250/Dog_Breed_Classifier temp_push
-              cp traced_models/model.pt temp_push/
-              cp src/app.py temp_push/
-              cd temp_push
-              git config --global user.email "tech.nageswar@gmail.com"
-              git config --global user.name "Nageswar-250"
-              ls -a
-              git lfs track model.pt
-              git add .
-              git commit -m "Prepare files for Hugging Face"
-    
-          # Step 3: Add remote Hugging Face repository
-      - name: Push to Hugging Face Hub
-        env:
-              HF: ${{ secrets.HF }}
-        run: |
-              cd temp_push
-              git push
