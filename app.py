@@ -6,6 +6,9 @@ from gradio.flagging import SimpleCSVLogger
 import os
 import logging
 
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 class CatDogClassifier:
     def __init__(self, model_path="model.pt"):
         self.device = torch.device('cpu')
