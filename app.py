@@ -9,13 +9,24 @@ class CatDogClassifier:
     def __init__(self, model_path="model.pt"):
         self.device = torch.device('cpu')
         model_path2="./model.pt"
-        print(f"Model path exists 1: {os.path.exists(model_path)}")
-        print(f"Model path exists 1: {os.path.exists(model_path2)}")
-        # Load the traced model
-        self.model = torch.jit.load(model_path)
-        self.model = self.model.to(self.device)
-        self.model.eval()
+        try:
+            logger.info(f"Model path exists: {os.path.exists(model_path)}")
 
+            # Load the traced model
+            self.model = torch.jit.load(model_path)
+            self.model = self.model.to(self.device)
+            self.model.eval()
+
+            logger.info("Model successfully loaded and initialized.")
+        except FileNotFoundError as fnf_error:
+            logger.error(f"Model file not found: {model_path}")
+            logger.error(f"Error details: {fnf_error}")
+        except RuntimeError as rt_error:
+            logger.error(f"Runtime error occurred while loading the model.")
+            logger.error(f"Error details: {rt_error}")
+        except Exception as e:
+            logger.error("An unexpected error occurred while loading the model.")
+            logger.error(f"Error details: {e}", exc_info=True)
         # Define the same transforms used during training/testing
         self.transform = transforms.Compose([
             transforms.Resize((160, 160)),
