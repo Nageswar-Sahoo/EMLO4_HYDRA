@@ -4,6 +4,7 @@ import torchvision.transforms as transforms
 from PIL import Image
 from gradio.flagging import SimpleCSVLogger
 import os
+import logging
 
 class CatDogClassifier:
     def __init__(self, model_path="model.pt"):
