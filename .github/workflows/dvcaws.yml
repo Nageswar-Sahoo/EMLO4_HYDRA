@@ -52,12 +52,11 @@ jobs:
       # Step 8: Build Docker Image and Inspect Contents (Debugging)
       - name: Build Docker Image and Inspect Contents
         run: |
-          docker build -t test-image .
-          echo "Inspecting files inside Docker image:"
-          docker run --rm -it test-image ls -l /var/task
-          echo "Verifying model file in Docker image:"
-          docker run --rm -it test-image sha256sum /var/task/model.pt
-
+           docker build -t test-image .
+           echo "Inspecting files inside Docker image:"
+           docker run --rm test-image ls -l /var/task
+           echo "Verifying model file in Docker image:"
+           docker run --rm test-image sha256sum /var/task/model.pt
       # Step 9: Configure AWS Credentials
       - name: Configure AWS Credentials
         env:
