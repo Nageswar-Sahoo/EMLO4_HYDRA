@@ -184,22 +184,36 @@ Integration: Works with popular frameworks like PyTorch, TensorFlow, Hugging Fac
 
       name: AWS_LAMBDA_DEPLOYMENT
       steps:
+      # Step 1: Checkout Repository
       - name: Checkout Repository
         uses: actions/checkout@v3
 
+      # Step 2: Install Git LFS
       - name: Install Git LFS
         run: git lfs install
 
+      # Step 3: Pull LFS Files
+      - name: Pull LFS Files
+        run: git lfs pull
+
+      # Step 4: List Files in Workspace (Debugging)
+      - name: List Files
+        run: |
+          echo "Listing all files in the workspace:"
+          ls -lR
+
+      # Step 5: Set up Python Environment
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.8'
+          python-version: '3.11'
 
+      # Step 6: Install Dependencies for CDK
       - name: Install Dependencies
         run: |
           pip install boto3 aws-cdk-lib==2.168.0
           npm install -g aws-cdk
-
+      # Step 9: Configure AWS Credentials
       - name: Configure AWS Credentials
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -210,13 +224,22 @@ Integration: Works with popular frameworks like PyTorch, TensorFlow, Hugging Fac
           aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
           aws configure set region $AWS_REGION
 
-      - name: CDK Deploy
+      # Step 10: Bootstrap CDK
+      - name: CDK Bootstrap
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
           cdk bootstrap
+
+      # Step 11: Synthesize and Deploy CDK Stack
+      - name: CDK Synthesize and Deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
           cdk synthesize
           cdk deploy --require-approval never
 
@@ -225,7 +248,10 @@ Integration: Works with popular frameworks like PyTorch, TensorFlow, Hugging Fac
 <h3> Inference Link :  </h3>   https://mq6lgqox7zlntc67xaeqlmd53e0itkgy.lambda-url.ap-south-1.on.aws/
 <h3>Prediction Results In Gradio </h3>
 
+<img width="1787" alt="image" src="https://github.com/user-attachments/assets/3dacaa59-8d94-4193-bb77-73f92c079665" />
+
 <img width="1585" alt="image" src="https://github.com/user-attachments/assets/91e90cc3-d4c4-41d9-8085-607e4827046c">
+
 <img width="1616" alt="image" src="https://github.com/user-attachments/assets/c607d9ab-d256-4ddd-ae35-9216ad3b3c0b">
 
 
