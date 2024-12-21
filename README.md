@@ -178,13 +178,8 @@ kubectl debug pod/<pod-name> -it --image=busybox
 
 
 <h2>MiniKube</h2>
-<h3>Start MiniKube</h3>
 
-<h3>1. Start MiniKube</h3>
 MiniKube is a local Kubernetes environment. Use it to test Kubernetes deployments on your local machine.
-
-Steps:
-Ensure MiniKube is installed. If not, install it following the MiniKube installation guide.
 
 Start MiniKube:
     minikube start --cpus=4 --memory=8192
