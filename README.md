@@ -1,8 +1,6 @@
 <h1>Dog Breed Classifier Deployment with Kubernetes and MiniKube </h1>
 
-
-
-This guide explains how to deploy a serverless AWS Lambda function using the AWS Cloud Development Kit (CDK). It includes setting up the environment, defining the Lambda function, and deploying the stack.
+This project demonstrates deploying a FastAPI-based CatDog Classifier application on a Kubernetes cluster using MiniKube. Follow these instructions to set up, deploy, and access the application.
 
 <h2>Directory Structure:</h2>
 
