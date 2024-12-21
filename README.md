@@ -260,5 +260,20 @@ To remove the resources, run kubectl delete -f ..
 
 <img width="1434" alt="image" src="https://github.com/user-attachments/assets/40d637b7-a199-4bb3-8ed3-d196043429dd" />
 
+<h3>Output of the following command present in logs folder </h3>
+ 
+ kubectl describe <your_deployment>
+ 
+ kubectl describe <your_pod>
+ 
+ kubectl describe <your_ingress>
+ 
+ kubectl top pod
+ 
+ kubectl top node
+ 
+ kubectl get all -o yaml
+
+
 
    
