@@ -1,0 +1,48 @@
+Name:             fastapi-app-7898c5c879-jwfgd
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Sat, 21 Dec 2024 18:19:19 +0530
+Labels:           app=fastapi-app
+                  pod-template-hash=7898c5c879
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.35
+IPs:
+  IP:           10.244.0.35
+Controlled By:  ReplicaSet/fastapi-app-7898c5c879
+Containers:
+  fastapi-container:
+    Container ID:   docker://a09bdc6af6bd477df879f3729ee5e7aa4a7df29830c4397c5e6189b4bd93ff86
+    Image:          fastapi-catdog-classifier:latest
+    Image ID:       docker://sha256:09b6c6253726ccbbad7cf7162917298fb67444f247d456f88d5a6fcc00770a5d
+    Port:           8080/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Sat, 21 Dec 2024 18:19:30 +0530
+    Ready:          True
+    Restart Count:  0
+    Environment:
+      UVICORN_SERVER_PORT:  8080
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-xwggd (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-xwggd:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:                      <none>

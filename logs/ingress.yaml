@@ -1,0 +1,13 @@
+Name:             fastapi-ingress
+Labels:           <none>
+Namespace:        default
+Address:          192.168.49.2
+Ingress Class:    nginx
+Default backend:  <default>
+Rules:
+  Host                       Path  Backends
+  ----                       ----  --------
+  fastapi.example.localhost  
+                             /   fastapi-service:80 (10.244.0.35:8080,10.244.0.34:8080)
+Annotations:                 nginx.ingress.kubernetes.io/rewrite-target: /
+Events:                      <none>
