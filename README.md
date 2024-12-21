@@ -1,4 +1,5 @@
-<h1>Inference of a Dog Breed Image Dataset using Docker, AWS Lambda, Gradio with GitHub Actions. </h1>
+<h1>Dog Breed Classifier Deployment with Kubernetes and MiniKube </h1>
+
 
 This guide explains how to deploy a serverless AWS Lambda function using the AWS Cloud Development Kit (CDK). It includes setting up the environment, defining the Lambda function, and deploying the stack.
 
@@ -20,16 +21,16 @@ This dataset contains a collection of images for 10 different dog breeds, meticu
        Boxer
        Dachshund
 
-k8s (Kubernetes)
+<h2>k8s (Kubernetes)</h2>
 
 k8s is a container orchestration system. It is used for container deployment and management. Its design is greatly impacted by Google’s internal system Borg.
 
 
 <img width="538" alt="image" src="https://github.com/user-attachments/assets/c8d5e689-5805-4ed3-b5df-162af7b2a98c" />
 
-A k8s cluster consists of a set of worker machines, called nodes, that run containerized applications. Every cluster has at least one worker node. [1]
+A k8s cluster consists of a set of worker machines, called nodes, that run containerized applications. Every cluster has at least one worker node.
 
-The worker node(s) host the Pods that are the components of the application workload. The control plane manages the worker nodes and the Pods in the cluster. In production environments, the control plane usually runs across multiple computers and a cluster usually runs multiple nodes, providing fault tolerance and high availability. [1]
+The worker node(s) host the Pods that are the components of the application workload. The control plane manages the worker nodes and the Pods in the cluster. In production environments, the control plane usually runs across multiple computers and a cluster usually runs multiple nodes, providing fault tolerance and high availability. 
 
 Control Plane Components
 
@@ -45,227 +46,160 @@ Nodes
 
 PodsA pod is a group of containers and is the smallest unit that k8s administers. Pods have a single IP address applied to every container within the pod.
 
-KubeletAn agent that runs on each node in the cluster. It ensures containers are running in a Pod. [1]
+KubeletAn agent that runs on each node in the cluster. It ensures containers are running in a Pod.
 
 Kube Proxykube-proxy is a network proxy that runs on each node in your cluster. It routes traffic coming into a node from the service. It forwards requests for work to the correct containers.
 
+<h2>Kubernetes Commands</h2>
+<h3>General Commands</h3></h4>
 
+<h4>Get All Resources in a Namespace:</h4>
 
-<h1>Deploying The Model</h1>
+  kubectl get all -n <namespace>
+<h4>Get Resource Details in YAML Format:</h4>
 
-<h2>TorchScript</h2>
+  kubectl get <resource-type> <resource-name> -o yaml
+<h4>Apply a Configuration File:</h4>
 
-TorchScript is an intermediate representation of PyTorch models that allows you to save, serialize, and run models independently of Python. It bridges the gap between research and production by enabling efficient deployment of PyTorch models in environments where Python runtime may not be available.
+  kubectl apply -f <file-name.yaml>
+<h4>Delete a Resource:</h4>
 
-Key features include:
+  kubectl delete -f <file-name.yaml>
+<h4>View Cluster Nodes:</h4>
 
-Serialization: Save models as .pt files for portability.
-Execution: Run models with optimized performance in C++ or other runtimes.
-Flexibility: Convert models written in standard PyTorch seamlessly using tracing or scripting.
-TorchScript makes it easier to transition from experimentation to deployment while preserving PyTorch's dynamic and flexible nature.
+  kubectl get nodes
+<h3>Commands for Deployments</h3>
+<h4>List Deployments:</h4>
 
-TorchScript provides two ways to convert a PyTorch model into its intermediate representation: Scripting and Tracing. Here's a comparison to help understand the differences and when to use each:
+kubectl get deployments
+<h4>Describe a Deployment:</h4>
 
-<h3>1. Scripting</h3>
-What It Is:
-Scripting involves directly converting a PyTorch nn.Module or function into TorchScript by analyzing its Python code.
-It captures the entire logic, including control flow (if-else, loops).
+kubectl describe deployment <deployment-name>
+<h4>Update a Deployment (Rolling Update):</h4>
 
-<h4>Advantages:</h4>
+kubectl set image deployment/<deployment-name> <container-name>=<new-image>
+<h4>Scale a Deployment:</h4>
 
-Handles dynamic control flows (e.g., loops, conditionals).
-Fully preserves the logic of the original Python code.
-Suitable for models with complex computations.
+kubectl scale deployment/<deployment-name> --replicas=<number>
+<h4>Restart a Deployment:</h4>
 
-<h4>Disadvantages:</h4>
+kubectl rollout restart deployment/<deployment-name>
+<h4>Check Rollout Status:</h4>
 
-Requires code to follow certain TorchScript compatibility rules.
-Slightly more effort to debug due to strict type checking.
+kubectl rollout status deployment/<deployment-name>
+<h4>Rollback a Deployment:</h4>
 
-<h3>2. Tracing</h3>
+kubectl rollout undo deployment/<deployment-name>
+<h3>Commands for Services</h3>
+<h4>List Services:</h4>
 
-What It Is:
-Tracing records the operations executed during a single run of the model with example inputs.
-It produces a static computational graph.
+kubectl get services
+<h4>Describe a Service:</h4>
 
-<h4>Advantages:</h4>
+kubectl describe service <service-name>
+<h4>Expose a Deployment as a Service:</h4>
 
-Quick and straightforward for static models without control flow.
-Easier to apply when the model's structure does not change with inputs.
+kubectl expose deployment <deployment-name> --type=<type> --port=<port>
+Example:
 
-<h4>Disadvantages:</h4>
+kubectl expose deployment catdog-classifier --type=NodePort --port=80
+<h4>Access NodePort Service:</h4>
 
-Ignores dynamic control flows (e.g., if-else, loops); these are "baked in" during tracing.
-Requires careful testing to ensure the traced model behaves correctly for all inputs.
+minikube service <service-name>
+<h3>Commands for Ingress</h3>
+<h4>List Ingress Rules:</h4>
 
-<h2>Why Use TorchScript?</h2>
-TorchScript simplifies and accelerates the transition from research to production by:
+kubectl get ingress
+<h4>Describe an Ingress:</h4>
 
-Enabling optimized inference.
+kubectl describe ingress <ingress-name>
+<h4>Access Ingress: After applying the Ingress, check the external IP or host:</h4>
 
-Supporting deployment on edge devices and servers.
+kubectl get ingress
+Access it using the hostname or external IP in your browser.
+<h4>Delete an Ingress:</h4>
 
-Reducing Python-specific dependencies for secure and scalable deployment.
+kubectl delete ingress <ingress-name>
+<h3>Commands for Pods</h3>
+<h4>List Pods:</h4>
 
-<h2>Getting Started</h2>
+kubectl get pods
+<h4>List Pods with Labels:</h4>
 
-Convert your PyTorch model to TorchScript using tracing or scripting.
+kubectl get pods -l <label-key>=<label-value>
+<h4>Describe a Pod:</h4>
 
-Save the TorchScript model using torch.jit.save().
+kubectl describe pod <pod-name>
+<h4>Get Pod Logs:</h4>
 
-Deploy it using the Python or C++ runtime for efficient production integration.
+kubectl logs <pod-name>
+<h4></h4>Stream Pod Logs:</pod-name>
 
-TorchScript is your solution for reliable, high-performance model deployment in the modern AI landscape.
+kubectl logs -f <pod-name>
+<h4>Execute a Command Inside a Pod:</h4>
 
-<img width="1426" alt="image" src="https://github.com/user-attachments/assets/f1dcf5b0-3010-418b-9d99-a7508d1504ed">
+kubectl exec -it <pod-name> -- <command>
+<h4>Delete a Pod:</h4>
 
-<h2>Gradio</h2>
+kubectl delete pod <pod-name>
+<h3>Namespace Management</h3>
+<h4>List All Namespaces:</h4>
 
-Gradio is an open-source Python library that simplifies the creation of interactive user interfaces (UIs) for machine learning models, APIs, and other Python-based applications. It enables you to build web-based UIs with minimal code, making it easy to showcase and test models in real-time.
+kubectl get namespaces
+<h4>Create a New Namespace:</h4>
 
-<h3>Key Features</h3>
+kubectl create namespace <namespace-name>
+<h4>Set a Default Namespace:</h4>
 
-Ease of Use: Quickly create UIs with just a few lines of code.
+kubectl config set-context --current --namespace=<namespace-name>
+<h4>Delete a Namespace:</h4>
 
-Interactive Components: Provides pre-built inputs (e.g., text, image, audio) and outputs for seamless integration.
+kubectl delete namespace <namespace-name>
+<h3>Resource Debugging</h3>
+<h4>Check Events in a Namespace:</h4>
 
-Web-Based: Automatically generates a local or shareable web interface.
+kubectl get events -n <namespace>
+<h4>Debug a Pod:</h4>
 
-Customizable: Easily modify components to suit your application's needs.
+kubectl debug pod/<pod-name> -it --image=busybox
+<h4>View Resource Usage:</h4>
 
-Integration: Works with popular frameworks like PyTorch, TensorFlow, Hugging Face, and more.
+  kubectl top pods
+  kubectl top nodes
 
 
-<h2>Project Setup</h2>
-  <h3>1. Initialize the CDK Project </h3>
-    
-    Run the following command in your project directory to initialize a  CDK app:
-    
-    pip install aws-cdk-lib==2.168.0
-    
-    npm install -g aws-cdk
-    
-    Configure the AWS SDK with credentials for the IAM user created above
-    
-    Permissions needed by CDK
-    
-     {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "cloudformation:*",
-                "ecr:*",
-                "ssm:*",
-                "s3:*",
-                "iam:*"
-            ],
-            "Resource": "*"
-        }
-    ]
-    }
-
- <h3>2. Define the Lambda Function and Resources </h3>
-
-  This Python class, GradioLambda, defines an AWS CDK stack that deploys an AWS Lambda function built from a Docker image. The Lambda function is configured with specific memory, architecture, and timeout settings and is exposed via 
-   an HTTPS Function URL with no authentication. Finally, the URL is outputted for easy access.
-
-    class GradioLambda(Stack):
-      def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
-        super().__init__(scope, construct_id, **kwargs)
-
-        # Create Lambda function
-        lambda_fn = DockerImageFunction(
-            self,
-            "CatDogClassifier",
-            code=DockerImageCode.from_image_asset(str(Path.cwd()), file="Dockerfile"),
-            architecture=Architecture.X86_64,
-            memory_size=3000,  # 8GB memory
-            timeout=Duration.minutes(5),
-        )
-
-        # Add HTTPS URL
-        fn_url = lambda_fn.add_function_url(auth_type=FunctionUrlAuthType.NONE)
-
-        CfnOutput(self, "functionUrl", value=fn_url.url)
-
-    app = App()
-    gradio_lambda = GradioLambda(app, "GradioLambda", env=my_environment)
-    app.synth()
-
-  <h3>3. Bootstrap the CDK Environment </h3>
-  
-       Before deploying, bootstrap your AWS environment:  cdk bootstrap
-    
-  <h3>4. Synthesize the Stack </h3>
-  
-       Before deploying, synthesize your AWS environment:  cdk synthesize
-
-  <h3>5. Deploy the Stack </h3>
-  
-        Deploy your resources using the following command: cdk deploy
-
-
-<h2>Create a CI/CD Pipeline to deploy/update the model to AWS Lambda</h2>
-
-  This GitHub Actions workflow automates the deployment of an AWS Lambda function using AWS CDK. It triggers on pushes or pull requests to the `feature/aws_lambda` branch, installs dependencies, configures AWS credentials, and runs 
-   CDK commands (`bootstrap`, `synthesize`, and `deploy`) to deploy the Lambda function to AWS.
-
-      name: AWS_LAMBDA_DEPLOYMENT
-      steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: Install Git LFS
-        run: git lfs install
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.8'
-
-      - name: Install Dependencies
-        run: |
-          pip install boto3 aws-cdk-lib==2.168.0
-          npm install -g aws-cdk
-
-      - name: Configure AWS Credentials
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-        run: |
-          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-          aws configure set region $AWS_REGION
-
-      - name: CDK Deploy
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-        run: |
-          cdk bootstrap
-          cdk synthesize
-          cdk deploy --require-approval never
-
-<img width="1447" alt="image" src="https://github.com/user-attachments/assets/f0e285e3-e0ce-416c-86c6-f60f06e7f4a6" />
-
-<h3> Inference Link :  </h3>   https://mq6lgqox7zlntc67xaeqlmd53e0itkgy.lambda-url.ap-south-1.on.aws/
-<h3>Prediction Results In Gradio </h3>
-
-<img width="1585" alt="image" src="https://github.com/user-attachments/assets/91e90cc3-d4c4-41d9-8085-607e4827046c">
-<img width="1616" alt="image" src="https://github.com/user-attachments/assets/c607d9ab-d256-4ddd-ae35-9216ad3b3c0b">
-
-
-
-<h3>Requirements</h3>
-
-         Docker
-         Kaggle API (for downloading the dataset)
-         GitHub Codespaces or Visual Studio Code with the Remote Containers extension (for DevContainer setup)
-
-  
-    
+<h2>MiniKube</h2>
+<h3>Start MiniKube</h3>
 
+<h3>1. Start MiniKube</h3>
+MiniKube is a local Kubernetes environment. Use it to test Kubernetes deployments on your local machine.
+
+Steps:
+Ensure MiniKube is installed. If not, install it following the MiniKube installation guide.
+
+Start MiniKube:
+    minikube start --cpus=4 --memory=8192
+    This starts a MiniKube cluster with 4 CPUs and 8 GB of memory.
+
+Verify that MiniKube is running:
+   minikube status
+
+<h2>MiniKube Commands</h2>
+<h4>Start MiniKube:</h4>
+  minikube start
+<h4>Stop MiniKube:</h4>
+   minikube stop
+<h4>Delete MiniKube Cluster:</h4>
+  minikube delete
+<h4>Access Kubernetes Dashboard:</h4>
+  minikube dashboard
+<h4>Enable Add-ons (e.g., ingress):</h4>
+   minikube addons enable ingress
+   
+<h4>Tunnel to the Ingress</h4>
+
+MiniKube does not expose Ingress directly on your host machine. Use the MiniKube tunnel to expose the Ingress.
+
+Start a MiniKube tunnel in a separate terminal:
+
+   minikube tunnel
