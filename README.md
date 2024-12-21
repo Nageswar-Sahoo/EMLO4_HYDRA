@@ -1,8 +1,19 @@
 <h1>Dog Breed Classifier Deployment with Kubernetes and MiniKube </h1>
 
 
+
 This guide explains how to deploy a serverless AWS Lambda function using the AWS Cloud Development Kit (CDK). It includes setting up the environment, defining the Lambda function, and deploying the stack.
 
+<h2>Directory Structure:</h2>
+
+        project/
+
+        ├── app.py
+        ├── templates/
+        │   ├── index.html
+        │   └── result.html
+        ├── requirements.txt
+        └── Dockerfile
 
 <h3>About Dataset</h3>
 
@@ -203,3 +214,51 @@ MiniKube does not expose Ingress directly on your host machine. Use the MiniKube
 Start a MiniKube tunnel in a separate terminal:
 
    minikube tunnel
+
+<h2>Project Setup</h2>
+
+<h3>FastAPI Application Code</h3>
+This is the core application handling image upload and classification. It uses FastAPI for API handling and Jinja2 for rendering HTML templates.
+
+<h3>HTML Templates</h3>
+These provide a user-friendly interface for uploading images and viewing results.
+
+
+<h3>Dockerfile</h3>
+Defines the containerization of the FastAPI application.
+
+<h3>Kubernetes YAML Files</h3>
+
+These configure the deployment, service, and ingress for your FastAPI application.
+
+
+<h3>Building and Pushing the image to Minikube</h3>
+
+Rebuild the Docker image to include the updated requirements:
+
+eval $(minikube docker-env)
+
+docker build -t fastapi-catdog-classifier .
+
+
+<h3>Kubernetes Deployment</h3>
+
+Start Minikube with the command: minikube start.
+
+Navigate to the Kubernetes YAML files located in the k8s directory.
+
+Use kubectl apply -f . to deploy the Kubernetes resources.
+
+To remove the resources, run kubectl delete -f ..
+
+<img width="1061" alt="image" src="https://github.com/user-attachments/assets/a07053e7-5d1e-4e01-9125-dbdc0328ff4c" />
+
+
+<h3>How to access FAST API : </h3>
+
+<img width="858" alt="image" src="https://github.com/user-attachments/assets/f7101312-288e-4b2d-9d1d-fc106c525e4b" />
+
+<img width="1434" alt="image" src="https://github.com/user-attachments/assets/40d637b7-a199-4bb3-8ed3-d196043429dd" />
+
+
+   
