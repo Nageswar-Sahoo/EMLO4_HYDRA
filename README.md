@@ -89,6 +89,9 @@ Simplified Management: Manage deployments, upgrades, and rollbacks with simple H
  
  helm list : Lists all active Helm releases
 
+ helm delete fastapi-release-prod : to delete helm already install 
+
+
 <h3>About Dataset</h3>
 
 Description
