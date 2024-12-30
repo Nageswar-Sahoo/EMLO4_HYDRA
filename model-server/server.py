@@ -1,17 +1,16 @@
-import urllib
-import io
 import os
-import zlib
+import io
 import json
+import zlib
 import socket
 import logging
-import requests
 
-import redis.asyncio as redis
 import torch
-import timm
+import requests
 import numpy as np
-
+import redis.asyncio as redis
+import timm
+import torchvision.transforms as transforms
 from PIL import Image
 from fastapi import FastAPI, File, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -24,9 +23,10 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Initialize FastAPI app
 app = FastAPI(title="Mamba Model Server")
 
-# CORS middleware
+# Configure CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -35,104 +35,104 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Update environment variables
-MODEL_NAME = os.environ.get("MODEL_NAME", "mambaout_base.in1k")
-REDIS_HOST = os.environ.get("REDIS_HOST", "localhost")
-REDIS_PORT = os.environ.get("REDIS_PORT", "6379")
-REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD", "")
+# Environment variables
+MODEL_NAME = os.getenv("MODEL_NAME", "mambaout_base.in1k")
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT = os.getenv("REDIS_PORT", "6379")
+REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", "")
 HOSTNAME = socket.gethostname()
 
+# Global variables
+model = None
+device = None
+transform = None
+categories = []
+redis_pool = None
+
+# Model initialization
 @app.on_event("startup")
 async def initialize():
     global model, device, transform, categories, redis_pool
+    model_path = "model.pt"
 
     logger.info(f"Initializing model server on host {HOSTNAME}")
-
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     logger.info(f"Using device: {device}")
 
-    logger.info(f"Loading model: {MODEL_NAME}")
-    model = timm.create_model(MODEL_NAME, pretrained=True)
-    model = model.to(device)
-    model.eval()
-    logger.info(f"Model loaded successfully")
+    try:
+        logger.info(f"Loading model: {MODEL_NAME}")
+        model = torch.jit.load(model_path)
+        model.to(device).eval()
+        logger.info("Model successfully loaded and initialized.")
+    except (FileNotFoundError, RuntimeError, Exception) as e:
+        logger.error(f"Error loading model: {str(e)}", exc_info=True)
 
-    # Get model specific transforms
-    logger.info("Setting up model transforms")
-    data_config = timm.data.resolve_model_data_config(model)
-    transform = timm.data.create_transform(**data_config, is_training=False)
+    # Define image transformations
+    transform = transforms.Compose([
+        transforms.Resize((160, 160)),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+    ])
 
-    # Load ImageNet labels
-    logger.info("Loading ImageNet categories")
-    url = "https://storage.googleapis.com/bit_models/ilsvrc2012_wordnet_lemmas.txt"
-    categories = requests.get(url).text.strip().split("\n")
-    logger.info(f"Loaded {len(categories)} categories")
+    # Define categories
+    categories = [
+        "beagle", "boxer", "bulldog", "dachshund", "german_Shepherd",
+        "Golden_Retriever", "Labrador_Retriever", "Poodle",
+        "Rottweiler", "Yorkshire_Terrier"
+    ]
 
-    # Redis setup
-    logger.info(f"Creating Redis connection pool: host={REDIS_HOST}, port={REDIS_PORT}")
+    # Setup Redis connection pool
     redis_pool = redis.ConnectionPool(
         host=REDIS_HOST,
         port=REDIS_PORT,
         password=REDIS_PASSWORD,
         db=0,
-        decode_responses=True,
+        decode_responses=True
     )
     logger.info("Model server initialization complete")
 
+# Cleanup on shutdown
 @app.on_event("shutdown")
 async def shutdown():
-    """Cleanup connection pool on shutdown"""
     logger.info("Shutting down model server")
     await redis_pool.aclose()
-    logger.info("Cleanup complete")
+    logger.info("Redis connection pool closed")
 
+# Redis client dependency
 def get_redis():
     return redis.Redis(connection_pool=redis_pool)
 
+# Prediction function
 def predict(inp_img: Image) -> Dict[str, float]:
-    logger.debug("Starting prediction")
-    img = inp_img.convert("RGB")
-    img_tensor = transform(img).unsqueeze(0).to(device)
+    logger.info("Running inference")
+    img_tensor = transform(inp_img.convert("RGB")).unsqueeze(0).to(device)
 
-    # inference
     with torch.no_grad():
-        logger.debug("Running inference")
         out = model(img_tensor)
         probabilities = torch.nn.functional.softmax(out[0], dim=0)
-
-        # Get top predictions
         top_prob, top_catid = torch.topk(probabilities, 5)
-        confidences = {
-            categories[idx.item()]: float(prob)
-            for prob, idx in zip(top_prob, top_catid)
-        }
 
-    logger.debug(f"Prediction complete. Top class: {list(confidences.keys())[0]}")
-    return confidences
+    return {categories[idx.item()]: float(prob) for prob, idx in zip(top_prob, top_catid)}
 
+# Write to Redis cache
 async def write_to_cache(file: bytes, result: Dict[str, float]) -> None:
     cache = get_redis()
-    hash = str(zlib.adler32(file))
-    logger.debug(f"Writing prediction to cache with hash: {hash}")
-    await cache.set(hash, json.dumps(result))
-    logger.debug("Cache write complete")
+    hash_key = str(zlib.adler32(file))
+    logger.info(f"Caching result with hash: {hash_key}")
+    await cache.set(hash_key, json.dumps(result))
 
+# Inference endpoint
 @app.post("/infer")
-async def infer(image: Annotated[bytes, File()]):
+async def infer(image: Annotated[bytes, File()]) -> Dict[str, float]:
     logger.info("Received inference request")
-    img: Image.Image = Image.open(io.BytesIO(image))
-
-    logger.debug("Running prediction")
+    img = Image.open(io.BytesIO(image))
     predictions = predict(img)
-
-    logger.debug("Writing results to cache")
     await write_to_cache(image, predictions)
-
-    logger.info("Inference complete")
     return predictions
 
+# Health check endpoint
 @app.get("/health")
-async def health_check():
+async def health_check() -> Dict:
     try:
         redis_client = get_redis()
         redis_connected = await redis_client.ping()
@@ -141,10 +141,10 @@ async def health_check():
         redis_connected = False
 
     return {
-        "status": "healthy",
+        "status": "healthy" if redis_connected else "unhealthy",
         "hostname": HOSTNAME,
         "model": MODEL_NAME,
-        "device": str(device) if "device" in globals() else None,
+        "device": str(device) if device else None,
         "redis": {
             "host": REDIS_HOST,
             "port": REDIS_PORT,
@@ -154,5 +154,4 @@ async def health_check():
 
 if __name__ == "__main__":
     import uvicorn
-
     uvicorn.run(app, host="0.0.0.0", port=8000)

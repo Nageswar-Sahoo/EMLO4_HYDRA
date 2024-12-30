@@ -1,13 +1,38 @@
-Name:             fastapi-ingress
-Labels:           <none>
-Namespace:        default
-Address:          192.168.49.2
-Ingress Class:    nginx
-Default backend:  <default>
-Rules:
-  Host                       Path  Backends
-  ----                       ----  --------
-  fastapi.example.localhost  
-                             /   fastapi-service:80 (10.244.0.35:8080,10.244.0.34:8080)
-Annotations:                 nginx.ingress.kubernetes.io/rewrite-target: /
-Events:                      <none>
+apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: fastapi-release-prod
+      meta.helm.sh/release-namespace: default
+    creationTimestamp: "2024-12-30T06:47:33Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: web-server
+      app.kubernetes.io/part-of: fastapi-app
+    name: web-server-ingress
+    namespace: prod
+    resourceVersion: "19048"
+    uid: abdb6beb-8f3f-400e-918c-cf70068a0224
+  spec:
+    ingressClassName: nginx
+    rules:
+    - host: fastapi.prod.example.localhost
+      http:
+        paths:
+        - backend:
+            service:
+              name: web-server-service
+              port:
+                number: 80
+          path: /
+          pathType: Prefix
+  status:
+    loadBalancer:
+      ingress:
+      - ip: 192.168.49.2
+kind: List
+metadata:
+  resourceVersion: ""

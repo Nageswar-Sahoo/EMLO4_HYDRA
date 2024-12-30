@@ -1,3 +1,6 @@
-NAME                           CPU(cores)   MEMORY(bytes)   
-fastapi-app-7898c5c879-jwfgd   8m           277Mi           
-fastapi-app-7898c5c879-ncm4s   8m           260Mi    
+NAME                            CPU(cores)   MEMORY(bytes)   
+model-server-664885b79f-9g2rg   9m           298Mi           
+model-server-664885b79f-stw7d   8m           299Mi           
+redis-69cf9b5676-c79bw          14m          8Mi             
+web-server-5c89b7fd87-28xmk     8m           47Mi            
+web-server-5c89b7fd87-dmlrp     7m           47Mi   

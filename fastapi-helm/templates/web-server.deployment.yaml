@@ -7,6 +7,7 @@ metadata:
         app.kubernetes.io/name: web-server
         app.kubernetes.io/part-of: fastapi-app
 spec:
+    replicas: {{ .Values.replica.webserver }}
     selector:
         matchLabels:
             app.kubernetes.io/name: web-server

@@ -9,6 +9,10 @@ configVersions:
   modelServer: v1
   redis: v1
 
+# Config Versions
+replica:
+  webserver: 2
+  modelserver: 2
 # Web Server
 webServer:
   image:

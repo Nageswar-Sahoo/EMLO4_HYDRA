@@ -3,39 +3,64 @@ items:
 - apiVersion: v1
   kind: Pod
   metadata:
-    creationTimestamp: "2024-12-21T12:49:17Z"
-    generateName: fastapi-app-7898c5c879-
+    creationTimestamp: "2024-12-30T06:47:34Z"
+    generateName: model-server-664885b79f-
     labels:
-      app: fastapi-app
-      pod-template-hash: 7898c5c879
-    name: fastapi-app-7898c5c879-jwfgd
-    namespace: default
+      app.kubernetes.io/name: model-server
+      pod-template-hash: 664885b79f
+    name: model-server-664885b79f-9g2rg
+    namespace: prod
     ownerReferences:
     - apiVersion: apps/v1
       blockOwnerDeletion: true
       controller: true
       kind: ReplicaSet
-      name: fastapi-app-7898c5c879
-      uid: e28fd704-b43b-4210-8a46-3a453bddc8b6
-    resourceVersion: "32094"
-    uid: 597a45e9-8f8a-478c-8eda-b97e3a4b90a5
+      name: model-server-664885b79f
+      uid: 541cf80d-abb1-4c80-8048-23d27189f145
+    resourceVersion: "19013"
+    uid: b47e22b9-c308-4607-8547-0544dc266942
   spec:
     containers:
     - env:
-      - name: UVICORN_SERVER_PORT
-        value: "8080"
-      image: fastapi-catdog-classifier:latest
+      - name: REDIS_HOST
+        valueFrom:
+          configMapKeyRef:
+            key: hostname
+            name: redis-config-v1
+      - name: REDIS_PORT
+        valueFrom:
+          configMapKeyRef:
+            key: port
+            name: redis-config-v1
+      - name: REDIS_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: db_password
+            name: redis-secret-v1
+      - name: MODEL_NAME
+        valueFrom:
+          configMapKeyRef:
+            key: model_name
+            name: model-server-config-v1
+      image: model-server:latest
       imagePullPolicy: Never
-      name: fastapi-container
+      name: model-server
       ports:
-      - containerPort: 8080
+      - containerPort: 80
+        name: http
         protocol: TCP
-      resources: {}
+      resources:
+        limits:
+          cpu: "1"
+          memory: 2Gi
+        requests:
+          cpu: "1"
+          memory: 2Gi
       terminationMessagePath: /dev/termination-log
       terminationMessagePolicy: File
       volumeMounts:
       - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-        name: kube-api-access-xwggd
+        name: kube-api-access-vv6ld
         readOnly: true
     dnsPolicy: ClusterFirst
     enableServiceLinks: true
@@ -58,7 +83,7 @@ items:
       operator: Exists
       tolerationSeconds: 300
     volumes:
-    - name: kube-api-access-xwggd
+    - name: kube-api-access-vv6ld
       projected:
         defaultMode: 420
         sources:
@@ -79,87 +104,112 @@ items:
   status:
     conditions:
     - lastProbeTime: null
-      lastTransitionTime: "2024-12-21T12:49:34Z"
+      lastTransitionTime: "2024-12-30T06:47:53Z"
       status: "True"
       type: PodReadyToStartContainers
     - lastProbeTime: null
-      lastTransitionTime: "2024-12-21T12:49:19Z"
+      lastTransitionTime: "2024-12-30T06:47:36Z"
       status: "True"
       type: Initialized
     - lastProbeTime: null
-      lastTransitionTime: "2024-12-21T12:49:34Z"
+      lastTransitionTime: "2024-12-30T06:47:53Z"
       status: "True"
       type: Ready
     - lastProbeTime: null
-      lastTransitionTime: "2024-12-21T12:49:34Z"
+      lastTransitionTime: "2024-12-30T06:47:53Z"
       status: "True"
       type: ContainersReady
     - lastProbeTime: null
-      lastTransitionTime: "2024-12-21T12:49:18Z"
+      lastTransitionTime: "2024-12-30T06:47:35Z"
       status: "True"
       type: PodScheduled
     containerStatuses:
-    - containerID: docker://a09bdc6af6bd477df879f3729ee5e7aa4a7df29830c4397c5e6189b4bd93ff86
-      image: fastapi-catdog-classifier:latest
-      imageID: docker://sha256:09b6c6253726ccbbad7cf7162917298fb67444f247d456f88d5a6fcc00770a5d
+    - containerID: docker://2fcd2b17c3c63420e719c85aa1e109975a84efe1460d68bb7969dd8ae2a554cb
+      image: model-server:latest
+      imageID: docker://sha256:40381f3b2735d1f849b7ccf6bc3cbf8cae98c7b9a29e9697277db4d2304e0176
       lastState: {}
-      name: fastapi-container
+      name: model-server
       ready: true
       restartCount: 0
       started: true
       state:
         running:
-          startedAt: "2024-12-21T12:49:30Z"
+          startedAt: "2024-12-30T06:47:48Z"
       volumeMounts:
       - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-        name: kube-api-access-xwggd
+        name: kube-api-access-vv6ld
         readOnly: true
         recursiveReadOnly: Disabled
     hostIP: 192.168.49.2
     hostIPs:
     - ip: 192.168.49.2
     phase: Running
-    podIP: 10.244.0.35
+    podIP: 10.244.0.31
     podIPs:
-    - ip: 10.244.0.35
-    qosClass: BestEffort
-    startTime: "2024-12-21T12:49:19Z"
+    - ip: 10.244.0.31
+    qosClass: Guaranteed
+    startTime: "2024-12-30T06:47:36Z"
 - apiVersion: v1
   kind: Pod
   metadata:
-    creationTimestamp: "2024-12-21T12:49:17Z"
-    generateName: fastapi-app-7898c5c879-
+    creationTimestamp: "2024-12-30T06:47:34Z"
+    generateName: model-server-664885b79f-
     labels:
-      app: fastapi-app
-      pod-template-hash: 7898c5c879
-    name: fastapi-app-7898c5c879-ncm4s
-    namespace: default
+      app.kubernetes.io/name: model-server
+      pod-template-hash: 664885b79f
+    name: model-server-664885b79f-stw7d
+    namespace: prod
     ownerReferences:
     - apiVersion: apps/v1
       blockOwnerDeletion: true
       controller: true
       kind: ReplicaSet
-      name: fastapi-app-7898c5c879
-      uid: e28fd704-b43b-4210-8a46-3a453bddc8b6
-    resourceVersion: "32101"
-    uid: 71789f28-b23d-42c0-9eb1-f343977f79ea
+      name: model-server-664885b79f
+      uid: 541cf80d-abb1-4c80-8048-23d27189f145
+    resourceVersion: "19039"
+    uid: 2070a659-6824-4c31-a239-279a60bbb205
   spec:
     containers:
     - env:
-      - name: UVICORN_SERVER_PORT
-        value: "8080"
-      image: fastapi-catdog-classifier:latest
+      - name: REDIS_HOST
+        valueFrom:
+          configMapKeyRef:
+            key: hostname
+            name: redis-config-v1
+      - name: REDIS_PORT
+        valueFrom:
+          configMapKeyRef:
+            key: port
+            name: redis-config-v1
+      - name: REDIS_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: db_password
+            name: redis-secret-v1
+      - name: MODEL_NAME
+        valueFrom:
+          configMapKeyRef:
+            key: model_name
+            name: model-server-config-v1
+      image: model-server:latest
       imagePullPolicy: Never
-      name: fastapi-container
+      name: model-server
       ports:
-      - containerPort: 8080
+      - containerPort: 80
+        name: http
         protocol: TCP
-      resources: {}
+      resources:
+        limits:
+          cpu: "1"
+          memory: 2Gi
+        requests:
+          cpu: "1"
+          memory: 2Gi
       terminationMessagePath: /dev/termination-log
       terminationMessagePolicy: File
       volumeMounts:
       - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-        name: kube-api-access-qn2k2
+        name: kube-api-access-69xdt
         readOnly: true
     dnsPolicy: ClusterFirst
     enableServiceLinks: true
@@ -182,7 +232,7 @@ items:
       operator: Exists
       tolerationSeconds: 300
     volumes:
-    - name: kube-api-access-qn2k2
+    - name: kube-api-access-69xdt
       projected:
         defaultMode: 420
         sources:
@@ -203,40 +253,187 @@ items:
   status:
     conditions:
     - lastProbeTime: null
-      lastTransitionTime: "2024-12-21T12:49:34Z"
+      lastTransitionTime: "2024-12-30T06:47:59Z"
       status: "True"
       type: PodReadyToStartContainers
     - lastProbeTime: null
-      lastTransitionTime: "2024-12-21T12:49:18Z"
+      lastTransitionTime: "2024-12-30T06:47:35Z"
       status: "True"
       type: Initialized
     - lastProbeTime: null
-      lastTransitionTime: "2024-12-21T12:49:34Z"
+      lastTransitionTime: "2024-12-30T06:47:59Z"
       status: "True"
       type: Ready
     - lastProbeTime: null
-      lastTransitionTime: "2024-12-21T12:49:34Z"
+      lastTransitionTime: "2024-12-30T06:47:59Z"
       status: "True"
       type: ContainersReady
     - lastProbeTime: null
-      lastTransitionTime: "2024-12-21T12:49:17Z"
+      lastTransitionTime: "2024-12-30T06:47:34Z"
       status: "True"
       type: PodScheduled
     containerStatuses:
-    - containerID: docker://1aea897c730360ee4067455412421fb1d448337962a7a6f6ab5a1c640f9ab219
-      image: fastapi-catdog-classifier:latest
-      imageID: docker://sha256:09b6c6253726ccbbad7cf7162917298fb67444f247d456f88d5a6fcc00770a5d
+    - containerID: docker://8eafec6ccb3f9aa35f542328029a1e7279290ad3a987f1c1c57c1edb258b56ba
+      image: model-server:latest
+      imageID: docker://sha256:40381f3b2735d1f849b7ccf6bc3cbf8cae98c7b9a29e9697277db4d2304e0176
       lastState: {}
-      name: fastapi-container
+      name: model-server
       ready: true
       restartCount: 0
       started: true
       state:
         running:
-          startedAt: "2024-12-21T12:49:29Z"
+          startedAt: "2024-12-30T06:47:48Z"
       volumeMounts:
       - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-        name: kube-api-access-qn2k2
+        name: kube-api-access-69xdt
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 192.168.49.2
+    hostIPs:
+    - ip: 192.168.49.2
+    phase: Running
+    podIP: 10.244.0.30
+    podIPs:
+    - ip: 10.244.0.30
+    qosClass: Guaranteed
+    startTime: "2024-12-30T06:47:35Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2024-12-30T06:47:34Z"
+    generateName: redis-69cf9b5676-
+    labels:
+      app.kubernetes.io/name: redis
+      pod-template-hash: 69cf9b5676
+      role: master
+    name: redis-69cf9b5676-c79bw
+    namespace: prod
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: redis-69cf9b5676
+      uid: f5da78e9-99cf-41f3-a6b3-bf77af403878
+    resourceVersion: "19032"
+    uid: 89afa079-e523-4475-9358-1393b5b9f4b6
+  spec:
+    containers:
+    - args:
+      - --requirepass
+      - $(REDIS_PASSWORD)
+      command:
+      - redis-server
+      env:
+      - name: REDIS_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: db_password
+            name: redis-secret-v1
+      image: redis:7.4.1
+      imagePullPolicy: IfNotPresent
+      name: redis
+      ports:
+      - containerPort: 6379
+        name: redis
+        protocol: TCP
+      resources:
+        limits:
+          cpu: 200m
+          memory: 200Mi
+        requests:
+          cpu: 200m
+          memory: 200Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /data
+        name: redis-storage
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-42slj
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: minikube
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: redis-storage
+      persistentVolumeClaim:
+        claimName: redis-pvc
+    - name: kube-api-access-42slj
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2024-12-30T06:47:58Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2024-12-30T06:47:40Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2024-12-30T06:47:58Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2024-12-30T06:47:58Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2024-12-30T06:47:40Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://cfca0280a9e82e092b4f207f4222a56d920029a4e94e46f0a1b6dfc1f491144c
+      image: redis:7.4.1
+      imageID: docker-pullable://redis@sha256:bb142a9c18ac18a16713c1491d779697b4e107c22a97266616099d288237ef47
+      lastState: {}
+      name: redis
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2024-12-30T06:47:52Z"
+      volumeMounts:
+      - mountPath: /data
+        name: redis-storage
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-42slj
         readOnly: true
         recursiveReadOnly: Disabled
     hostIP: 192.168.49.2
@@ -246,224 +443,294 @@ items:
     podIP: 10.244.0.34
     podIPs:
     - ip: 10.244.0.34
-    qosClass: BestEffort
-    startTime: "2024-12-21T12:49:18Z"
+    qosClass: Guaranteed
+    startTime: "2024-12-30T06:47:40Z"
 - apiVersion: v1
-  kind: Service
+  kind: Pod
   metadata:
-    annotations:
-      kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"classifier-service","namespace":"default"},"spec":{"ports":[{"port":80,"protocol":"TCP","targetPort":7860}],"selector":{"app":"classifier"}}}
-    creationTimestamp: "2024-12-20T15:49:02Z"
-    name: classifier-service
-    namespace: default
-    resourceVersion: "1350"
-    uid: 55a5159e-838c-4587-b209-110e626ea2bc
-  spec:
-    clusterIP: 10.104.119.228
-    clusterIPs:
-    - 10.104.119.228
-    internalTrafficPolicy: Cluster
-    ipFamilies:
-    - IPv4
-    ipFamilyPolicy: SingleStack
-    ports:
-    - port: 80
-      protocol: TCP
-      targetPort: 7860
-    selector:
-      app: classifier
-    sessionAffinity: None
-    type: ClusterIP
-  status:
-    loadBalancer: {}
-- apiVersion: v1
-  kind: Service
-  metadata:
-    annotations:
-      kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"fastapi-service","namespace":"default"},"spec":{"ports":[{"port":80,"protocol":"TCP","targetPort":8080}],"selector":{"app":"fastapi-app"},"type":"ClusterIP"}}
-    creationTimestamp: "2024-12-21T12:49:16Z"
-    name: fastapi-service
-    namespace: default
-    resourceVersion: "32047"
-    uid: f6e6bbe1-f383-4d08-9656-fc207ec61bea
-  spec:
-    clusterIP: 10.98.197.173
-    clusterIPs:
-    - 10.98.197.173
-    internalTrafficPolicy: Cluster
-    ipFamilies:
-    - IPv4
-    ipFamilyPolicy: SingleStack
-    ports:
-    - port: 80
-      protocol: TCP
-      targetPort: 8080
-    selector:
-      app: fastapi-app
-    sessionAffinity: None
-    type: ClusterIP
-  status:
-    loadBalancer: {}
-- apiVersion: v1
-  kind: Service
-  metadata:
-    creationTimestamp: "2024-12-20T15:35:52Z"
+    creationTimestamp: "2024-12-30T06:47:35Z"
+    generateName: web-server-5c89b7fd87-
     labels:
-      component: apiserver
-      provider: kubernetes
-    name: kubernetes
-    namespace: default
-    resourceVersion: "198"
-    uid: 64004de1-97c0-4265-bf6c-ab4d693f922c
-  spec:
-    clusterIP: 10.96.0.1
-    clusterIPs:
-    - 10.96.0.1
-    internalTrafficPolicy: Cluster
-    ipFamilies:
-    - IPv4
-    ipFamilyPolicy: SingleStack
-    ports:
-    - name: https
-      port: 443
-      protocol: TCP
-      targetPort: 8443
-    sessionAffinity: None
-    type: ClusterIP
-  status:
-    loadBalancer: {}
-- apiVersion: apps/v1
-  kind: Deployment
-  metadata:
-    annotations:
-      deployment.kubernetes.io/revision: "1"
-      kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"fastapi-app"},"name":"fastapi-app","namespace":"default"},"spec":{"replicas":2,"selector":{"matchLabels":{"app":"fastapi-app"}},"template":{"metadata":{"labels":{"app":"fastapi-app"}},"spec":{"containers":[{"env":[{"name":"UVICORN_SERVER_PORT","value":"8080"}],"image":"fastapi-catdog-classifier:latest","imagePullPolicy":"Never","name":"fastapi-container","ports":[{"containerPort":8080}]}]}}}}
-    creationTimestamp: "2024-12-21T12:49:15Z"
-    generation: 1
-    labels:
-      app: fastapi-app
-    name: fastapi-app
-    namespace: default
-    resourceVersion: "32105"
-    uid: 2af0666d-a30d-4ae6-9f76-f0bffbb64974
-  spec:
-    progressDeadlineSeconds: 600
-    replicas: 2
-    revisionHistoryLimit: 10
-    selector:
-      matchLabels:
-        app: fastapi-app
-    strategy:
-      rollingUpdate:
-        maxSurge: 25%
-        maxUnavailable: 25%
-      type: RollingUpdate
-    template:
-      metadata:
-        creationTimestamp: null
-        labels:
-          app: fastapi-app
-      spec:
-        containers:
-        - env:
-          - name: UVICORN_SERVER_PORT
-            value: "8080"
-          image: fastapi-catdog-classifier:latest
-          imagePullPolicy: Never
-          name: fastapi-container
-          ports:
-          - containerPort: 8080
-            protocol: TCP
-          resources: {}
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
-        dnsPolicy: ClusterFirst
-        restartPolicy: Always
-        schedulerName: default-scheduler
-        securityContext: {}
-        terminationGracePeriodSeconds: 30
-  status:
-    availableReplicas: 2
-    conditions:
-    - lastTransitionTime: "2024-12-21T12:49:35Z"
-      lastUpdateTime: "2024-12-21T12:49:35Z"
-      message: Deployment has minimum availability.
-      reason: MinimumReplicasAvailable
-      status: "True"
-      type: Available
-    - lastTransitionTime: "2024-12-21T12:49:16Z"
-      lastUpdateTime: "2024-12-21T12:49:35Z"
-      message: ReplicaSet "fastapi-app-7898c5c879" has successfully progressed.
-      reason: NewReplicaSetAvailable
-      status: "True"
-      type: Progressing
-    observedGeneration: 1
-    readyReplicas: 2
-    replicas: 2
-    updatedReplicas: 2
-- apiVersion: apps/v1
-  kind: ReplicaSet
-  metadata:
-    annotations:
-      deployment.kubernetes.io/desired-replicas: "2"
-      deployment.kubernetes.io/max-replicas: "3"
-      deployment.kubernetes.io/revision: "1"
-    creationTimestamp: "2024-12-21T12:49:16Z"
-    generation: 1
-    labels:
-      app: fastapi-app
-      pod-template-hash: 7898c5c879
-    name: fastapi-app-7898c5c879
-    namespace: default
+      app.kubernetes.io/name: web-server
+      pod-template-hash: 5c89b7fd87
+    name: web-server-5c89b7fd87-28xmk
+    namespace: prod
     ownerReferences:
     - apiVersion: apps/v1
       blockOwnerDeletion: true
       controller: true
-      kind: Deployment
-      name: fastapi-app
-      uid: 2af0666d-a30d-4ae6-9f76-f0bffbb64974
-    resourceVersion: "32103"
-    uid: e28fd704-b43b-4210-8a46-3a453bddc8b6
+      kind: ReplicaSet
+      name: web-server-5c89b7fd87
+      uid: 33768927-e29f-4625-b537-7266b111c829
+    resourceVersion: "19027"
+    uid: 21185b5d-9650-4184-bf32-b21f9a896fcc
   spec:
-    replicas: 2
-    selector:
-      matchLabels:
-        app: fastapi-app
-        pod-template-hash: 7898c5c879
-    template:
-      metadata:
-        creationTimestamp: null
-        labels:
-          app: fastapi-app
-          pod-template-hash: 7898c5c879
-      spec:
-        containers:
-        - env:
-          - name: UVICORN_SERVER_PORT
-            value: "8080"
-          image: fastapi-catdog-classifier:latest
-          imagePullPolicy: Never
-          name: fastapi-container
-          ports:
-          - containerPort: 8080
-            protocol: TCP
-          resources: {}
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
-        dnsPolicy: ClusterFirst
-        restartPolicy: Always
-        schedulerName: default-scheduler
-        securityContext: {}
-        terminationGracePeriodSeconds: 30
+    containers:
+    - env:
+      - name: REDIS_HOST
+        valueFrom:
+          configMapKeyRef:
+            key: hostname
+            name: redis-config-v1
+      - name: REDIS_PORT
+        valueFrom:
+          configMapKeyRef:
+            key: port
+            name: redis-config-v1
+      - name: REDIS_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: db_password
+            name: redis-secret-v1
+      - name: MODEL_SERVER_URL
+        valueFrom:
+          configMapKeyRef:
+            key: model_server_url
+            name: model-server-config-v1
+      image: web-server:latest
+      imagePullPolicy: Never
+      name: web-server
+      ports:
+      - containerPort: 80
+        name: http
+        protocol: TCP
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-r55hs
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: minikube
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-r55hs
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
   status:
-    availableReplicas: 2
-    fullyLabeledReplicas: 2
-    observedGeneration: 1
-    readyReplicas: 2
-    replicas: 2
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2024-12-30T06:47:58Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2024-12-30T06:47:36Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2024-12-30T06:47:58Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2024-12-30T06:47:58Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2024-12-30T06:47:35Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://9a5ea03bad6af9107136cad874d3e317717981fd911cfae06210628ef6ab07ed
+      image: web-server:latest
+      imageID: docker://sha256:53679b792075bf8d6c6e259244fcb42eda6307dc8b4c814660d718722d7a47ac
+      lastState: {}
+      name: web-server
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2024-12-30T06:47:49Z"
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-r55hs
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 192.168.49.2
+    hostIPs:
+    - ip: 192.168.49.2
+    phase: Running
+    podIP: 10.244.0.32
+    podIPs:
+    - ip: 10.244.0.32
+    qosClass: BestEffort
+    startTime: "2024-12-30T06:47:36Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2024-12-30T06:47:34Z"
+    generateName: web-server-5c89b7fd87-
+    labels:
+      app.kubernetes.io/name: web-server
+      pod-template-hash: 5c89b7fd87
+    name: web-server-5c89b7fd87-dmlrp
+    namespace: prod
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: web-server-5c89b7fd87
+      uid: 33768927-e29f-4625-b537-7266b111c829
+    resourceVersion: "19021"
+    uid: a56315c5-63ee-49b4-9392-21524df6f452
+  spec:
+    containers:
+    - env:
+      - name: REDIS_HOST
+        valueFrom:
+          configMapKeyRef:
+            key: hostname
+            name: redis-config-v1
+      - name: REDIS_PORT
+        valueFrom:
+          configMapKeyRef:
+            key: port
+            name: redis-config-v1
+      - name: REDIS_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: db_password
+            name: redis-secret-v1
+      - name: MODEL_SERVER_URL
+        valueFrom:
+          configMapKeyRef:
+            key: model_server_url
+            name: model-server-config-v1
+      image: web-server:latest
+      imagePullPolicy: Never
+      name: web-server
+      ports:
+      - containerPort: 80
+        name: http
+        protocol: TCP
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-kcbbk
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: minikube
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-kcbbk
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2024-12-30T06:47:56Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2024-12-30T06:47:36Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2024-12-30T06:47:56Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2024-12-30T06:47:56Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2024-12-30T06:47:35Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://87f15fee3a91dcf839827784644e0f123acf6c533a95a0e1ef6feacd45f15325
+      image: web-server:latest
+      imageID: docker://sha256:53679b792075bf8d6c6e259244fcb42eda6307dc8b4c814660d718722d7a47ac
+      lastState: {}
+      name: web-server
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2024-12-30T06:47:49Z"
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-kcbbk
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 192.168.49.2
+    hostIPs:
+    - ip: 192.168.49.2
+    phase: Running
+    podIP: 10.244.0.33
+    podIPs:
+    - ip: 10.244.0.33
+    qosClass: BestEffort
+    startTime: "2024-12-30T06:47:36Z"
 kind: List
 metadata:
   resourceVersion: ""

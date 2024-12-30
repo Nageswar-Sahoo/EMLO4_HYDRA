@@ -1,49 +1,283 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-    name: model-server
-    namespace: {{ .Values.namespace }}
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      meta.helm.sh/release-name: fastapi-release-prod
+      meta.helm.sh/release-namespace: default
+    creationTimestamp: "2024-12-30T06:47:33Z"
+    generation: 1
     labels:
-        app.kubernetes.io/name: model-server
-        app.kubernetes.io/part-of: fastapi-app
-spec:
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: model-server
+      app.kubernetes.io/part-of: fastapi-app
+    name: model-server
+    namespace: prod
+    resourceVersion: "19043"
+    uid: aadaa571-89bf-4d68-870c-1c87d4b9a496
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 2
+    revisionHistoryLimit: 10
     selector:
-        matchLabels:
-            app.kubernetes.io/name: model-server
+      matchLabels:
+        app.kubernetes.io/name: model-server
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
     template:
-        metadata:
-            labels:
-                app.kubernetes.io/name: model-server
-        spec:
-            containers:
-                - name: model-server
-                  image: "{{ .Values.modelServer.image.repository }}:{{ .Values.modelServer.image.tag }}"
-                  imagePullPolicy: Never
-                  resources:
-                      limits:
-                          memory: {{ .Values.modelServer.resources.memory }}
-                          cpu: {{ .Values.modelServer.resources.cpu }}
-                  ports:
-                      - name: http
-                        containerPort: 80
-                  env:
-                      - name: REDIS_HOST
-                        valueFrom:
-                            configMapKeyRef:
-                                name: redis-config-{{ .Values.configVersions.redis }}
-                                key: hostname
-                      - name: REDIS_PORT
-                        valueFrom:
-                            configMapKeyRef:
-                                name: redis-config-{{ .Values.configVersions.redis }}
-                                key: port
-                      - name: REDIS_PASSWORD
-                        valueFrom:
-                            secretKeyRef:
-                                name: redis-secret-{{ .Values.configVersions.redis }}
-                                key: db_password
-                      - name: MODEL_NAME
-                        valueFrom:
-                            configMapKeyRef:
-                                name: model-server-config-{{ .Values.configVersions.modelServer }}
-                                key: model_name
+      metadata:
+        creationTimestamp: null
+        labels:
+          app.kubernetes.io/name: model-server
+      spec:
+        containers:
+        - env:
+          - name: REDIS_HOST
+            valueFrom:
+              configMapKeyRef:
+                key: hostname
+                name: redis-config-v1
+          - name: REDIS_PORT
+            valueFrom:
+              configMapKeyRef:
+                key: port
+                name: redis-config-v1
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: db_password
+                name: redis-secret-v1
+          - name: MODEL_NAME
+            valueFrom:
+              configMapKeyRef:
+                key: model_name
+                name: model-server-config-v1
+          image: model-server:latest
+          imagePullPolicy: Never
+          name: model-server
+          ports:
+          - containerPort: 80
+            name: http
+            protocol: TCP
+          resources:
+            limits:
+              cpu: "1"
+              memory: 2Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 2
+    conditions:
+    - lastTransitionTime: "2024-12-30T06:48:01Z"
+      lastUpdateTime: "2024-12-30T06:48:01Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2024-12-30T06:47:33Z"
+      lastUpdateTime: "2024-12-30T06:48:01Z"
+      message: ReplicaSet "model-server-664885b79f" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 2
+    replicas: 2
+    updatedReplicas: 2
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      meta.helm.sh/release-name: fastapi-release-prod
+      meta.helm.sh/release-namespace: default
+    creationTimestamp: "2024-12-30T06:47:33Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: redis
+      app.kubernetes.io/part-of: fastapi-app
+    name: redis
+    namespace: prod
+    resourceVersion: "19037"
+    uid: 4c16affd-418b-4799-9b9f-77d65caaae8f
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: redis
+        role: master
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app.kubernetes.io/name: redis
+          role: master
+      spec:
+        containers:
+        - args:
+          - --requirepass
+          - $(REDIS_PASSWORD)
+          command:
+          - redis-server
+          env:
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: db_password
+                name: redis-secret-v1
+          image: redis:7.4.1
+          imagePullPolicy: IfNotPresent
+          name: redis
+          ports:
+          - containerPort: 6379
+            name: redis
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: 200Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /data
+            name: redis-storage
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: redis-storage
+          persistentVolumeClaim:
+            claimName: redis-pvc
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2024-12-30T06:48:00Z"
+      lastUpdateTime: "2024-12-30T06:48:00Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2024-12-30T06:47:33Z"
+      lastUpdateTime: "2024-12-30T06:48:00Z"
+      message: ReplicaSet "redis-69cf9b5676" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      meta.helm.sh/release-name: fastapi-release-prod
+      meta.helm.sh/release-namespace: default
+    creationTimestamp: "2024-12-30T06:47:33Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: web-server
+      app.kubernetes.io/part-of: fastapi-app
+    name: web-server
+    namespace: prod
+    resourceVersion: "19031"
+    uid: 2d38c89a-5999-4b92-bd5c-c5fb5b30cf49
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 2
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: web-server
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app.kubernetes.io/name: web-server
+      spec:
+        containers:
+        - env:
+          - name: REDIS_HOST
+            valueFrom:
+              configMapKeyRef:
+                key: hostname
+                name: redis-config-v1
+          - name: REDIS_PORT
+            valueFrom:
+              configMapKeyRef:
+                key: port
+                name: redis-config-v1
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: db_password
+                name: redis-secret-v1
+          - name: MODEL_SERVER_URL
+            valueFrom:
+              configMapKeyRef:
+                key: model_server_url
+                name: model-server-config-v1
+          image: web-server:latest
+          imagePullPolicy: Never
+          name: web-server
+          ports:
+          - containerPort: 80
+            name: http
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 2
+    conditions:
+    - lastTransitionTime: "2024-12-30T06:47:59Z"
+      lastUpdateTime: "2024-12-30T06:47:59Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2024-12-30T06:47:33Z"
+      lastUpdateTime: "2024-12-30T06:47:59Z"
+      message: ReplicaSet "web-server-5c89b7fd87" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 2
+    replicas: 2
+    updatedReplicas: 2
+kind: List
+metadata:
+  resourceVersion: ""

@@ -63,7 +63,7 @@ async def check_cached(image: bytes):
     hash = zlib.adler32(image)
     cache = get_redis()
 
-    logger.debug(f"Checking cache for image hash: {hash}")
+    logger.info(f"Checking cache for image hash: {hash}")
     data = await cache.get(hash)
 
     if data:
@@ -85,7 +85,7 @@ async def classify_imagenet(image: Annotated[bytes, File()]):
                 url = f"{MODEL_SERVER_URL}/infer"
                 files = {"image": image}
 
-                logger.debug(f"Sending request to model server: {url}")
+                logger.info(f"Sending request to model server: {url}")
                 response = await client.post(url, files=files)
                 response.raise_for_status()
 
