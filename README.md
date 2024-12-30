@@ -17,6 +17,21 @@ This project demonstrates how to deploy a Dog Bredd image classifier on Kubernet
         │   └── result.html
         ├── requirements.txt
 
+<h2>Features</h2>
+
+FastAPI-based model server
+
+Docker Compose for local testing
+
+Kubernetes manifests for deployment
+
+Redis caching for inference performance
+
+HELM chart for easy configuration and deployment
+
+Ingress for external access
+        
+
 <h2>Architecture Diagram</h2>
 
 ![img1 drawio](https://github.com/user-attachments/assets/ad7dcd25-9889-4d0d-989f-33af0ef232ec)
@@ -50,6 +65,29 @@ Web Server Service: Exposes web interface
 
 <h3>Volumes:</h3> Persistent storage for models and inference data
 
+<h2>Helm</h2>
+Deploying the Cat/Dog Classifier using Helm simplifies Kubernetes resource management by packaging all Kubernetes manifests into a single, reusable chart. This makes deployments more scalable, configurable, and easy to manage across environments.
+
+<h3>Why Use Helm?</h3>
+
+Reusability: Package Kubernetes resources into a single chart that can be deployed repeatedly.
+Configurability: Easily override default values (like replica count, CPU, and memory limits) at deployment time.
+Simplified Management: Manage deployments, upgrades, and rollbacks with simple Helm commands.
+
+
+ <h3>Helm Commad : </h3>
+
+ helm create fastapi-helm : Creates a new Helm chart for FastAPI.
+ 
+ helm install fastapi-release-dev fastapi-helm --values fastapi-helm/values.yaml -f fastapi-helm/values-dev.yaml : Deploys the chart for development with custom values.
+ 
+ helm install fastapi-release-prod fastapi-helm --values fastapi-helm/values.yaml -f fastapi-helm/values-prod.yaml : Deploys the chart for production with specific overrides.
+ 
+ helm upgrade fastapi-release-dev fastapi-helm --values fastapi-helm/values.yaml -f fastapi-helm/values-dev.yaml : Updates the development deployment with new changes.
+ 
+ helm upgrade fastapi-release-prod fastapi-helm --values fastapi-helm/values.yaml -f fastapi-helm/values-prod.yaml : Updates the production deployment.
+ 
+ helm list : Lists all active Helm releases
 
 <h3>About Dataset</h3>
 
