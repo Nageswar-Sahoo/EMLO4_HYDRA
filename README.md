@@ -7,12 +7,13 @@ This project demonstrates deploying a FastAPI-based CatDog Classifier applicatio
         project/
 
         ├── app.py
+        ├── fastapi_helm
+        ├── model server
+        ├── web server
         ├── templates/
         │   ├── index.html
         │   └── result.html
         ├── requirements.txt
-        └── Dockerfile
-
 <h3>About Dataset</h3>
 
 Description
