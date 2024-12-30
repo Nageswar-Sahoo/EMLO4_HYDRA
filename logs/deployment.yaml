@@ -31,4 +31,4 @@ NewReplicaSet:   fastapi-app-7898c5c879 (2/2 replicas created)
 Events:
   Type    Reason             Age   From                   Message
   ----    ------             ----  ----                   -------
-  Normal  ScalingReplicaSet  60m   deployment-controller  Scaled up replica set fastapi-app-7898c5c879 to 
+  Normal  ScalingReplicaSet  60m   deployment-controller  Scaled up replica set fastapi-app-7898c5c879 to kubectl get 
