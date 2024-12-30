@@ -2,6 +2,8 @@
 
 This project demonstrates deploying a FastAPI-based CatDog Classifier application on a Kubernetes cluster using MiniKube. Follow these instructions to set up, deploy, and access the application.
 
+This project demonstrates how to deploy a Dog Bredd image classifier on Kubernetes (K8S). The classifier uses a deep learning model to distinguish between dog Breed images. The deployment includes a FastAPI web server to serve inference requests, a Redis cache for caching inference results, and Kubernetes manifests for deployment.
+
 <h2>Directory Structure:</h2>
 
         project/
@@ -14,6 +16,41 @@ This project demonstrates deploying a FastAPI-based CatDog Classifier applicatio
         │   ├── index.html
         │   └── result.html
         ├── requirements.txt
+
+<h2>Architecture Diagram</h2>
+
+![img1 drawio](https://github.com/user-attachments/assets/ad7dcd25-9889-4d0d-989f-33af0ef232ec)
+
+
+<h3>Architecture Components:</h3>
+
+<h3>Node: Minikube node running the cluster
+
+<h3>Pods:</h3>
+
+Model Server Pod: Hosts the deep learning model (FastAPI)
+
+Redis Pod: Caches inference results
+
+Web Server Pod: Frontend for user interaction
+
+<h3>ReplicaSets:</h3> Ensures desired number of pods for scalability
+
+<h3>Deployments:</h3> For managing pod lifecycle
+
+<h3>Services:</h3>
+
+Model Server Service: Exposes model server
+
+Redis Service: Internal service for Redis communication
+
+Web Server Service: Exposes web interface
+
+<h3>Ingress:</h3> Routes external traffic to the web server
+
+<h3>Volumes:</h3> Persistent storage for models and inference data
+
+
 <h3>About Dataset</h3>
 
 Description
@@ -37,8 +74,6 @@ k8s is a container orchestration system. It is used for container deployment and
 
 
 <img width="538" alt="image" src="https://github.com/user-attachments/assets/c8d5e689-5805-4ed3-b5df-162af7b2a98c" />
-
-![img1 drawio](https://github.com/user-attachments/assets/ad7dcd25-9889-4d0d-989f-33af0ef232ec)
 
 
 A k8s cluster consists of a set of worker machines, called nodes, that run containerized applications. Every cluster has at least one worker node.
