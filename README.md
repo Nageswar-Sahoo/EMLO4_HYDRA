@@ -284,6 +284,13 @@ MiniKube does not expose Ingress directly on your host machine. Use the MiniKube
 Start a MiniKube tunnel in a separate terminal:
 
    minikube tunnel
+<h3>FAST API Endpoint </h3>
+
+<img width="1438" alt="image" src="https://github.com/user-attachments/assets/073b26d0-1ee7-4a06-903a-ca9927a93792" />
+<img width="1571" alt="image" src="https://github.com/user-attachments/assets/20e67d5d-fd58-4c30-a9d8-61be38a8d920" />
+<img width="1525" alt="image" src="https://github.com/user-attachments/assets/de14b7ae-8d01-42cd-af35-3f2d7b36872a" />
+
+
 
 
 <h3>Output of the following command present in logs folder </h3>
