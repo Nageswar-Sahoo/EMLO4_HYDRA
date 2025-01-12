@@ -268,5 +268,30 @@ To remove the resources, run kubectl delete -f ..
  kubectl get all -o yaml
 
 
+ <img width="1002" alt="image" src="https://github.com/user-attachments/assets/1898e11d-343c-4ef0-8f5d-899f31758ece" />
+ <img width="1379" alt="image" src="https://github.com/user-attachments/assets/5d352639-61b1-41ac-8663-a666d985b5f1" />
+
+ <img width="1437" alt="image" src="https://github.com/user-attachments/assets/7febe686-1f0d-4377-a559-7a8c88d14bd3" />
+
+ <img width="970" alt="image" src="https://github.com/user-attachments/assets/4add3b07-3170-42c8-902a-01e47b6e00f7" />
+
+ <img width="1014" alt="image" src="https://github.com/user-attachments/assets/d458ee1c-b181-4deb-bb70-c095247cb5c5" />
+
+ <img width="1692" alt="image" src="https://github.com/user-attachments/assets/4b624e1d-c256-46d1-9d6d-06f65eec991c" />
+
+ <img width="1432" alt="image" src="https://github.com/user-attachments/assets/3275a911-e4ca-4e34-82f5-b83f9c77e2c1" />
+
+ <img width="1470" alt="image" src="https://github.com/user-attachments/assets/d6e70bcd-317f-402f-9fe9-23677140b3a1" />
+
+
+ 
+
+
+
+
+
+
+
+
 
    
