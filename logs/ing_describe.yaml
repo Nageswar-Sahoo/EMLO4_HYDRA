@@ -1,0 +1,22 @@
+kubectl describe ing web-server-ingress -n dev
+Name:             web-server-ingress
+Labels:           app.kubernetes.io/managed-by=Helm
+                  app.kubernetes.io/name=web-server
+                  app.kubernetes.io/part-of=fastapi-app
+Namespace:        dev
+Address:          k8s-dev-webserve-252dede249-2003874733.ap-south-1.elb.amazonaws.com
+Ingress Class:    alb
+Default backend:  <default>
+Rules:
+  Host        Path  Backends
+  ----        ----  --------
+  *           
+              /   web-server-service:80 (192.168.90.58:80,192.168.42.177:80)
+Annotations:  alb.ingress.kubernetes.io/scheme: internet-facing
+              alb.ingress.kubernetes.io/target-type: ip
+              meta.helm.sh/release-name: fastapi-release-dev
+              meta.helm.sh/release-namespace: default
+Events:
+  Type    Reason                  Age   From     Message
+  ----    ------                  ----  ----     -------
+  Normal  SuccessfullyReconciled  56m   ingress  Successfully reconciled
