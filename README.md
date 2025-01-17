@@ -292,43 +292,6 @@ This README includes commands to manage EKS clusters, node groups, IAM service a
 
 
 
-<h2>Project Setup</h2>
-
-<h3>FastAPI Application Code</h3>
-This is the core application handling image upload and classification. It uses FastAPI for API handling and Jinja2 for rendering HTML templates.
-
-<h3>HTML Templates</h3>
-These provide a user-friendly interface for uploading images and viewing results.
-
-
-<h3>Dockerfile</h3>
-Defines the containerization of the FastAPI application.
-
-<h3>Kubernetes YAML Files</h3>
-
-These configure the deployment, service, and ingress for your FastAPI application.
-
-
-<h3>Building and Pushing the image to Minikube</h3>
-
-Rebuild the Docker image to include the updated requirements:
-
-eval $(minikube docker-env)
-
-docker build -t fastapi-catdog-classifier .
-
-
-<h3>Kubernetes Deployment</h3>
-
-Start Minikube with the command: minikube start.
-
-Navigate to the Kubernetes YAML files located in the k8s directory.
-
-Use kubectl apply -f . to deploy the Kubernetes resources.
-
-To remove the resources, run kubectl delete -f ..
-
-
 
 <h3>Output of the following command present in logs folder </h3>
  
@@ -346,9 +309,12 @@ To remove the resources, run kubectl delete -f ..
 
 
  <img width="1002" alt="image" src="https://github.com/user-attachments/assets/1898e11d-343c-4ef0-8f5d-899f31758ece" />
+ 
  <img width="1379" alt="image" src="https://github.com/user-attachments/assets/5d352639-61b1-41ac-8663-a666d985b5f1" />
 
  <img width="1437" alt="image" src="https://github.com/user-attachments/assets/7febe686-1f0d-4377-a559-7a8c88d14bd3" />
+
+  <img width="1317" alt="image" src="https://github.com/user-attachments/assets/8e851423-7b1c-41d7-a6ab-50c4ee68801b" />
 
  <img width="970" alt="image" src="https://github.com/user-attachments/assets/4add3b07-3170-42c8-902a-01e47b6e00f7" />
 
@@ -356,7 +322,6 @@ To remove the resources, run kubectl delete -f ..
 
  <img width="1692" alt="image" src="https://github.com/user-attachments/assets/4b624e1d-c256-46d1-9d6d-06f65eec991c" />
 
-  <img width="1317" alt="image" src="https://github.com/user-attachments/assets/8e851423-7b1c-41d7-a6ab-50c4ee68801b" />
 
  <img width="1432" alt="image" src="https://github.com/user-attachments/assets/3275a911-e4ca-4e34-82f5-b83f9c77e2c1" />
 
