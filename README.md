@@ -99,30 +99,44 @@ Kube Proxykube-proxy is a network proxy that runs on each node in your cluster. 
     helm repo update
 
 
-  <h3>Delete Cluster (from config):</h3>
+  <h3>Install AWS Load Balancer Controller:</h3>
    
-    Deletes the cluster specified in the configuration file.
+    Installs the AWS Load Balancer Controller using Helm.
    
-    eksctl delete cluster -f eks-cluster.yaml
-
-  <h3>Delete Cluster (from config):</h3>
-   
-    Deletes the cluster specified in the configuration file.
-   
-    eksctl delete cluster -f eks-cluster.yaml
-
-  <h3>Delete Cluster (from config):</h3>
-   
-    Deletes the cluster specified in the configuration file.
-   
-    eksctl delete cluster -f eks-cluster.yaml
+    helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=basic-cluster --set serviceAccount.create=false --set 
+    serviceAccount.name=aws-load-balancer-controller
 
 
-  <h3>Delete Cluster (from config):</h3>
+  <h3>Create IAM Service Account for Cluster Autoscaler:</h3>
    
-    Deletes the cluster specified in the configuration file.
+    Creates a service account for the Cluster Autoscaler.
    
-    eksctl delete cluster -f eks-cluster.yaml
+    eksctl create iamserviceaccount \
+    --cluster=basic-cluster \
+    --namespace=kube-system \
+    --name=cluster-autoscaler \
+    --attach-policy-arn=arn:aws:iam::688567263021:policy/AWSClusterAutoScalerIAMPolicy \
+    --override-existing-serviceaccounts \
+    --region ap-south-1 \
+    --approve
+
+
+  <h3>Deploy Cluster Autoscaler:</h3>
+   
+    Applies the Cluster Autoscaler manifest for automatic scaling.
+   
+    wget https://raw.githubusercontent.com/kubernetes/autoscaler/master/cluster-autoscaler/cloudprovider/aws/examples/cluster-autoscaler-autodiscover.yaml
+    kubectl apply -f cluster-autoscaler-autodiscover.yaml
+
+
+
+  <h3>Install Metrics Server:</h3>
+   
+    Installs the Kubernetes Metrics Server.
+
+   
+    kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml -n dev
+
 
   <h3>Delete Cluster (from config):</h3>
    
