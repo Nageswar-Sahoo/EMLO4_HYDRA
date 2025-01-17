@@ -1,4 +1,4 @@
-<h1>Dog Breed Classifier Deployment with Kubernetes and MiniKube </h1>
+<h1>Dog Breed Classifier Deployment with EKS </h1>
 
 This project demonstrates deploying a FastAPI-based CatDog Classifier application on a Kubernetes cluster using MiniKube. Follow these instructions to set up, deploy, and access the application.
 
@@ -130,19 +130,52 @@ Kube Proxykube-proxy is a network proxy that runs on each node in your cluster. 
 
 
 
-  <h3>Install Metrics Server:</h3>
+  <h3>Monitor HPA:</h3>
    
-    Installs the Kubernetes Metrics Server.
+    Watches the HPA status for web-server and model-server in the dev namespace.
+   
+    kubectl get hpa web-server-hpa --watch -n dev
+    kubectl get hpa model-server-hpa --watch -n dev
+
+
+
+  <h3>Describe HPA:</h3>
+   
+    Describes the HPA configuration for web-server and model-server
+   
+    kubectl describe hpa model-server-hpa
+    kubectl describe hpa web-server-hpa
+
+  <h3>Deploy FastAPI Application:</h3>
+   
+    Installs the FastAPI application using Helm with specific configurations.
 
    
-    kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml -n dev
+    helm install fastapi-release-dev fastapi-helm --values fastapi-helm/values.yaml -f fastapi-helm/values-dev.yaml
 
 
-  <h3>Delete Cluster (from config):</h3>
+
+  <h3>Upgrade FastAPI Application:</h3>
    
-    Deletes the cluster specified in the configuration file.
+    Upgrades the FastAPI Helm release with updated configurations.
    
-    eksctl delete cluster -f eks-cluster.yaml    
+    helm upgrade fastapi-release-dev fastapi-helm --values fastapi-helm/values.yaml -f fastapi-helm/values-dev.yaml
+
+  <h3>Delete FastAPI Application:</h3>
+   
+    Deletes the FastAPI Helm release.
+   
+    helm delete fastapi-release-dev fastapi-helm --values fastapi-helm/values.yaml -f fastapi-helm/values-dev.yaml
+
+  <h3>Run Load Test:</h3>
+   
+    Executes a load test using the Python script test_requests.py. (need to update ing endpoint ) 
+   
+    python test_requests.py --requests 50000 --workers 50
+
+
+
+
 
 <h2>Kubernetes Commands</h2>
 <h3>General Commands</h3></h4>
@@ -199,7 +232,6 @@ Example:
 kubectl expose deployment catdog-classifier --type=NodePort --port=80
 <h4>Access NodePort Service:</h4>
 
-minikube service <service-name>
 <h3>Commands for Ingress</h3>
 <h4>List Ingress Rules:</h4>
 
@@ -260,38 +292,6 @@ kubectl debug pod/<pod-name> -it --image=busybox
 
   kubectl top pods
   kubectl top nodes
-
-
-<h2>MiniKube</h2>
-
-MiniKube is a local Kubernetes environment. Use it to test Kubernetes deployments on your local machine.
-
-Start MiniKube:
-    minikube start --cpus=4 --memory=8192
-    This starts a MiniKube cluster with 4 CPUs and 8 GB of memory.
-
-Verify that MiniKube is running:
-   minikube status
-
-<h2>MiniKube Commands</h2>
-<h4>Start MiniKube:</h4>
-  minikube start
-<h4>Stop MiniKube:</h4>
-   minikube stop
-<h4>Delete MiniKube Cluster:</h4>
-  minikube delete
-<h4>Access Kubernetes Dashboard:</h4>
-  minikube dashboard
-<h4>Enable Add-ons (e.g., ingress):</h4>
-   minikube addons enable ingress
-   
-<h4>Tunnel to the Ingress</h4>
-
-MiniKube does not expose Ingress directly on your host machine. Use the MiniKube tunnel to expose the Ingress.
-
-Start a MiniKube tunnel in a separate terminal:
-
-   minikube tunnel
 
 <h2>Project Setup</h2>
 
