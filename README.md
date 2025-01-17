@@ -2,33 +2,7 @@
 
 This project demonstrates deploying a FastAPI-based CatDog Classifier application on a Kubernetes cluster using MiniKube. Follow these instructions to set up, deploy, and access the application.
 
-<h2>Directory Structure:</h2>
 
-        project/
-
-        ├── app.py
-        ├── templates/
-        │   ├── index.html
-        │   └── result.html
-        ├── requirements.txt
-        └── Dockerfile
-
-<h3>About Dataset</h3>
-
-Description
-
-This dataset contains a collection of images for 10 different dog breeds, meticulously gathered and organized to facilitate various computer vision tasks such as image classification and object detection. The dataset includes the following breeds:
-
-       Golden Retriever
-       German Shepherd
-       Labrador Retriever
-       Bulldog
-       Beagle
-       Poodle
-       Rottweiler
-       Yorkshire Terrier
-       Boxer
-       Dachshund
 
 <h2>k8s (Kubernetes)</h2>
 
@@ -58,6 +32,103 @@ PodsA pod is a group of containers and is the smallest unit that k8s administers
 KubeletAn agent that runs on each node in the cluster. It ensures containers are running in a Pod.
 
 Kube Proxykube-proxy is a network proxy that runs on each node in your cluster. It routes traffic coming into a node from the service. It forwards requests for work to the correct containers.
+
+<h2>EKS Cluster Operations</h2>
+
+ <h3>Create Cluster:</h3>
+   
+    Creates a new EKS cluster based on a configuration file.
+   
+    eksctl create cluster -f eks-cluster.yaml
+    
+  <h3>Delete Cluster:</h3>
+   
+    Deletes an existing EKS cluster.
+   
+    eksctl delete cluster --name basic-cluster --region ap-south-1
+
+  <h3>Delete Nodegroup:</h3>
+   
+    Deletes a specific nodegroup in the cluster.
+   
+    eksctl delete nodegroup --name ng-spot-4 --cluster basic-cluster 
+
+   <h3>Create Nodegroup:</h3>
+   
+    Creates a new nodegroup using a configuration file.
+   
+    eksctl create nodegroup --config-file=eks-cluster.yaml   
+
+   <h3>Delete Cluster (from config):</h3>
+   
+    Deletes the cluster specified in the configuration file.
+   
+    eksctl delete cluster -f eks-cluster.yaml 
+
+   <h3>Associate IAM OIDC Provider:</h3>
+   
+    Associates an OIDC provider with the EKS cluster.
+   
+    eksctl utils associate-iam-oidc-provider --region ap-south-1 --cluster basic-cluster --approve
+       
+   <h3>Create IAM Policy:</h3>
+   
+    Creates an IAM policy for the LoadBalancer Controller.
+   
+    aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-document file://iam-policy.json 
+
+  <h3>Create IAM Service Account for LoadBalancer Controller:</h3>
+   
+    Creates an IAM service account and associates the IAM policy.
+   
+    eksctl create iamserviceaccount \
+            --cluster=basic-cluster \
+            --namespace=kube-system \
+            --name=aws-load-balancer-controller \
+            --attach-policy-arn=arn:aws:iam::<accountid>:policy/AWSLoadBalancerControllerIAMPolicy \
+            --override-existing-serviceaccounts \
+            --region ap-south-1 \
+            --approve
+
+
+  <h3>Add Helm Repo:</h3>
+   
+    Adds the AWS EKS Helm charts repository.
+   
+    helm repo add eks https://aws.github.io/eks-charts
+    helm repo update
+
+
+  <h3>Delete Cluster (from config):</h3>
+   
+    Deletes the cluster specified in the configuration file.
+   
+    eksctl delete cluster -f eks-cluster.yaml
+
+  <h3>Delete Cluster (from config):</h3>
+   
+    Deletes the cluster specified in the configuration file.
+   
+    eksctl delete cluster -f eks-cluster.yaml
+
+  <h3>Delete Cluster (from config):</h3>
+   
+    Deletes the cluster specified in the configuration file.
+   
+    eksctl delete cluster -f eks-cluster.yaml
+
+
+  <h3>Delete Cluster (from config):</h3>
+   
+    Deletes the cluster specified in the configuration file.
+   
+    eksctl delete cluster -f eks-cluster.yaml
+
+  <h3>Delete Cluster (from config):</h3>
+   
+    Deletes the cluster specified in the configuration file.
+   
+    eksctl delete cluster -f eks-cluster.yaml    
 
 <h2>Kubernetes Commands</h2>
 <h3>General Commands</h3></h4>
