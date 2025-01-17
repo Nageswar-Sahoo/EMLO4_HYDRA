@@ -364,11 +364,12 @@ To remove the resources, run kubectl delete -f ..
 
  <img width="1692" alt="image" src="https://github.com/user-attachments/assets/4b624e1d-c256-46d1-9d6d-06f65eec991c" />
 
+  <img width="1317" alt="image" src="https://github.com/user-attachments/assets/8e851423-7b1c-41d7-a6ab-50c4ee68801b" />
+
  <img width="1432" alt="image" src="https://github.com/user-attachments/assets/3275a911-e4ca-4e34-82f5-b83f9c77e2c1" />
 
  <img width="1470" alt="image" src="https://github.com/user-attachments/assets/d6e70bcd-317f-402f-9fe9-23677140b3a1" />
 
- <img width="1317" alt="image" src="https://github.com/user-attachments/assets/8e851423-7b1c-41d7-a6ab-50c4ee68801b" />
 
 
 
