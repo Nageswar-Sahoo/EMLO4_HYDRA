@@ -2,6 +2,92 @@
 
 This project demonstrates deploying a FastAPI-based CatDog Classifier application on a Kubernetes cluster using MiniKube. Follow these instructions to set up, deploy, and access the application.
 
+<h2>Directory Structure:</h2>
+
+        project/
+
+        ├── app.py
+        ├── fastapi_helm
+        ├── model server
+        ├── web server
+        ├── templates/
+        │   ├── index.html
+        │   └── result.html
+        ├── requirements.txt
+
+<h2>Features</h2>
+
+FastAPI-based model server
+
+Docker Compose for local testing
+
+Kubernetes manifests for deployment
+
+Redis caching for inference performance
+
+HELM chart for easy configuration and deployment
+
+Ingress for external access
+        
+
+<h2>Architecture Diagram</h2>
+
+![img1 drawio](https://github.com/user-attachments/assets/ad7dcd25-9889-4d0d-989f-33af0ef232ec)
+
+
+<h3>Architecture Components:</h3>
+
+<h3>Node: Minikube node running the cluster
+
+<h3>Pods:</h3>
+
+Model Server Pod: Hosts the deep learning model (FastAPI)
+
+Redis Pod: Caches inference results
+
+Web Server Pod: Frontend for user interaction
+
+<h3>ReplicaSets:</h3> Ensures desired number of pods for scalability
+
+<h3>Deployments:</h3> For managing pod lifecycle
+
+<h3>Services:</h3>
+
+Model Server Service: Exposes model server
+
+Redis Service: Internal service for Redis communication
+
+Web Server Service: Exposes web interface
+
+<h3>Ingress:</h3> Routes external traffic to the web server
+
+<h3>Volumes:</h3> Persistent storage for models and inference data
+
+<h2>Helm</h2>
+Deploying the Cat/Dog Classifier using Helm simplifies Kubernetes resource management by packaging all Kubernetes manifests into a single, reusable chart. This makes deployments more scalable, configurable, and easy to manage across environments.
+
+<h3>Why Use Helm?</h3>
+
+Reusability: Package Kubernetes resources into a single chart that can be deployed repeatedly.
+Configurability: Easily override default values (like replica count, CPU, and memory limits) at deployment time.
+Simplified Management: Manage deployments, upgrades, and rollbacks with simple Helm commands.
+
+
+ <h3>Helm Commad : </h3>
+
+ helm create fastapi-helm : Creates a new Helm chart for FastAPI.
+ 
+ helm install fastapi-release-dev fastapi-helm --values fastapi-helm/values.yaml -f fastapi-helm/values-dev.yaml : Deploys the chart for development with custom values.
+ 
+ helm install fastapi-release-prod fastapi-helm --values fastapi-helm/values.yaml -f fastapi-helm/values-prod.yaml : Deploys the chart for production with specific overrides.
+ 
+ helm upgrade fastapi-release-dev fastapi-helm --values fastapi-helm/values.yaml -f fastapi-helm/values-dev.yaml : Updates the development deployment with new changes.
+ 
+ helm upgrade fastapi-release-prod fastapi-helm --values fastapi-helm/values.yaml -f fastapi-helm/values-prod.yaml : Updates the production deployment.
+ 
+ helm list : Lists all active Helm releases
+
+ helm delete fastapi-release-prod : to delete helm already install 
 
 
 <h2>k8s (Kubernetes)</h2>
