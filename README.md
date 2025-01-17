@@ -119,7 +119,38 @@ KubeletAn agent that runs on each node in the cluster. It ensures containers are
 
 Kube Proxykube-proxy is a network proxy that runs on each node in your cluster. It routes traffic coming into a node from the service. It forwards requests for work to the correct containers.
 
-<h2>EKS Cluster Operations</h2>
+<h2>Amazon Elastic Kubernetes Service (EKS) Overview</h2>
+
+Amazon Elastic Kubernetes Service (EKS) is a managed Kubernetes service that simplifies the deployment, management, and scaling of containerized applications. EKS integrates seamlessly with AWS services, offering features like scalability, security, and high availability, while reducing the operational complexity of running Kubernetes clusters.
+
+Key Highlights:
+
+Cluster Management:
+
+Create, update, and delete Kubernetes clusters effortlessly using tools like eksctl and AWS Management Console.
+Supports managed and self-managed node groups for a flexible compute setup.
+
+Node Group Management:
+
+Spot and on-demand instance support for cost efficiency and workload flexibility.
+GPU instance support for compute-intensive applications like machine learning and graphics processing.
+
+Add-Ons and Integrations:
+
+Easily associate IAM roles and policies for enhanced security and permissions management.
+Supports integrations with AWS services like Elastic Load Balancer (ELB), CloudWatch, and IAM.
+
+Application Deployment:
+
+Simplify application scaling with Kubernetes Horizontal Pod Autoscalers (HPA) and Cluster Autoscaler.
+Utilize Helm charts for efficient application management and deployment.
+
+Monitoring and Scaling:
+
+Deploy tools like the Kubernetes metrics server for resource monitoring.
+Enable cluster auto-scaling for optimized resource usage based on workload demands.
+This README includes commands to manage EKS clusters, node groups, IAM service accounts, load balancers, and autoscaling configurations to help set up and maintain Kubernetes applications efficiently.
+
 
  <h3>Create Cluster:</h3>
    
@@ -261,124 +292,6 @@ Kube Proxykube-proxy is a network proxy that runs on each node in your cluster. 
 
 
 
-
-
-<h2>Kubernetes Commands</h2>
-<h3>General Commands</h3></h4>
-
-<h4>Get All Resources in a Namespace:</h4>
-
-  kubectl get all -n <namespace>
-<h4>Get Resource Details in YAML Format:</h4>
-
-  kubectl get <resource-type> <resource-name> -o yaml
-<h4>Apply a Configuration File:</h4>
-
-  kubectl apply -f <file-name.yaml>
-<h4>Delete a Resource:</h4>
-
-  kubectl delete -f <file-name.yaml>
-<h4>View Cluster Nodes:</h4>
-
-  kubectl get nodes
-<h3>Commands for Deployments</h3>
-<h4>List Deployments:</h4>
-
-kubectl get deployments
-<h4>Describe a Deployment:</h4>
-
-kubectl describe deployment <deployment-name>
-<h4>Update a Deployment (Rolling Update):</h4>
-
-kubectl set image deployment/<deployment-name> <container-name>=<new-image>
-<h4>Scale a Deployment:</h4>
-
-kubectl scale deployment/<deployment-name> --replicas=<number>
-<h4>Restart a Deployment:</h4>
-
-kubectl rollout restart deployment/<deployment-name>
-<h4>Check Rollout Status:</h4>
-
-kubectl rollout status deployment/<deployment-name>
-<h4>Rollback a Deployment:</h4>
-
-kubectl rollout undo deployment/<deployment-name>
-<h3>Commands for Services</h3>
-<h4>List Services:</h4>
-
-kubectl get services
-<h4>Describe a Service:</h4>
-
-kubectl describe service <service-name>
-<h4>Expose a Deployment as a Service:</h4>
-
-kubectl expose deployment <deployment-name> --type=<type> --port=<port>
-Example:
-
-kubectl expose deployment catdog-classifier --type=NodePort --port=80
-<h4>Access NodePort Service:</h4>
-
-<h3>Commands for Ingress</h3>
-<h4>List Ingress Rules:</h4>
-
-kubectl get ingress
-<h4>Describe an Ingress:</h4>
-
-kubectl describe ingress <ingress-name>
-<h4>Access Ingress: After applying the Ingress, check the external IP or host:</h4>
-
-kubectl get ingress
-Access it using the hostname or external IP in your browser.
-<h4>Delete an Ingress:</h4>
-
-kubectl delete ingress <ingress-name>
-<h3>Commands for Pods</h3>
-<h4>List Pods:</h4>
-
-kubectl get pods
-<h4>List Pods with Labels:</h4>
-
-kubectl get pods -l <label-key>=<label-value>
-<h4>Describe a Pod:</h4>
-
-kubectl describe pod <pod-name>
-<h4>Get Pod Logs:</h4>
-
-kubectl logs <pod-name>
-<h4></h4>Stream Pod Logs:</pod-name>
-
-kubectl logs -f <pod-name>
-<h4>Execute a Command Inside a Pod:</h4>
-
-kubectl exec -it <pod-name> -- <command>
-<h4>Delete a Pod:</h4>
-
-kubectl delete pod <pod-name>
-<h3>Namespace Management</h3>
-<h4>List All Namespaces:</h4>
-
-kubectl get namespaces
-<h4>Create a New Namespace:</h4>
-
-kubectl create namespace <namespace-name>
-<h4>Set a Default Namespace:</h4>
-
-kubectl config set-context --current --namespace=<namespace-name>
-<h4>Delete a Namespace:</h4>
-
-kubectl delete namespace <namespace-name>
-<h3>Resource Debugging</h3>
-<h4>Check Events in a Namespace:</h4>
-
-kubectl get events -n <namespace>
-<h4>Debug a Pod:</h4>
-
-kubectl debug pod/<pod-name> -it --image=busybox
-<h4>View Resource Usage:</h4>
-
-  kubectl top pods
-  kubectl top nodes
-
 <h2>Project Setup</h2>
 
 <h3>FastAPI Application Code</h3>
@@ -415,14 +328,7 @@ Use kubectl apply -f . to deploy the Kubernetes resources.
 
 To remove the resources, run kubectl delete -f ..
 
-<img width="1061" alt="image" src="https://github.com/user-attachments/assets/a07053e7-5d1e-4e01-9125-dbdc0328ff4c" />
 
-
-<h3>How to access FAST API : </h3>
-
-<img width="858" alt="image" src="https://github.com/user-attachments/assets/f7101312-288e-4b2d-9d1d-fc106c525e4b" />
-
-<img width="1434" alt="image" src="https://github.com/user-attachments/assets/40d637b7-a199-4bb3-8ed3-d196043429dd" />
 
 <h3>Output of the following command present in logs folder </h3>
  
