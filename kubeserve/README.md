@@ -182,6 +182,23 @@ Grafana Logs :
 <img width="1792" alt="image" src="https://github.com/user-attachments/assets/76df4183-939d-4db0-afec-1cd3ed79b761" />
 <img width="1791" alt="image" src="https://github.com/user-attachments/assets/addb5220-ecb0-4eae-b441-d09cf4dcfe49" />
 
+test prompt : 
+    
+    "a Green Apple",
+    "a cat on a farm",
+    "a magical forest with glowing mushrooms at night",
+    "a futuristic city with flying cars",
+    "a snowy mountain landscape with a cabin",
+    "a vibrant sunset over a calm ocean",
+    "a dragon flying over a medieval castle",
+    "a cyberpunk street filled with neon signs",
+    "a serene lake surrounded by autumn trees",
+    "a tropical beach with palm trees and clear blue water",
+    "a robot in a futuristic laboratory",
+    "a starry sky above a quiet desert",
+    "a pirate ship sailing across stormy seas",
+    "a large elephant walking through the savannah",
+    "a bustling market in an ancient city"
 
 
 output-image:
