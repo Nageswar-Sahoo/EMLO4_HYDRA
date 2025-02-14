@@ -17,7 +17,7 @@ def generate_image(prompt: str, output_path: str = "output.jpg"):
         output_path (str): Path where the generated image will be saved
     """
     # Endpoint configuration
-    url = "http://k8s-istioing-istioing-866072961b-254c48d1ecee3ca5.elb.ap-south-1.amazonaws.com/v1/models/sd3:predict"
+    url = "http://k8s-istioing-istioing-b451a242e7-c58bb4291a6e76ca.elb.ap-south-1.amazonaws.com/v1/models/sd3:predict"
     
     # Headers
     headers = {
@@ -81,15 +81,27 @@ if __name__ == "__main__":
 
     # Test prompts
     prompts = [
-        "a Green Apple",
-        # "a cat on a farm"
-        # "a magical forest with glowing mushrooms at night",
-        # "a futuristic city with flying cars"
+    "a Green Apple",
+    "a cat on a farm",
+    "a magical forest with glowing mushrooms at night",
+    "a futuristic city with flying cars",
+    "a snowy mountain landscape with a cabin",
+    "a vibrant sunset over a calm ocean",
+    "a dragon flying over a medieval castle",
+    "a cyberpunk street filled with neon signs",
+    "a serene lake surrounded by autumn trees",
+    "a tropical beach with palm trees and clear blue water",
+    "a robot in a futuristic laboratory",
+    "a starry sky above a quiet desert",
+    "a pirate ship sailing across stormy seas",
+    "a large elephant walking through the savannah",
+    "a bustling market in an ancient city"
     ]
+
 
     # Generate images for each prompt
     for i, prompt in enumerate(prompts):
-        output_path = f"output_{i+1}.jpg"
+        output_path = f"output_{prompt}.jpg"
         logger.info(f"\\nGenerating image {i+1} of {len(prompts)}")
         success = generate_image(prompt, output_path)
         if success:

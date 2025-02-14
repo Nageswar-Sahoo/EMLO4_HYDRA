@@ -1,0 +1,156 @@
+eksctl create cluster -f eks-cluster.yaml
+
+eksctl delete cluster -f eks-cluster.yaml
+
+
+eksctl utils associate-iam-oidc-provider --region ap-south-1 --cluster basic-cluster12 --approve
+
+aws iam create-policy \
+    --policy-name S3ListTestEMLO \
+    --policy-document file://iam-s3-test-policy.json
+
+    aws iam delete-policy \
+    --policy-name S3ListTestEMLO \
+    --policy-document file://iam-s3-test-policy.json    
+
+
+eksctl create iamserviceaccount \
+  --name s3-list-sa \
+  --cluster basic-cluster12 \
+  --attach-policy-arn arn:aws:iam::688567263021:policy/S3ListTestEMLO \
+  --approve \
+	--region ap-south-1    
+
+
+
+  helm repo add nvidia https://helm.ngc.nvidia.com/nvidia \
+  && helm repo update
+
+  helm install --wait --generate-name \
+  -n gpu-operator --create-namespace \
+  nvidia/gpu-operator \
+  --version=v24.9.1    
+
+aws iam get-policy-version --policy-arn arn:aws:iam::688567263021:policy/S3ListTestEMLO --version-id v1
+
+
+
+kubectl create namespace istio-system
+
+helm repo add istio https://istio-release.storage.googleapis.com/charts
+
+
+helm install istio-base istio/base \
+  --version 1.20.2 \
+  --namespace istio-system --wait
+
+
+  helm install istiod istio/istiod \
+  --version 1.20.2 \
+  --namespace istio-system --wait
+
+
+kubectl create namespace istio-ingress
+
+
+helm install istio-ingress istio/gateway \
+  --version 1.20.2 \
+  --namespace istio-ingress \
+  --set labels.istio=ingressgateway \
+  --set service.annotations."service\.beta\.kubernetes\.io/aws-load-balancer-type"=external \
+  --set service.annotations."service\.beta\.kubernetes\.io/aws-load-balancer-nlb-target-type"=ip \
+  --set service.annotations."service\.beta\.kubernetes\.io/aws-load-balancer-scheme"=internet-facing \
+  --set service.annotations."service\.beta\.kubernetes\.io/aws-load-balancer-attributes"="load_balancing.cross_zone.enabled=true" 
+
+kubectl apply -f s3-secret.yaml
+
+kubectl rollout restart deployment istio-ingress -n istio-ingress
+
+helm ls -n istio-system
+helm ls -n istio-ingress
+
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+kubectl label namespace default istio-injection=enabled
+
+kubectl apply -f istio-kserve-ingress.yaml
+
+
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.16.2/cert-manager.yaml
+
+helm install kserve-crd oci://ghcr.io/kserve/charts/kserve-crd --version v0.14.1
+
+eksctl utils associate-iam-oidc-provider --region ap-south-1 --cluster basic-cluster12 --approve
+
+
+eksctl create iamserviceaccount \
+	--cluster=basic-cluster12 \
+	--name=s3-read-only \
+	--attach-policy-arn=arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess \
+	--override-existing-serviceaccounts \
+	--region ap-south-1 \
+	--approve
+
+
+
+helm install kserve oci://ghcr.io/kserve/charts/kserve \
+  --version v0.14.1 \
+  --set kserve.controller.deploymentMode=RawDeployment \
+  --set kserve.controller.gateway.ingressGateway.className=istio
+
+
+  curl -v -H "Host: sklearn-iris-default.example.com" -H "Content-Type: application/json" "http://k8s-istioing-istioing-bcbd5be777-3c5d8a8300169dad.elb.ap-south-1.amazonaws.com/v1/models/sklearn-iris:predict" -d @./iris-input.json
+
+
+  eksctl create iamserviceaccount \
+--cluster=basic-cluster12 \
+--namespace=kube-system \
+--name=aws-load-balancer-controller \
+--attach-policy-arn=arn:aws:iam::688567263021:policy/AWSLoadBalancerControllerIAMPolicy \
+--override-existing-serviceaccounts \
+--region ap-south-1 \
+--approve
+
+helm install istio-ingress istio/gateway \
+  --version 1.20.2 \
+  --namespace istio-ingress \
+  --set labels.istio=ingressgateway \
+  --set service.annotations."service\\.beta\\.kubernetes\\.io/aws-load-balancer-type"=external \
+  --set service.annotations."service\\.beta\\.kubernetes\\.io/aws-load-balancer-nlb-target-type"=ip \
+  --set service.annotations."service\\.beta\\.kubernetes\\.io/aws-load-balancer-scheme"=internet-facing \
+  --set service.annotations."service\\.beta\\.kubernetes\\.io/aws-load-balancer-attributes"="load_balancing.cross_zone.enabled=true" 
+  
+
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=basic-cluster12 --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller
+
+kubectl label namespace default istio-injection=enabled
+
+
+kubectl get crd gateways.gateway.networking.k8s.io &> /dev/null || \
+  { kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd?ref=v1.2.0" | kubectl apply -f -; }
+
+
+
+
+  kubectl port-forward svc/kiali 20001:20001 -n istio-system
+
+
+  helm repo add nvidia https://helm.ngc.nvidia.com/nvidia \
+    && helm repo update
+
+    helm install --wait --generate-name \
+    -n gpu-operator --create-namespace \
+    nvidia/gpu-operator \
+    --version=v24.9.1
+
+
+    kubectl get isvc
+
+    kubectl get  svc -n istio-ingress
+
+
+
+
