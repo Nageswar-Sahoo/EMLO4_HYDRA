@@ -140,9 +140,12 @@ helm install istio-ingress istio/gateway \
 
 ### **Restarting Istio Ingress Deployment**
 ```bash
-kubectl rollout restart deployment istio-ingress -n istio-ingress
+kubectl apply -f sd3-isvc.yaml
 ```
+### **K8s Deployment**
+```bash
 
+```
 ---
 
 ## Conclusion
