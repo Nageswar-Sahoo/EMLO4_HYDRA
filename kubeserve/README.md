@@ -144,7 +144,7 @@ kubectl apply -f sd3-isvc.yaml
 ```
 ### **K8s Deployment**
 ```bash
-
+  kubectl apply -f sd3-isvc.yaml
 ```
 ---
 
