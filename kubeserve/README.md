@@ -271,10 +271,28 @@ default         horizontalpodautoscaler.autoscaling/torchserve-sd3-predictor   D
 istio-ingress   horizontalpodautoscaler.autoscaling/istio-ingress              Deployment/istio-ingress              cpu: 2%/80%   1         5         1          47m
 istio-system    horizontalpodautoscaler.autoscaling/istiod                     Deployment/istiod                     cpu: 0%/80%   1         5         1          48m
 
+
+Kiali Graph : 
+
+<img width="1781" alt="image" src="https://github.com/user-attachments/assets/ef45d84b-db60-43d0-8f03-499440222447" />
+<img width="1592" alt="image" src="https://github.com/user-attachments/assets/e73e30f8-2c1b-4e8a-90ab-f77f8e1c24b7" />
+<img width="1792" alt="image" src="https://github.com/user-attachments/assets/247c1d36-a392-4bba-9cd8-4e148b4ca713" />
+<img width="1582" alt="image" src="https://github.com/user-attachments/assets/d50ff13a-6279-4ad8-a33c-4f666e33c59e" />
+<img width="1785" alt="image" src="https://github.com/user-attachments/assets/19159f67-ce24-455a-a27f-6983d12fee3a" />
+
+Grafana Logs : 
+
+<img width="1780" alt="image" src="https://github.com/user-attachments/assets/1e31e891-de8c-4a0b-bb81-10e7f60a79ac" />
+<img width="1792" alt="image" src="https://github.com/user-attachments/assets/9dd3d702-17dc-439a-b17a-5a5597279b5f" />
+<img width="1791" alt="image" src="https://github.com/user-attachments/assets/faf0bc08-994d-4abe-a1d3-a47b0e03f7f3" />
+<img width="1768" alt="image" src="https://github.com/user-attachments/assets/df359aa3-86c6-44da-9f16-9125b67cf19d" />
+<img width="1792" alt="image" src="https://github.com/user-attachments/assets/76df4183-939d-4db0-afec-1cd3ed79b761" />
+<img width="1791" alt="image" src="https://github.com/user-attachments/assets/addb5220-ecb0-4eae-b441-d09cf4dcfe49" />
+
+
+
 output-image:
 
-![image](https://github.com/user-attachments/assets/b7f36880-c141-406d-94b3-9ebb499b72f4)
-![image](https://github.com/user-attachments/assets/077cbb4c-37a4-4d36-a016-5dbdef570bfd)
 
 
 
