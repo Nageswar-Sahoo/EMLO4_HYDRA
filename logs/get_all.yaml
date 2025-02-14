@@ -1,469 +1,104 @@
-apiVersion: v1
-items:
-- apiVersion: v1
-  kind: Pod
-  metadata:
-    creationTimestamp: "2024-12-21T12:49:17Z"
-    generateName: fastapi-app-7898c5c879-
-    labels:
-      app: fastapi-app
-      pod-template-hash: 7898c5c879
-    name: fastapi-app-7898c5c879-jwfgd
-    namespace: default
-    ownerReferences:
-    - apiVersion: apps/v1
-      blockOwnerDeletion: true
-      controller: true
-      kind: ReplicaSet
-      name: fastapi-app-7898c5c879
-      uid: e28fd704-b43b-4210-8a46-3a453bddc8b6
-    resourceVersion: "32094"
-    uid: 597a45e9-8f8a-478c-8eda-b97e3a4b90a5
-  spec:
-    containers:
-    - env:
-      - name: UVICORN_SERVER_PORT
-        value: "8080"
-      image: fastapi-catdog-classifier:latest
-      imagePullPolicy: Never
-      name: fastapi-container
-      ports:
-      - containerPort: 8080
-        protocol: TCP
-      resources: {}
-      terminationMessagePath: /dev/termination-log
-      terminationMessagePolicy: File
-      volumeMounts:
-      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-        name: kube-api-access-xwggd
-        readOnly: true
-    dnsPolicy: ClusterFirst
-    enableServiceLinks: true
-    nodeName: minikube
-    preemptionPolicy: PreemptLowerPriority
-    priority: 0
-    restartPolicy: Always
-    schedulerName: default-scheduler
-    securityContext: {}
-    serviceAccount: default
-    serviceAccountName: default
-    terminationGracePeriodSeconds: 30
-    tolerations:
-    - effect: NoExecute
-      key: node.kubernetes.io/not-ready
-      operator: Exists
-      tolerationSeconds: 300
-    - effect: NoExecute
-      key: node.kubernetes.io/unreachable
-      operator: Exists
-      tolerationSeconds: 300
-    volumes:
-    - name: kube-api-access-xwggd
-      projected:
-        defaultMode: 420
-        sources:
-        - serviceAccountToken:
-            expirationSeconds: 3607
-            path: token
-        - configMap:
-            items:
-            - key: ca.crt
-              path: ca.crt
-            name: kube-root-ca.crt
-        - downwardAPI:
-            items:
-            - fieldRef:
-                apiVersion: v1
-                fieldPath: metadata.namespace
-              path: namespace
-  status:
-    conditions:
-    - lastProbeTime: null
-      lastTransitionTime: "2024-12-21T12:49:34Z"
-      status: "True"
-      type: PodReadyToStartContainers
-    - lastProbeTime: null
-      lastTransitionTime: "2024-12-21T12:49:19Z"
-      status: "True"
-      type: Initialized
-    - lastProbeTime: null
-      lastTransitionTime: "2024-12-21T12:49:34Z"
-      status: "True"
-      type: Ready
-    - lastProbeTime: null
-      lastTransitionTime: "2024-12-21T12:49:34Z"
-      status: "True"
-      type: ContainersReady
-    - lastProbeTime: null
-      lastTransitionTime: "2024-12-21T12:49:18Z"
-      status: "True"
-      type: PodScheduled
-    containerStatuses:
-    - containerID: docker://a09bdc6af6bd477df879f3729ee5e7aa4a7df29830c4397c5e6189b4bd93ff86
-      image: fastapi-catdog-classifier:latest
-      imageID: docker://sha256:09b6c6253726ccbbad7cf7162917298fb67444f247d456f88d5a6fcc00770a5d
-      lastState: {}
-      name: fastapi-container
-      ready: true
-      restartCount: 0
-      started: true
-      state:
-        running:
-          startedAt: "2024-12-21T12:49:30Z"
-      volumeMounts:
-      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-        name: kube-api-access-xwggd
-        readOnly: true
-        recursiveReadOnly: Disabled
-    hostIP: 192.168.49.2
-    hostIPs:
-    - ip: 192.168.49.2
-    phase: Running
-    podIP: 10.244.0.35
-    podIPs:
-    - ip: 10.244.0.35
-    qosClass: BestEffort
-    startTime: "2024-12-21T12:49:19Z"
-- apiVersion: v1
-  kind: Pod
-  metadata:
-    creationTimestamp: "2024-12-21T12:49:17Z"
-    generateName: fastapi-app-7898c5c879-
-    labels:
-      app: fastapi-app
-      pod-template-hash: 7898c5c879
-    name: fastapi-app-7898c5c879-ncm4s
-    namespace: default
-    ownerReferences:
-    - apiVersion: apps/v1
-      blockOwnerDeletion: true
-      controller: true
-      kind: ReplicaSet
-      name: fastapi-app-7898c5c879
-      uid: e28fd704-b43b-4210-8a46-3a453bddc8b6
-    resourceVersion: "32101"
-    uid: 71789f28-b23d-42c0-9eb1-f343977f79ea
-  spec:
-    containers:
-    - env:
-      - name: UVICORN_SERVER_PORT
-        value: "8080"
-      image: fastapi-catdog-classifier:latest
-      imagePullPolicy: Never
-      name: fastapi-container
-      ports:
-      - containerPort: 8080
-        protocol: TCP
-      resources: {}
-      terminationMessagePath: /dev/termination-log
-      terminationMessagePolicy: File
-      volumeMounts:
-      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-        name: kube-api-access-qn2k2
-        readOnly: true
-    dnsPolicy: ClusterFirst
-    enableServiceLinks: true
-    nodeName: minikube
-    preemptionPolicy: PreemptLowerPriority
-    priority: 0
-    restartPolicy: Always
-    schedulerName: default-scheduler
-    securityContext: {}
-    serviceAccount: default
-    serviceAccountName: default
-    terminationGracePeriodSeconds: 30
-    tolerations:
-    - effect: NoExecute
-      key: node.kubernetes.io/not-ready
-      operator: Exists
-      tolerationSeconds: 300
-    - effect: NoExecute
-      key: node.kubernetes.io/unreachable
-      operator: Exists
-      tolerationSeconds: 300
-    volumes:
-    - name: kube-api-access-qn2k2
-      projected:
-        defaultMode: 420
-        sources:
-        - serviceAccountToken:
-            expirationSeconds: 3607
-            path: token
-        - configMap:
-            items:
-            - key: ca.crt
-              path: ca.crt
-            name: kube-root-ca.crt
-        - downwardAPI:
-            items:
-            - fieldRef:
-                apiVersion: v1
-                fieldPath: metadata.namespace
-              path: namespace
-  status:
-    conditions:
-    - lastProbeTime: null
-      lastTransitionTime: "2024-12-21T12:49:34Z"
-      status: "True"
-      type: PodReadyToStartContainers
-    - lastProbeTime: null
-      lastTransitionTime: "2024-12-21T12:49:18Z"
-      status: "True"
-      type: Initialized
-    - lastProbeTime: null
-      lastTransitionTime: "2024-12-21T12:49:34Z"
-      status: "True"
-      type: Ready
-    - lastProbeTime: null
-      lastTransitionTime: "2024-12-21T12:49:34Z"
-      status: "True"
-      type: ContainersReady
-    - lastProbeTime: null
-      lastTransitionTime: "2024-12-21T12:49:17Z"
-      status: "True"
-      type: PodScheduled
-    containerStatuses:
-    - containerID: docker://1aea897c730360ee4067455412421fb1d448337962a7a6f6ab5a1c640f9ab219
-      image: fastapi-catdog-classifier:latest
-      imageID: docker://sha256:09b6c6253726ccbbad7cf7162917298fb67444f247d456f88d5a6fcc00770a5d
-      lastState: {}
-      name: fastapi-container
-      ready: true
-      restartCount: 0
-      started: true
-      state:
-        running:
-          startedAt: "2024-12-21T12:49:29Z"
-      volumeMounts:
-      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-        name: kube-api-access-qn2k2
-        readOnly: true
-        recursiveReadOnly: Disabled
-    hostIP: 192.168.49.2
-    hostIPs:
-    - ip: 192.168.49.2
-    phase: Running
-    podIP: 10.244.0.34
-    podIPs:
-    - ip: 10.244.0.34
-    qosClass: BestEffort
-    startTime: "2024-12-21T12:49:18Z"
-- apiVersion: v1
-  kind: Service
-  metadata:
-    annotations:
-      kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"classifier-service","namespace":"default"},"spec":{"ports":[{"port":80,"protocol":"TCP","targetPort":7860}],"selector":{"app":"classifier"}}}
-    creationTimestamp: "2024-12-20T15:49:02Z"
-    name: classifier-service
-    namespace: default
-    resourceVersion: "1350"
-    uid: 55a5159e-838c-4587-b209-110e626ea2bc
-  spec:
-    clusterIP: 10.104.119.228
-    clusterIPs:
-    - 10.104.119.228
-    internalTrafficPolicy: Cluster
-    ipFamilies:
-    - IPv4
-    ipFamilyPolicy: SingleStack
-    ports:
-    - port: 80
-      protocol: TCP
-      targetPort: 7860
-    selector:
-      app: classifier
-    sessionAffinity: None
-    type: ClusterIP
-  status:
-    loadBalancer: {}
-- apiVersion: v1
-  kind: Service
-  metadata:
-    annotations:
-      kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"fastapi-service","namespace":"default"},"spec":{"ports":[{"port":80,"protocol":"TCP","targetPort":8080}],"selector":{"app":"fastapi-app"},"type":"ClusterIP"}}
-    creationTimestamp: "2024-12-21T12:49:16Z"
-    name: fastapi-service
-    namespace: default
-    resourceVersion: "32047"
-    uid: f6e6bbe1-f383-4d08-9656-fc207ec61bea
-  spec:
-    clusterIP: 10.98.197.173
-    clusterIPs:
-    - 10.98.197.173
-    internalTrafficPolicy: Cluster
-    ipFamilies:
-    - IPv4
-    ipFamilyPolicy: SingleStack
-    ports:
-    - port: 80
-      protocol: TCP
-      targetPort: 8080
-    selector:
-      app: fastapi-app
-    sessionAffinity: None
-    type: ClusterIP
-  status:
-    loadBalancer: {}
-- apiVersion: v1
-  kind: Service
-  metadata:
-    creationTimestamp: "2024-12-20T15:35:52Z"
-    labels:
-      component: apiserver
-      provider: kubernetes
-    name: kubernetes
-    namespace: default
-    resourceVersion: "198"
-    uid: 64004de1-97c0-4265-bf6c-ab4d693f922c
-  spec:
-    clusterIP: 10.96.0.1
-    clusterIPs:
-    - 10.96.0.1
-    internalTrafficPolicy: Cluster
-    ipFamilies:
-    - IPv4
-    ipFamilyPolicy: SingleStack
-    ports:
-    - name: https
-      port: 443
-      protocol: TCP
-      targetPort: 8443
-    sessionAffinity: None
-    type: ClusterIP
-  status:
-    loadBalancer: {}
-- apiVersion: apps/v1
-  kind: Deployment
-  metadata:
-    annotations:
-      deployment.kubernetes.io/revision: "1"
-      kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"fastapi-app"},"name":"fastapi-app","namespace":"default"},"spec":{"replicas":2,"selector":{"matchLabels":{"app":"fastapi-app"}},"template":{"metadata":{"labels":{"app":"fastapi-app"}},"spec":{"containers":[{"env":[{"name":"UVICORN_SERVER_PORT","value":"8080"}],"image":"fastapi-catdog-classifier:latest","imagePullPolicy":"Never","name":"fastapi-container","ports":[{"containerPort":8080}]}]}}}}
-    creationTimestamp: "2024-12-21T12:49:15Z"
-    generation: 1
-    labels:
-      app: fastapi-app
-    name: fastapi-app
-    namespace: default
-    resourceVersion: "32105"
-    uid: 2af0666d-a30d-4ae6-9f76-f0bffbb64974
-  spec:
-    progressDeadlineSeconds: 600
-    replicas: 2
-    revisionHistoryLimit: 10
-    selector:
-      matchLabels:
-        app: fastapi-app
-    strategy:
-      rollingUpdate:
-        maxSurge: 25%
-        maxUnavailable: 25%
-      type: RollingUpdate
-    template:
-      metadata:
-        creationTimestamp: null
-        labels:
-          app: fastapi-app
-      spec:
-        containers:
-        - env:
-          - name: UVICORN_SERVER_PORT
-            value: "8080"
-          image: fastapi-catdog-classifier:latest
-          imagePullPolicy: Never
-          name: fastapi-container
-          ports:
-          - containerPort: 8080
-            protocol: TCP
-          resources: {}
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
-        dnsPolicy: ClusterFirst
-        restartPolicy: Always
-        schedulerName: default-scheduler
-        securityContext: {}
-        terminationGracePeriodSeconds: 30
-  status:
-    availableReplicas: 2
-    conditions:
-    - lastTransitionTime: "2024-12-21T12:49:35Z"
-      lastUpdateTime: "2024-12-21T12:49:35Z"
-      message: Deployment has minimum availability.
-      reason: MinimumReplicasAvailable
-      status: "True"
-      type: Available
-    - lastTransitionTime: "2024-12-21T12:49:16Z"
-      lastUpdateTime: "2024-12-21T12:49:35Z"
-      message: ReplicaSet "fastapi-app-7898c5c879" has successfully progressed.
-      reason: NewReplicaSetAvailable
-      status: "True"
-      type: Progressing
-    observedGeneration: 1
-    readyReplicas: 2
-    replicas: 2
-    updatedReplicas: 2
-- apiVersion: apps/v1
-  kind: ReplicaSet
-  metadata:
-    annotations:
-      deployment.kubernetes.io/desired-replicas: "2"
-      deployment.kubernetes.io/max-replicas: "3"
-      deployment.kubernetes.io/revision: "1"
-    creationTimestamp: "2024-12-21T12:49:16Z"
-    generation: 1
-    labels:
-      app: fastapi-app
-      pod-template-hash: 7898c5c879
-    name: fastapi-app-7898c5c879
-    namespace: default
-    ownerReferences:
-    - apiVersion: apps/v1
-      blockOwnerDeletion: true
-      controller: true
-      kind: Deployment
-      name: fastapi-app
-      uid: 2af0666d-a30d-4ae6-9f76-f0bffbb64974
-    resourceVersion: "32103"
-    uid: e28fd704-b43b-4210-8a46-3a453bddc8b6
-  spec:
-    replicas: 2
-    selector:
-      matchLabels:
-        app: fastapi-app
-        pod-template-hash: 7898c5c879
-    template:
-      metadata:
-        creationTimestamp: null
-        labels:
-          app: fastapi-app
-          pod-template-hash: 7898c5c879
-      spec:
-        containers:
-        - env:
-          - name: UVICORN_SERVER_PORT
-            value: "8080"
-          image: fastapi-catdog-classifier:latest
-          imagePullPolicy: Never
-          name: fastapi-container
-          ports:
-          - containerPort: 8080
-            protocol: TCP
-          resources: {}
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
-        dnsPolicy: ClusterFirst
-        restartPolicy: Always
-        schedulerName: default-scheduler
-        securityContext: {}
-        terminationGracePeriodSeconds: 30
-  status:
-    availableReplicas: 2
-    fullyLabeledReplicas: 2
-    observedGeneration: 1
-    readyReplicas: 2
-    replicas: 2
-kind: List
-metadata:
-  resourceVersion: ""
+NAMESPACE       NAME                                                                  READY   STATUS      RESTARTS      AGE
+cert-manager    pod/cert-manager-57d855897b-tdf9z                                     1/1     Running     0             46m
+cert-manager    pod/cert-manager-cainjector-5c7f79b84b-x8wdj                          1/1     Running     0             46m
+cert-manager    pod/cert-manager-webhook-657b9f664c-brqp4                             1/1     Running     0             46m
+default         pod/kserve-controller-manager-6cb87dcc55-vnr9z                        3/3     Running     0             40m
+default         pod/modelmesh-controller-6f5bdb97db-mlxmg                             2/2     Running     1 (40m ago)   40m
+default         pod/torchserve-sd3-predictor-855444854-qfcbj                          2/2     Running     0             37m
+gpu-operator    pod/gpu-feature-discovery-br28q                                       1/1     Running     0             49m
+gpu-operator    pod/gpu-operator-1737987260-node-feature-discovery-gc-75fd956f2pj4w   1/1     Running     0             49m
+gpu-operator    pod/gpu-operator-1737987260-node-feature-discovery-master-54cc6j896   1/1     Running     0             49m
+gpu-operator    pod/gpu-operator-1737987260-node-feature-discovery-worker-c8xnx       1/1     Running     0             49m
+gpu-operator    pod/gpu-operator-bcf5659c7-xp58g                                      1/1     Running     0             49m
+gpu-operator    pod/nvidia-container-toolkit-daemonset-b8j5z                          1/1     Running     0             49m
+gpu-operator    pod/nvidia-cuda-validator-h44m6                                       0/1     Completed   0             49m
+gpu-operator    pod/nvidia-dcgm-exporter-7hs6z                                        1/1     Running     0             49m
+gpu-operator    pod/nvidia-device-plugin-daemonset-66mmv                              1/1     Running     0             49m
+gpu-operator    pod/nvidia-operator-validator-txscc                                   1/1     Running     0             49m
+istio-ingress   pod/istio-ingress-8689988bc9-znwm4                                    1/1     Running     0             47m
+istio-system    pod/istiod-7dbdb8d5bd-rmtbc                                           1/1     Running     0             48m
+kube-system     pod/aws-load-balancer-controller-7bf7b6d7f-gck7t                      1/1     Running     0             38m
+kube-system     pod/aws-load-balancer-controller-7bf7b6d7f-gr6rn                      1/1     Running     0             38m
+kube-system     pod/aws-node-xqhq8                                                    2/2     Running     0             101m
+kube-system     pod/coredns-6c55b85fbb-nsvwb                                          1/1     Running     0             104m
+kube-system     pod/coredns-6c55b85fbb-wkmnj                                          1/1     Running     0             104m
+kube-system     pod/kube-proxy-kr6rp                                                  1/1     Running     0             101m
+kube-system     pod/metrics-server-d5865ff47-mbg7v                                    1/1     Running     0             46m
+
+NAMESPACE       NAME                                        TYPE           CLUSTER-IP       EXTERNAL-IP                                                                      PORT(S)                                      AGE
+cert-manager    service/cert-manager                        ClusterIP      10.100.45.201    <none>                                                                           9402/TCP                                     46m
+cert-manager    service/cert-manager-cainjector             ClusterIP      10.100.246.40    <none>                                                                           9402/TCP                                     46m
+cert-manager    service/cert-manager-webhook                ClusterIP      10.100.50.199    <none>                                                                           443/TCP,9402/TCP                             46m
+default         service/kserve-controller-manager-service   ClusterIP      10.100.199.191   <none>                                                                           8443/TCP                                     40m
+default         service/kserve-webhook-server-service       ClusterIP      10.100.241.203   <none>                                                                           443/TCP                                      40m
+default         service/kubernetes                          ClusterIP      10.100.0.1       <none>                                                                           443/TCP                                      107m
+default         service/modelmesh-serving                   ClusterIP      None             <none>                                                                           8033/TCP,8008/TCP,2112/TCP                   40m
+default         service/modelmesh-webhook-server-service    ClusterIP      10.100.139.157   <none>                                                                           9443/TCP                                     40m
+default         service/torchserve-sd3-predictor            ClusterIP      10.100.97.88     <none>                                                                           80/TCP                                       37m
+gpu-operator    service/gpu-operator                        ClusterIP      10.100.134.10    <none>                                                                           8080/TCP                                     49m
+gpu-operator    service/nvidia-dcgm-exporter                ClusterIP      10.100.67.11     <none>                                                                           9400/TCP                                     49m
+istio-ingress   service/istio-ingress                       LoadBalancer   10.100.189.131   k8s-istioing-istioing-8fab4b3d41-ff52dca464b77c08.elb.ap-south-1.amazonaws.com   15021:32489/TCP,80:31052/TCP,443:32522/TCP   47m
+istio-system    service/istiod                              ClusterIP      10.100.190.50    <none>                                                                           15010/TCP,15012/TCP,443/TCP,15014/TCP        48m
+kube-system     service/aws-load-balancer-webhook-service   ClusterIP      10.100.110.233   <none>                                                                           443/TCP                                      38m
+kube-system     service/eks-extension-metrics-api           ClusterIP      10.100.22.61     <none>                                                                           443/TCP                                      107m
+kube-system     service/kube-dns                            ClusterIP      10.100.0.10      <none>                                                                           53/UDP,53/TCP,9153/TCP                       104m
+kube-system     service/metrics-server                      ClusterIP      10.100.66.220    <none>                                                                           443/TCP                                      46m
+
+NAMESPACE      NAME                                                                   DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR                                                          AGE
+gpu-operator   daemonset.apps/gpu-feature-discovery                                   1         1         1       1            1           nvidia.com/gpu.deploy.gpu-feature-discovery=true                       49m
+gpu-operator   daemonset.apps/gpu-operator-1737987260-node-feature-discovery-worker   1         1         1       1            1           <none>                                                                 49m
+gpu-operator   daemonset.apps/nvidia-container-toolkit-daemonset                      1         1         1       1            1           nvidia.com/gpu.deploy.container-toolkit=true                           49m
+gpu-operator   daemonset.apps/nvidia-dcgm-exporter                                    1         1         1       1            1           nvidia.com/gpu.deploy.dcgm-exporter=true                               49m
+gpu-operator   daemonset.apps/nvidia-device-plugin-daemonset                          1         1         1       1            1           nvidia.com/gpu.deploy.device-plugin=true                               49m
+gpu-operator   daemonset.apps/nvidia-device-plugin-mps-control-daemon                 0         0         0       0            0           nvidia.com/gpu.deploy.device-plugin=true,nvidia.com/mps.capable=true   49m
+gpu-operator   daemonset.apps/nvidia-driver-daemonset                                 0         0         0       0            0           nvidia.com/gpu.deploy.driver=true                                      49m
+gpu-operator   daemonset.apps/nvidia-mig-manager                                      0         0         0       0            0           nvidia.com/gpu.deploy.mig-manager=true                                 49m
+gpu-operator   daemonset.apps/nvidia-operator-validator                               1         1         1       1            1           nvidia.com/gpu.deploy.operator-validator=true                          49m
+kube-system    daemonset.apps/aws-node                                                1         1         1       1            1           <none>                                                                 104m
+kube-system    daemonset.apps/kube-proxy                                              1         1         1       1            1           <none>                                                                 104m
+
+NAMESPACE       NAME                                                                    READY   UP-TO-DATE   AVAILABLE   AGE
+cert-manager    deployment.apps/cert-manager                                            1/1     1            1           46m
+cert-manager    deployment.apps/cert-manager-cainjector                                 1/1     1            1           46m
+cert-manager    deployment.apps/cert-manager-webhook                                    1/1     1            1           46m
+default         deployment.apps/kserve-controller-manager                               1/1     1            1           40m
+default         deployment.apps/modelmesh-controller                                    1/1     1            1           40m
+default         deployment.apps/modelmesh-serving-mlserver-1.x                          0/0     0            0           40m
+default         deployment.apps/modelmesh-serving-ovms-1.x                              0/0     0            0           40m
+default         deployment.apps/modelmesh-serving-torchserve-0.x                        0/0     0            0           40m
+default         deployment.apps/modelmesh-serving-triton-2.x                            0/0     0            0           40m
+default         deployment.apps/torchserve-sd3-predictor                                1/1     1            1           37m
+gpu-operator    deployment.apps/gpu-operator                                            1/1     1            1           49m
+gpu-operator    deployment.apps/gpu-operator-1737987260-node-feature-discovery-gc       1/1     1            1           49m
+gpu-operator    deployment.apps/gpu-operator-1737987260-node-feature-discovery-master   1/1     1            1           49m
+istio-ingress   deployment.apps/istio-ingress                                           1/1     1            1           47m
+istio-system    deployment.apps/istiod                                                  1/1     1            1           48m
+kube-system     deployment.apps/aws-load-balancer-controller                            2/2     2            2           38m
+kube-system     deployment.apps/coredns                                                 2/2     2            2           104m
+kube-system     deployment.apps/metrics-server                                          1/1     1            1           46m
+
+NAMESPACE       NAME                                                                               DESIRED   CURRENT   READY   AGE
+cert-manager    replicaset.apps/cert-manager-57d855897b                                            1         1         1       46m
+cert-manager    replicaset.apps/cert-manager-cainjector-5c7f79b84b                                 1         1         1       46m
+cert-manager    replicaset.apps/cert-manager-webhook-657b9f664c                                    1         1         1       46m
+default         replicaset.apps/kserve-controller-manager-6cb87dcc55                               1         1         1       40m
+default         replicaset.apps/modelmesh-controller-6f5bdb97db                                    1         1         1       40m
+default         replicaset.apps/modelmesh-serving-mlserver-1.x-57d65d9fdd                          0         0         0       40m
+default         replicaset.apps/modelmesh-serving-ovms-1.x-5488c8f4f9                              0         0         0       40m
+default         replicaset.apps/modelmesh-serving-torchserve-0.x-67f9485cb9                        0         0         0       40m
+default         replicaset.apps/modelmesh-serving-triton-2.x-66756bc646                            0         0         0       40m
+default         replicaset.apps/torchserve-sd3-predictor-855444854                                 1         1         1       37m
+gpu-operator    replicaset.apps/gpu-operator-1737987260-node-feature-discovery-gc-75fd956f4c       1         1         1       49m
+gpu-operator    replicaset.apps/gpu-operator-1737987260-node-feature-discovery-master-54cccf99dd   1         1         1       49m
+gpu-operator    replicaset.apps/gpu-operator-bcf5659c7                                             1         1         1       49m
+istio-ingress   replicaset.apps/istio-ingress-8689988bc9                                           1         1         1       47m
+istio-ingress   replicaset.apps/istio-ingress-94f46b75b                                            0         0         0       47m
+istio-system    replicaset.apps/istiod-7dbdb8d5bd                                                  1         1         1       48m
+kube-system     replicaset.apps/aws-load-balancer-controller-7bf7b6d7f                             2         2         2       38m
+kube-system     replicaset.apps/coredns-6c55b85fbb                                                 2         2         2       104m
+kube-system     replicaset.apps/metrics-server-d5865ff47                                           1         1         1       46m
+
+NAMESPACE       NAME                                                           REFERENCE                             TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+default         horizontalpodautoscaler.autoscaling/torchserve-sd3-predictor   Deployment/torchserve-sd3-predictor   cpu: 0%/80%   1         1         1          37m
+istio-ingress   horizontalpodautoscaler.autoscaling/istio-ingress              Deployment/istio-ingress              cpu: 2%/80%   1         5         1          47m
+istio-system    horizontalpodautoscaler.autoscaling/istiod                     Deployment/istiod                     cpu: 0%/80%   1         5         1          48m
