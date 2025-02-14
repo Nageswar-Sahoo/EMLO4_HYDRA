@@ -1,300 +1,167 @@
-<h1>Dog Breed Classifier Deployment with Kubernetes and MiniKube </h1>
+# EKS Cluster and Kubernetes Setup Guide
 
-This project demonstrates deploying a FastAPI-based CatDog Classifier application on a Kubernetes cluster using MiniKube. Follow these instructions to set up, deploy, and access the application.
+This README provides a step-by-step guide to setting up an **Amazon EKS Cluster**, configuring IAM roles, installing **Istio**, **KServe**, **AWS Load Balancer Controller**, and **NVIDIA GPU Operator** using **Helm**. Each section contains detailed explanations, verification steps, and best practices.
 
-<h2>Directory Structure:</h2>
+---
 
-        project/
+## Introduction to Model Serving with SD3, Istio, and KServe
 
-        ├── app.py
-        ├── templates/
-        │   ├── index.html
-        │   └── result.html
-        ├── requirements.txt
-        └── Dockerfile
+### **SD3 Model**
+The **Stable Diffusion 3 (SD3) model** is an advanced deep learning model designed for high-quality image generation. It leverages diffusion-based techniques to generate detailed and coherent images from text prompts. When deploying SD3 in a cloud-native environment, efficient scaling, resource management, and low-latency inference are critical. This is where **Istio** and **KServe** play a crucial role in optimizing the model serving process.
 
-<h3>About Dataset</h3>
+### **Istio for Model Serving**
+**Istio** is a powerful service mesh that provides traffic management, security, and observability for microservices, including ML model serving workloads. When used for model deployment:
+- **Traffic Routing:** It ensures smooth request handling across multiple model versions.
+- **Load Balancing:** Distributes inference requests efficiently across pods.
+- **Security & Authentication:** Supports mutual TLS (mTLS) and role-based access control (RBAC) for secure API interactions.
+- **Observability:** Enables detailed monitoring through tools like **Kiali** and **Prometheus**.
 
-Description
+### **KServe for Model Inference**
+**KServe** (formerly KFServing) is a Kubernetes-based serving tool tailored for ML models. It simplifies and automates model deployment while ensuring high availability and scalability. Key features include:
+- **RawDeployment & InferenceService:** Supports deploying models as individual Kubernetes services or as Istio-managed inference services.
+- **Multi-Framework Support:** Works with TensorFlow, PyTorch, ONNX, and custom ML models like SD3.
+- **Autoscaling:** Uses **Knative** to scale model replicas based on request traffic.
+- **Canary Deployment:** Enables A/B testing and gradual rollout of new model versions.
 
-This dataset contains a collection of images for 10 different dog breeds, meticulously gathered and organized to facilitate various computer vision tasks such as image classification and object detection. The dataset includes the following breeds:
+By integrating **Istio and KServe**, organizations can deploy **SD3 and other deep learning models** in a robust, scalable, and efficient manner on **Amazon EKS**.
 
-       Golden Retriever
-       German Shepherd
-       Labrador Retriever
-       Bulldog
-       Beagle
-       Poodle
-       Rottweiler
-       Yorkshire Terrier
-       Boxer
-       Dachshund
+---
 
-<h2>k8s (Kubernetes)</h2>
+## 1. Amazon EKS Cluster Setup
 
-k8s is a container orchestration system. It is used for container deployment and management. Its design is greatly impacted by Google’s internal system Borg.
-
-
-<img width="538" alt="image" src="https://github.com/user-attachments/assets/c8d5e689-5805-4ed3-b5df-162af7b2a98c" />
-
-A k8s cluster consists of a set of worker machines, called nodes, that run containerized applications. Every cluster has at least one worker node.
-
-The worker node(s) host the Pods that are the components of the application workload. The control plane manages the worker nodes and the Pods in the cluster. In production environments, the control plane usually runs across multiple computers and a cluster usually runs multiple nodes, providing fault tolerance and high availability. 
-
-Control Plane Components
-
-API ServerThe API server talks to all the components in the k8s cluster. All the operations on pods are executed by talking to the API server.
-
-SchedulerThe scheduler watches the workloads on pods and assigns loads on newly created pods.
-
-Controller ManagerThe controller manager runs the controllers, including Node Controller, Job Controller, EndpointSlice Controller, and ServiceAccount Controller.
-
-etcd etcd is a key-value store used as Kubernetes' backing store for all cluster data.
-
-Nodes
-
-PodsA pod is a group of containers and is the smallest unit that k8s administers. Pods have a single IP address applied to every container within the pod.
-
-KubeletAn agent that runs on each node in the cluster. It ensures containers are running in a Pod.
-
-Kube Proxykube-proxy is a network proxy that runs on each node in your cluster. It routes traffic coming into a node from the service. It forwards requests for work to the correct containers.
-
-<h2>Kubernetes Commands</h2>
-<h3>General Commands</h3></h4>
-
-<h4>Get All Resources in a Namespace:</h4>
-
-  kubectl get all -n <namespace>
-<h4>Get Resource Details in YAML Format:</h4>
-
-  kubectl get <resource-type> <resource-name> -o yaml
-<h4>Apply a Configuration File:</h4>
-
-  kubectl apply -f <file-name.yaml>
-<h4>Delete a Resource:</h4>
-
-  kubectl delete -f <file-name.yaml>
-<h4>View Cluster Nodes:</h4>
-
+### **Creating an EKS Cluster**
+```bash
+eksctl create cluster -f eks-cluster.yaml
+```
+- This command creates an Amazon EKS cluster based on the configuration specified in `eks-cluster.yaml`.
+- Ensure that the YAML file includes details like **region, VPC settings, node groups, and IAM roles**.
+- Verify the cluster creation with:
+  ```bash
   kubectl get nodes
-<h3>Commands for Deployments</h3>
-<h4>List Deployments:</h4>
+  ```
+
+### **Deleting an EKS Cluster**
+```bash
+eksctl delete cluster -f eks-cluster.yaml
+```
+- This will delete the entire EKS cluster along with associated resources.
+- Before deletion, backup any important data such as persistent volumes and configurations.
+
+---
+
+## 2. Configuring IAM Roles and Policies
+
+### **Associating IAM OIDC Provider with EKS**
+```bash
+eksctl utils associate-iam-oidc-provider --region ap-south-1 --cluster basic-cluster12 --approve
+```
+- This step is required to allow Kubernetes service accounts to use AWS IAM roles.
+- Verify association with:
+  ```bash
+  aws eks describe-cluster --name basic-cluster12 --query "cluster.identity.oidc.issuer" --output text
+  ```
+
+### **Creating an IAM Policy for S3 Access**
+```bash
+aws iam create-policy \
+    --policy-name S3ListTestEMLO \
+    --policy-document file://iam-s3-test-policy.json
+```
+- This policy grants permissions to access specific S3 buckets.
+- Verify policy creation with:
+  ```bash
+  aws iam list-policies --query "Policies[?PolicyName=='S3ListTestEMLO']"
+  ```
+
+### **Deleting an IAM Policy**
+```bash
+aws iam delete-policy --policy-arn arn:aws:iam::<account-id>:policy/S3ListTestEMLO
+```
+- Ensure that no roles or service accounts are attached before deleting.
+
+---
+
+## 3. Creating IAM Service Accounts for Kubernetes
+
+### **Creating a Service Account for S3 Access**
+```bash
+eksctl create iamserviceaccount \
+  --name s3-list-sa \
+  --cluster basic-cluster12 \
+  --attach-policy-arn arn:aws:iam::688567263021:policy/S3ListTestEMLO \
+  --approve \
+  --region ap-south-1
+```
+- Creates a **Kubernetes service account** and attaches an IAM policy to it.
+- Verify service account creation with:
+  ```bash
+  kubectl get serviceaccount s3-list-sa -n default
+  ```
+
+---
+
+## 4. Installing NVIDIA GPU Operator
+
+### **Adding NVIDIA Helm Repository**
+```bash
+helm repo add nvidia https://helm.ngc.nvidia.com/nvidia && helm repo update
+```
+- Adds the official NVIDIA Helm chart repository for GPU management.
+
+### **Installing the GPU Operator**
+```bash
+helm install --wait --generate-name \
+  -n gpu-operator --create-namespace \
+  nvidia/gpu-operator \
+  --version=v24.9.1
+```
+- This deploys the **NVIDIA GPU Operator**, which enables GPU scheduling and monitoring.
+- Verify GPU node detection with:
+  ```bash
+  kubectl get nodes -o json | jq '.items[].status.allocatable' | grep nvidia.com/gpu
+  ```
+
+---
+
+## 5. Setting up Istio Service Mesh
+
+### **Creating Istio Namespace**
+```bash
+kubectl create namespace istio-system
+```
+
+### **Installing Istio Base Components**
+```bash
+helm install istio-base istio/base \
+  --version 1.20.2 \
+  --namespace istio-system --wait
+```
+
+### **Deploying Istio Control Plane (Istiod)**
+```bash
+helm install istiod istio/istiod \
+  --version 1.20.2 \
+  --namespace istio-system --wait
+```
+- Verify installation with:
+  ```bash
+  kubectl get pods -n istio-system
+  ```
+
+---
+
+## Conclusion
+
+By following these steps, you have successfully:
+- Set up an **Amazon EKS cluster**
+- Configured **IAM roles** and **service accounts**
+- Installed **Istio** for service mesh
+- Deployed **AWS Load Balancer Controller**
+- Installed **KServe for model serving**
+- Configured **NVIDIA GPU Operator** for machine learning workloads
+
+For troubleshooting, use:
+```bash
+kubectl logs <pod-name> -n <namespace>
+```
 
-kubectl get deployments
-<h4>Describe a Deployment:</h4>
-
-kubectl describe deployment <deployment-name>
-<h4>Update a Deployment (Rolling Update):</h4>
-
-kubectl set image deployment/<deployment-name> <container-name>=<new-image>
-<h4>Scale a Deployment:</h4>
-
-kubectl scale deployment/<deployment-name> --replicas=<number>
-<h4>Restart a Deployment:</h4>
-
-kubectl rollout restart deployment/<deployment-name>
-<h4>Check Rollout Status:</h4>
-
-kubectl rollout status deployment/<deployment-name>
-<h4>Rollback a Deployment:</h4>
-
-kubectl rollout undo deployment/<deployment-name>
-<h3>Commands for Services</h3>
-<h4>List Services:</h4>
-
-kubectl get services
-<h4>Describe a Service:</h4>
-
-kubectl describe service <service-name>
-<h4>Expose a Deployment as a Service:</h4>
-
-kubectl expose deployment <deployment-name> --type=<type> --port=<port>
-Example:
-
-kubectl expose deployment catdog-classifier --type=NodePort --port=80
-<h4>Access NodePort Service:</h4>
-
-minikube service <service-name>
-<h3>Commands for Ingress</h3>
-<h4>List Ingress Rules:</h4>
-
-kubectl get ingress
-<h4>Describe an Ingress:</h4>
-
-kubectl describe ingress <ingress-name>
-<h4>Access Ingress: After applying the Ingress, check the external IP or host:</h4>
-
-kubectl get ingress
-Access it using the hostname or external IP in your browser.
-<h4>Delete an Ingress:</h4>
-
-kubectl delete ingress <ingress-name>
-<h3>Commands for Pods</h3>
-<h4>List Pods:</h4>
-
-kubectl get pods
-<h4>List Pods with Labels:</h4>
-
-kubectl get pods -l <label-key>=<label-value>
-<h4>Describe a Pod:</h4>
-
-kubectl describe pod <pod-name>
-<h4>Get Pod Logs:</h4>
-
-kubectl logs <pod-name>
-<h4></h4>Stream Pod Logs:</pod-name>
-
-kubectl logs -f <pod-name>
-<h4>Execute a Command Inside a Pod:</h4>
-
-kubectl exec -it <pod-name> -- <command>
-<h4>Delete a Pod:</h4>
-
-kubectl delete pod <pod-name>
-<h3>Namespace Management</h3>
-<h4>List All Namespaces:</h4>
-
-kubectl get namespaces
-<h4>Create a New Namespace:</h4>
-
-kubectl create namespace <namespace-name>
-<h4>Set a Default Namespace:</h4>
-
-kubectl config set-context --current --namespace=<namespace-name>
-<h4>Delete a Namespace:</h4>
-
-kubectl delete namespace <namespace-name>
-<h3>Resource Debugging</h3>
-<h4>Check Events in a Namespace:</h4>
-
-kubectl get events -n <namespace>
-<h4>Debug a Pod:</h4>
-
-kubectl debug pod/<pod-name> -it --image=busybox
-<h4>View Resource Usage:</h4>
-
-  kubectl top pods
-  kubectl top nodes
-
-
-<h2>MiniKube</h2>
-
-MiniKube is a local Kubernetes environment. Use it to test Kubernetes deployments on your local machine.
-
-Start MiniKube:
-    minikube start --cpus=4 --memory=8192
-    This starts a MiniKube cluster with 4 CPUs and 8 GB of memory.
-
-Verify that MiniKube is running:
-   minikube status
-
-<h2>MiniKube Commands</h2>
-<h4>Start MiniKube:</h4>
-  minikube start
-<h4>Stop MiniKube:</h4>
-   minikube stop
-<h4>Delete MiniKube Cluster:</h4>
-  minikube delete
-<h4>Access Kubernetes Dashboard:</h4>
-  minikube dashboard
-<h4>Enable Add-ons (e.g., ingress):</h4>
-   minikube addons enable ingress
-   
-<h4>Tunnel to the Ingress</h4>
-
-MiniKube does not expose Ingress directly on your host machine. Use the MiniKube tunnel to expose the Ingress.
-
-Start a MiniKube tunnel in a separate terminal:
-
-   minikube tunnel
-
-<h2>Project Setup</h2>
-
-<h3>FastAPI Application Code</h3>
-This is the core application handling image upload and classification. It uses FastAPI for API handling and Jinja2 for rendering HTML templates.
-
-<h3>HTML Templates</h3>
-These provide a user-friendly interface for uploading images and viewing results.
-
-
-<h3>Dockerfile</h3>
-Defines the containerization of the FastAPI application.
-
-<h3>Kubernetes YAML Files</h3>
-
-These configure the deployment, service, and ingress for your FastAPI application.
-
-
-<h3>Building and Pushing the image to Minikube</h3>
-
-Rebuild the Docker image to include the updated requirements:
-
-eval $(minikube docker-env)
-
-docker build -t fastapi-catdog-classifier .
-
-
-<h3>Kubernetes Deployment</h3>
-
-Start Minikube with the command: minikube start.
-
-Navigate to the Kubernetes YAML files located in the k8s directory.
-
-Use kubectl apply -f . to deploy the Kubernetes resources.
-
-To remove the resources, run kubectl delete -f ..
-
-<img width="1061" alt="image" src="https://github.com/user-attachments/assets/a07053e7-5d1e-4e01-9125-dbdc0328ff4c" />
-
-
-<h3>How to access FAST API : </h3>
-
-<img width="858" alt="image" src="https://github.com/user-attachments/assets/f7101312-288e-4b2d-9d1d-fc106c525e4b" />
-
-<img width="1434" alt="image" src="https://github.com/user-attachments/assets/40d637b7-a199-4bb3-8ed3-d196043429dd" />
-
-<h3>Output of the following command present in logs folder </h3>
- 
- kubectl describe <your_deployment>
- 
- kubectl describe <your_pod>
- 
- kubectl describe <your_ingress>
- 
- kubectl top pod
- 
- kubectl top node
- 
- kubectl get all -o yaml
-
-
- <img width="1002" alt="image" src="https://github.com/user-attachments/assets/1898e11d-343c-4ef0-8f5d-899f31758ece" />
- <img width="1379" alt="image" src="https://github.com/user-attachments/assets/5d352639-61b1-41ac-8663-a666d985b5f1" />
-
- <img width="1437" alt="image" src="https://github.com/user-attachments/assets/7febe686-1f0d-4377-a559-7a8c88d14bd3" />
-
- <img width="970" alt="image" src="https://github.com/user-attachments/assets/4add3b07-3170-42c8-902a-01e47b6e00f7" />
-
- <img width="1014" alt="image" src="https://github.com/user-attachments/assets/d458ee1c-b181-4deb-bb70-c095247cb5c5" />
-
- <img width="1692" alt="image" src="https://github.com/user-attachments/assets/4b624e1d-c256-46d1-9d6d-06f65eec991c" />
-
- <img width="1432" alt="image" src="https://github.com/user-attachments/assets/3275a911-e4ca-4e34-82f5-b83f9c77e2c1" />
-
- <img width="1470" alt="image" src="https://github.com/user-attachments/assets/d6e70bcd-317f-402f-9fe9-23677140b3a1" />
-
- <img width="1317" alt="image" src="https://github.com/user-attachments/assets/8e851423-7b1c-41d7-a6ab-50c4ee68801b" />
-
-
-
- 
-
-
-
-
-
-
-
-
-
-   
