@@ -100,30 +100,7 @@ eksctl create iamserviceaccount \
 
 ---
 
-## 4. Installing NVIDIA GPU Operator
-
-### **Adding NVIDIA Helm Repository**
-```bash
-helm repo add nvidia https://helm.ngc.nvidia.com/nvidia && helm repo update
-```
-- Adds the official NVIDIA Helm chart repository for GPU management.
-
-### **Installing the GPU Operator**
-```bash
-helm install --wait --generate-name \
-  -n gpu-operator --create-namespace \
-  nvidia/gpu-operator \
-  --version=v24.9.1
-```
-- This deploys the **NVIDIA GPU Operator**, which enables GPU scheduling and monitoring.
-- Verify GPU node detection with:
-  ```bash
-  kubectl get nodes -o json | jq '.items[].status.allocatable' | grep nvidia.com/gpu
-  ```
-
----
-
-## 5. Setting up Istio Service Mesh
+## 4. Setting up Istio Service Mesh
 
 ### **Creating Istio Namespace**
 ```bash
@@ -148,6 +125,24 @@ helm install istiod istio/istiod \
   kubectl get pods -n istio-system
   ```
 
+### **Deploying Istio Ingress Gateway**
+```bash
+kubectl create namespace istio-ingress
+helm install istio-ingress istio/gateway \
+  --version 1.20.2 \
+  --namespace istio-ingress \
+  --set labels.istio=ingressgateway \
+  --set service.annotations."service\.beta\.kubernetes\.io/aws-load-balancer-type"=external \
+  --set service.annotations."service\.beta\.kubernetes\.io/aws-load-balancer-nlb-target-type"=ip \
+  --set service.annotations."service\.beta\.kubernetes\.io/aws-load-balancer-scheme"=internet-facing \
+  --set service.annotations."service\.beta\.kubernetes\.io/aws-load-balancer-attributes"="load_balancing.cross_zone.enabled=true"
+```
+
+### **Restarting Istio Ingress Deployment**
+```bash
+kubectl rollout restart deployment istio-ingress -n istio-ingress
+```
+
 ---
 
 ## Conclusion
@@ -159,6 +154,13 @@ By following these steps, you have successfully:
 - Deployed **AWS Load Balancer Controller**
 - Installed **KServe for model serving**
 - Configured **NVIDIA GPU Operator** for machine learning workloads
+
+For troubleshooting, use:
+```bash
+kubectl logs <pod-name> -n <namespace>
+```
+
+
 
 pods : 
 
