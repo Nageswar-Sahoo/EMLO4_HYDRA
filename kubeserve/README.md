@@ -222,6 +222,8 @@ output-image:
 ![image](https://github.com/user-attachments/assets/0b3d5101-c85f-4ffb-9ad1-6ec515604bb9)
 ![image](https://github.com/user-attachments/assets/b9e7088a-5d83-4f1f-8826-06abf0cb9471)
 
+Detsila logs : 
 
+it can be found in logs folder . 
 
 
